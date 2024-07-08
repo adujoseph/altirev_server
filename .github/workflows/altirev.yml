@@ -63,12 +63,12 @@ jobs:
             echo $PATH
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
-            pm2 kill
-            cd altirev_server
-            git pull https://zabilal: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@github.com/adujoseph/altirev_server.git;
-            rm -rf node_modules package-lock.json
-            npm install
-            pm2 start src/main.ts
+            # pm2 kill
+            # cd altirev_server
+            # git pull https://zabilal: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@github.com/adujoseph/altirev_server.git;
+            # rm -rf node_modules package-lock.json
+            # npm install
+            # pm2 start src/main.ts
               
     # Deployment completes
       # - name: Slack Notification - Deployment Success
