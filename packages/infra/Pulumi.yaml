@@ -1,0 +1,11 @@
+name: altirev-aws-pulumi
+runtime:
+  name: nodejs
+  options:
+    packagemanager: npm
+description: NestJS microservices deployed on ECS created using Pulumi infra as code
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: aws-typescript
+  aws:region: us-east-2
