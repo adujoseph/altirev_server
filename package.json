@@ -1,8 +1,7 @@
 {
-  "name": "nestjs-boilerplate",
+  "name": "altirev-main-server",
   "version": "1.2.0",
   "description": "",
-  "main": "src/main.ts",
   "author": "",
   "private": true,
   "license": "MIT",
