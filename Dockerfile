@@ -1,22 +1,25 @@
-FROM node:20.16.0-alpine
+FROM node:20-alpine AS base
+EXPOSE 3000 3001 3002
+ARG APP
+WORKDIR /app
+COPY package*.json .
 
-RUN apk add --no-cache bash
-RUN npm i -g @nestjs/cli typescript ts-node
+FROM base AS development
+ARG NODE_ENV=development
+ENV NODE_ENV=${NODE_ENV}
+RUN npm install
+COPY . .
+RUN npm run build ${APP}
 
-COPY package*.json /tmp/app/
-RUN cd /tmp/app && npm install
+ENV DEPLOY_COMMAND="node /app/dist/apps/${APP}/main"
+CMD $DEPLOY_COMMAND
 
-COPY . /usr/src/app
-RUN cp -a /tmp/app/node_modules /usr/src/app
-COPY ./wait-for-it.sh /opt/wait-for-it.sh
-RUN chmod +x /opt/wait-for-it.sh
-COPY ./startup.relational.dev.sh /opt/startup.relational.dev.sh
-RUN chmod +x /opt/startup.relational.dev.sh
-RUN sed -i 's/\r//g' /opt/wait-for-it.sh
-RUN sed -i 's/\r//g' /opt/startup.relational.dev.sh
+FROM base AS production
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+RUN npm install --production
+COPY . .
+RUN npm run build ${APP}
 
-WORKDIR /usr/src/app
-RUN if [ ! -f .env ]; then cp env-example-relational .env; fi
-RUN npm run build
-
-CMD ["/opt/startup.relational.dev.sh"]
+ENV DEPLOY_COMMAND="node /app/dist/apps/${APP}/main"
+CMD $DEPLOY_COMMAND

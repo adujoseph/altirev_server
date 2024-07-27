@@ -1,0 +1,81 @@
+# # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+
+# name: Altirev-Machine
+
+# on:
+#   push:
+#     branches: [ main ]
+
+# jobs:
+#   build:
+
+#     runs-on: ubuntu-latest
+
+#     steps:
+#     - uses: actions/checkout@v4
+    
+#     - name: Use Node.js 20.x
+#       uses: actions/setup-node@v3
+#       with:
+#         node-version: "20.x"
+        
+#       # Starting deployment
+#     # - name: Slack Notification - Deployment Inititated
+#     #   uses: rtCamp/action-slack-notify@v2.2.0
+#     #   env:
+#     #     SLACK_COLOR: ${{ job.status }}
+#     #     SLACK_MESSAGE: "Starting deployment :hourglass_flowing_sand: commit: ${{ github.event.head_commit.message }}"
+#         # SLACK_WEBHOOK: 
+   
+#     - name: Install dependencies
+#       run: npm install
+      
+#     - name: Building the Server
+#       run: npm run build --if-present
+      
+#     # - name: Run Test
+#     #   run: npm test
+      
+#       # On failure
+#     # - name: Slack Notification - Deployment Failed
+#     #   uses: rtCamp/action-slack-notify@v2.2.0
+#     #   if: ${{ failure() }}
+#     #   env:
+#     #     SLACK_COLOR: ${{ job.status }}
+#     #     SLACK_MESSAGE: "Failed deployment :x: commit: ${{ github.event.head_commit.message }}"
+#         # SLACK_WEBHOOK: https://hooks.slack.com/services/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
+
+#   deploy:
+#     runs-on: ubuntu-latest
+#     needs: [ build ]
+    
+#     steps:
+#       - name: Executing remote ssh commands using ssh key
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: 3.131.13.238
+#           username: zabilal
+#           password: Eneyohwei1!
+#           script: |
+#             #sh deploy.sh
+#             echo $PATH
+#             export NVM_DIR=~/.nvm
+#             source ~/.nvm/nvm.sh
+#             # pm2 kill
+#             # cd altirev_server
+#             # git pull https://zabilal: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@github.com/adujoseph/altirev_server.git;
+#             # rm -rf node_modules package-lock.json
+#             # npm install
+#             # pm2 start src/main.ts
+              
+#     # Deployment completes
+#       # - name: Slack Notification - Deployment Success
+#       #   uses: rtCamp/action-slack-notify@v2.2.0
+#       #   if: ${{ success() }}
+#       #   env:
+#       #     SLACK_COLOR: ${{ job.status }}
+#       #     SLACK_MESSAGE: "Deplyment Completed Successfully :rocket: commit: ${{ github.event.head_commit.message }}"
+#           # SLACK_WEBHOOK: https://hooks.slack.com/services/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
+#           # SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
