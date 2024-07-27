@@ -37,8 +37,8 @@ async function bootstrap() {
   );
 
   const options = new DocumentBuilder()
-    .setTitle('API')
-    .setDescription('API docs')
+    .setTitle('Altirev API')
+    .setDescription('API documentation for Altirev Server')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
