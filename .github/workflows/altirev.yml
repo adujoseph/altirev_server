@@ -6,7 +6,7 @@ name: Altirev-Machine
 
 on:
   push:
-    branches: [ main ]
+    branches: [ feature/monolith ]
 
 jobs:
   build:
@@ -56,19 +56,22 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: 3.131.13.238
-          username: zabilal
+          # username: zabilal
+          # password: Eneyohwei1!
+          username: ubuntu
           password: Eneyohwei1!
           script: |
             #sh deploy.sh
             echo $PATH
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
-            # pm2 kill
-            # cd altirev_server
-            # git pull https://zabilal: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@github.com/adujoseph/altirev_server.git;
-            # rm -rf node_modules package-lock.json
-            # npm install
-            # pm2 start src/main.ts
+            pm2 kill
+            cd altirev_server
+            git pull https://zabilal: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@github.com/adujoseph/altirev_server.git;
+            git checkout feature/monolith
+            rm -rf node_modules package-lock.json
+            npm install
+            pm2 start src/main.ts
               
     # Deployment completes
       # - name: Slack Notification - Deployment Success
