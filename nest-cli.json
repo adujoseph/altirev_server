@@ -1,8 +1,32 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src",
+  "sourceRoot": "apps/altirev_server/src",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/altirev_server/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/altirev_server",
+  "projects": {
+    "altirev_server": {
+      "type": "application",
+      "root": "apps/altirev_server",
+      "entryFile": "main",
+      "sourceRoot": "apps/altirev_server/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/altirev_server/tsconfig.app.json"
+      }
+    },
+    "main": {
+      "type": "application",
+      "root": "apps/main",
+      "entryFile": "main",
+      "sourceRoot": "apps/main/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/main/tsconfig.app.json"
+      }
+    }
   }
 }
