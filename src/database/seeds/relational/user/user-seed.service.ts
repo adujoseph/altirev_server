@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import bcrypt from 'bcryptjs';
 import { RoleEnum } from '../../../../roles/roles.enum';
 import { StatusEnum } from '../../../../statuses/statuses.enum';
-import { UserEntity } from '../../../../users/infrastructure/persistence/relational/entities/user.entity';
+import { UserEntity } from '../../../../users/persistence/entities/user.entity';
 
 @Injectable()
 export class UserSeedService {
