@@ -1,7 +1,4 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from './users/users.module';
-import { FilesModule } from './files/files.module';
-import { AuthModule } from './auth/auth.module';
 import databaseConfig from './database/config/database.config';
 import authConfig from './auth/config/auth.config';
 import appConfig from './config/app.config';
@@ -13,11 +10,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { I18nModule } from 'nestjs-i18n/dist/i18n.module';
 import { HeaderResolver } from 'nestjs-i18n';
 import { TypeOrmConfigService } from './database/typeorm-config.service';
-import { MailModule } from './mail/mail.module';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import { AllConfigType } from './config/config.type';
+//Modules
+import { UsersModule } from './users/users.module';
+import { FilesModule } from './files/files.module';
+import { AuthModule } from './auth/auth.module';
 import { SessionModule } from './session/session.module';
 import { MailerModule } from './mailer/mailer.module';
+import { MailModule } from './mail/mail.module';
+import { ElectionModule } from './election/election.module';
 
 const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
   useClass: TypeOrmConfigService,
@@ -63,6 +65,7 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
     SessionModule,
     MailModule,
     MailerModule,
+    ElectionModule,
   ],
 })
 export class AppModule {}
