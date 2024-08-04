@@ -21,6 +21,7 @@ import { MailerModule } from './mailer/mailer.module';
 import { MailModule } from './mail/mail.module';
 import { ElectionModule } from './election/election.module';
 import { NotificationModule } from './notification/notification.module';
+import { AdminModule } from './admin/admin.module';
 
 const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
   useClass: TypeOrmConfigService,
@@ -68,6 +69,7 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
     MailerModule,
     ElectionModule,
     NotificationModule,
+    AdminModule,
   ],
 })
 export class AppModule {}
