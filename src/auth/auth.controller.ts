@@ -24,6 +24,8 @@ import { LoginResponseDto } from './dto/login-response.dto';
 import { NullableType } from '../utils/types/nullable.type';
 import { User } from '../users/domain/user';
 import { RefreshResponseDto } from './dto/refresh-response.dto';
+import { RegisterResponseDto } from './dto/register-response.dto';
+import { TokenDto } from './dto/token.dto';
 
 @ApiTags('Auth')
 @Controller({
@@ -46,9 +48,20 @@ export class AuthController {
   }
 
   @Post('register')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async register(@Body() createUserDto: AuthRegisterLoginDto): Promise<void> {
+  @ApiOkResponse({
+    type: RegisterResponseDto,
+  })
+  @HttpCode(HttpStatus.OK)
+  async register(
+    @Body() createUserDto: AuthRegisterLoginDto,
+  ): Promise<RegisterResponseDto> {
     return this.service.register(createUserDto);
+  }
+
+  @Post('verifyOtp')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async verifyOtp(@Body() verifyOtpDto: TokenDto): Promise<void> {
+    return this.service.verifyOtpToken(verifyOtpDto);
   }
 
   @Post('confirm')

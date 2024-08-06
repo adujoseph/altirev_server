@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
   JoinColumn,
   OneToOne,
+  Generated,
 } from 'typeorm';
 import { RoleEntity } from '../../../roles/persistence/entities/role.entity';
 import { StatusEntity } from '../../../statuses/persistence/entities/status.entity';
@@ -33,6 +34,13 @@ export class UserEntity extends EntityRelationalHelper {
   })
   @PrimaryGeneratedColumn()
   id: number;
+
+  @ApiProperty({
+    type: String,
+  })
+  @Generated('uuid')
+  @Column({ type: String, unique: true, nullable: false })
+  altirevId: string;
 
   @ApiProperty({
     type: String,
@@ -105,6 +113,41 @@ export class UserEntity extends EntityRelationalHelper {
     eager: true,
   })
   role?: RoleEntity | null;
+
+  @ApiProperty({
+    type: String,
+    example: 'bambam4sure',
+  })
+  @Column({ type: String, nullable: true })
+  username: string | null;
+
+  @ApiProperty({
+    type: String,
+    example: '+234855478989',
+  })
+  @Column({ type: String, nullable: true })
+  phoneNumber: string | null;
+
+  @ApiProperty({
+    type: String,
+    example: 'male | female',
+  })
+  @Column({ type: String, nullable: true })
+  gender: string | null;
+
+  @ApiProperty({
+    type: String,
+    example: 'Abuja',
+  })
+  @Column({ type: String, nullable: true })
+  state: string | null;
+
+  @ApiProperty({
+    type: String,
+    example: 'Nigeria',
+  })
+  @Column({ type: String, nullable: true })
+  country: string | null;
 
   @ApiProperty({
     type: () => StatusEntity,

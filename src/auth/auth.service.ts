@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpStatus,
   Injectable,
   NotFoundException,
@@ -10,6 +11,7 @@ import crypto from 'crypto';
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcryptjs';
+import randomstring from 'randomstring';
 import { AuthEmailLoginDto } from './dto/auth-email-login.dto';
 import { AuthUpdateDto } from './dto/auth-update.dto';
 import { AuthProvidersEnum } from './auth-providers.enum';
@@ -27,6 +29,9 @@ import { Session } from '../session/domain/session';
 import { SessionService } from '../session/session.service';
 import { StatusEnum } from '../statuses/statuses.enum';
 import { User } from '../users/domain/user';
+import { RegisterResponseDto } from './dto/register-response.dto';
+import { TokenDto } from './dto/token.dto';
+import { TokenService } from './token.service';
 
 @Injectable()
 export class AuthService {
@@ -35,6 +40,7 @@ export class AuthService {
     private usersService: UsersService,
     private sessionService: SessionService,
     private mailService: MailService,
+    private tokenService: TokenService,
     private configService: ConfigService<AllConfigType>,
   ) {}
 
@@ -107,7 +113,7 @@ export class AuthService {
     };
   }
 
-  async register(dto: AuthRegisterLoginDto): Promise<void> {
+  async register(dto: AuthRegisterLoginDto): Promise<RegisterResponseDto> {
     const user = await this.usersService.create({
       ...dto,
       email: dto.email,
@@ -117,27 +123,65 @@ export class AuthService {
       status: {
         id: StatusEnum.inactive,
       },
+      username: dto.username,
+      phoneNumber: dto.phoneNumber,
+      gender: dto.gender,
+      state: dto.state,
+      country: dto.country,
     });
 
-    const hash = await this.jwtService.signAsync(
-      {
-        confirmEmailUserId: user.id,
-      },
-      {
-        secret: this.configService.getOrThrow('auth.confirmEmailSecret', {
-          infer: true,
-        }),
-        expiresIn: this.configService.getOrThrow('auth.confirmEmailExpires', {
-          infer: true,
-        }),
-      },
-    );
+    // const hash = await this.jwtService.signAsync(
+    //   {
+    //     confirmEmailUserId: user.id,
+    //   },
+    //   {
+    //     secret: this.configService.getOrThrow('auth.confirmEmailSecret', {
+    //       infer: true,
+    //     }),
+    //     expiresIn: this.configService.getOrThrow('auth.confirmEmailExpires', {
+    //       infer: true,
+    //     }),
+    //   },
+    // );
 
-    await this.mailService.userSignUp({
+    // await this.mailService.userSignUpVerifyLink({
+    //   to: dto.email,
+    //   data: {
+    //     hash,
+    //   },
+    // });
+
+    //generate token
+    const otpToken = this.generateOTP();
+
+    //send token by email
+    await this.mailService.userSignUpVerifyOTP({
       to: dto.email,
       data: {
-        hash,
+        otp: otpToken,
       },
+    });
+
+    //save generated token
+    const tokenData = new TokenDto();
+    tokenData.userAltirevId = user.altirevId;
+
+    //hash token for a save
+    const salt = await bcrypt.genSalt();
+    tokenData.token = await bcrypt.hash(otpToken, salt);
+
+    const createdToken = await this.tokenService.createToken(tokenData);
+    if (!createdToken) {
+      throw new UnprocessableEntityException('Unable to save user token');
+    }
+
+    return { userAltirevId: user.altirevId };
+  }
+
+  private generateOTP() {
+    return randomstring.generate({
+      length: 6,
+      charset: 'numeric',
     });
   }
 
@@ -503,5 +547,33 @@ export class AuthService {
       refreshToken,
       tokenExpires,
     };
+  }
+
+  async verifyOtpToken(dto: TokenDto): Promise<void> {
+    const { userAltirevId, token } = dto;
+    // check if user exists
+    const user = await this.usersService.findByAltirevId(userAltirevId);
+    if (!user) {
+      throw new BadRequestException();
+    }
+
+    // fetch the otp by user
+    const tokenEntity =
+      await this.tokenService.getTokenByUserAltirevId(userAltirevId);
+
+    //verify token
+    let isValidToken = false;
+    if (token != null && tokenEntity.token != null) {
+      isValidToken = await bcrypt.compare(token, tokenEntity.token);
+    }
+    if (!isValidToken) {
+      throw new UnprocessableEntityException({
+        status: HttpStatus.UNPROCESSABLE_ENTITY,
+        errors: {
+          password: 'Token is Incorrect',
+        },
+      });
+    }
+    return;
   }
 }

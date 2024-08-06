@@ -26,6 +26,8 @@ export class UsersService {
   async create(createProfileDto: CreateUserDto): Promise<User> {
     const clonedPayload = {
       provider: AuthProvidersEnum.email,
+      altirevId: '',
+      otpSecret: '',
       ...createProfileDto,
     };
 
@@ -116,6 +118,10 @@ export class UsersService {
 
   findByEmail(email: User['email']): Promise<NullableType<User>> {
     return this.usersRepository.findByEmail(email);
+  }
+
+  findByAltirevId(altirevId: User['altirevId']): Promise<NullableType<User>> {
+    return this.usersRepository.findByAltirevId(altirevId);
   }
 
   findBySocialIdAndProvider({
