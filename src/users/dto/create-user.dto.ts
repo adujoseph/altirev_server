@@ -35,6 +35,26 @@ export class CreateUserDto {
   @IsNotEmpty()
   lastName: string | null;
 
+  @ApiProperty({ example: 'bambam', type: String })
+  @IsNotEmpty()
+  username: string | null;
+
+  @ApiProperty({ example: '+234980778697', type: String })
+  @IsNotEmpty()
+  phoneNumber: string | null;
+
+  @ApiProperty({ example: 'Male | Female', type: String })
+  @IsNotEmpty()
+  gender: string | null;
+
+  @ApiProperty({ example: 'Abuja', type: String })
+  @IsNotEmpty()
+  state: string | null;
+
+  @ApiProperty({ example: 'Nigeria', type: String })
+  @IsNotEmpty()
+  country: string | null;
+
   @ApiPropertyOptional({ type: () => FileDto })
   @IsOptional()
   photo?: FileDto | null;

@@ -9,6 +9,7 @@ export class UserMapper {
   static toDomain(raw: UserEntity): User {
     const domainEntity = new User();
     domainEntity.id = raw.id;
+    domainEntity.altirevId = raw.altirevId;
     domainEntity.email = raw.email;
     domainEntity.password = raw.password;
     domainEntity.previousPassword = raw.previousPassword;
@@ -16,6 +17,11 @@ export class UserMapper {
     domainEntity.socialId = raw.socialId;
     domainEntity.firstName = raw.firstName;
     domainEntity.lastName = raw.lastName;
+    domainEntity.username = raw.username;
+    domainEntity.phoneNumber = raw.phoneNumber;
+    domainEntity.gender = raw.gender;
+    domainEntity.state = raw.state;
+    domainEntity.country = raw.country;
     if (raw.photo) {
       domainEntity.photo = FileMapper.toDomain(raw.photo);
     }
@@ -63,6 +69,11 @@ export class UserMapper {
     persistenceEntity.socialId = domainEntity.socialId;
     persistenceEntity.firstName = domainEntity.firstName;
     persistenceEntity.lastName = domainEntity.lastName;
+    persistenceEntity.username = domainEntity.username;
+    persistenceEntity.phoneNumber = domainEntity.phoneNumber;
+    persistenceEntity.gender = domainEntity.gender;
+    persistenceEntity.state = domainEntity.state;
+    persistenceEntity.country = domainEntity.country;
     persistenceEntity.photo = photo;
     persistenceEntity.role = role;
     persistenceEntity.status = status;
