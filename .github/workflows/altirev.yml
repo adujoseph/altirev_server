@@ -29,22 +29,22 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build the project
-        run: npm run build
+      # - name: Build the project
+      #   run: npm run build
 
       - name: Stop current PM2 process by name
         run: pm2 stop altirev || true
 
       - name: Start new PM2 process with name
-        run: pm2 start src/main.ts
-        # with:
-        #     script: |
-        #       cd altirev_server
-        #       git pull https://zabilal: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@github.com/adujoseph/altirev_server.git;
-        #       git checkout feature/monolith
-        #       rm -rf node_modules package-lock.json
-        #       npm install
-        #       pm2 start src/main.ts
+        # run: pm2 start src/main.ts
+        with:
+            script: |
+              cd altirev_server
+              # git pull https://zabilal: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@github.com/adujoseph/altirev_server.git;
+              # git checkout feature/monolith
+              # rm -rf node_modules package-lock.json
+              # npm install
+              pm2 start src/main.ts
             
         # run: pm2 start dist/main.js — name altirev
       #   run: pm2 start npm --name altirev -- start
