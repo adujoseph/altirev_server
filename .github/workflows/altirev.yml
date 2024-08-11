@@ -35,12 +35,14 @@ jobs:
       - name: Stop current PM2 process by name
         run: pm2 stop altirev || true
 
+      - name: Change dir altirev
+        run: cd altirev_server
+
       - name: Start new PM2 process with name
-        # run: pm2 start src/main.ts
+       # run: pm2 start src/main.ts
         # with:
         #     script: |
-        run: cd altirev_server
-              pm2 start src/main.ts
+        run: pm2 start src/main.ts
               # git pull https://zabilal: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@github.com/adujoseph/altirev_server.git;
               # git checkout feature/monolith
               # rm -rf node_modules package-lock.json
