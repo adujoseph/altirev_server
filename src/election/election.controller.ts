@@ -10,7 +10,9 @@ import {
 } from '@nestjs/common';
 import { ElectionService } from './election.service';
 import { ElectionStatus } from './election.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Elections')
 @Controller('elections')
 export class ElectionController {
   constructor(private readonly electionService: ElectionService) {}
