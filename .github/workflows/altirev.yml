@@ -37,14 +37,15 @@ jobs:
 
       - name: Start new PM2 process with name
         # run: pm2 start src/main.ts
-        with:
-            script: |
-              cd altirev_server
+        # with:
+        #     script: |
+        run: cd altirev_server
+              pm2 start src/main.ts
               # git pull https://zabilal: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@github.com/adujoseph/altirev_server.git;
               # git checkout feature/monolith
               # rm -rf node_modules package-lock.json
               # npm install
-              pm2 start src/main.ts
+              # pm2 start src/main.ts
             
         # run: pm2 start dist/main.js — name altirev
       #   run: pm2 start npm --name altirev -- start
