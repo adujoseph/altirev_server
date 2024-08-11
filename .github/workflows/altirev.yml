@@ -33,7 +33,8 @@ jobs:
       #   run: npm run build
 
       - name: Stop current PM2 process by name
-        run: pm2 stop altirev || true
+        run: pm2 kill
+        # run: pm2 stop altirev || true
 
       - name: Copy env file to runner dir
         run: cp ~/altirev_server/.env ~/actions-runner-server/_work/altirev_server/altirev_server
