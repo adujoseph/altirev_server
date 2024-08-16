@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, MinLength } from 'class-validator';
 
-export class TokenDto {
+export class RegTokenDto {
   @ApiProperty({ example: 'name@email.com' })
   @IsNotEmpty()
   email: string;
 
-  @ApiProperty({ example: '123456' })
+  @ApiProperty({ example: '08123456789' })
   @IsNotEmpty()
-  @MinLength(6)
-  token: string;
+  @MinLength(11)
+  phone: string;
 }

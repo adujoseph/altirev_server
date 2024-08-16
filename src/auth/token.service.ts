@@ -13,26 +13,19 @@ export class TokenService {
 
   async createToken(createTokenDto: TokenDto) {
     const tokenEntity = new TokenEntity();
-    tokenEntity.userAltirevId = createTokenDto.userAltirevId;
+    tokenEntity.email = createTokenDto.email;
     tokenEntity.token = createTokenDto.token;
     return await this.TokenRepository.save(tokenEntity);
   }
 
-  async getTokenByUserAltirevId(userAltirevId: string): Promise<TokenEntity> {
-    const found = await this.TokenRepository.findOneBy({ userAltirevId });
-    if (!found) {
-      throw new NotFoundException(
-        `Token with ID ${userAltirevId} is not found`,
-      );
-    } else {
-      return found;
-    }
+  async getTokenByUserEmail(email: string): Promise<TokenEntity | null> {
+    return await this.TokenRepository.findOneBy({ email });
   }
 
-  async deleteNotificationById(altirevId: string): Promise<void> {
+  async deleteTokenByEmail(altirevId: string): Promise<void> {
     const result = await this.TokenRepository.delete(altirevId);
     if (result.affected === 0) {
-      throw new NotFoundException(`Token with ID ${altirevId} is not found`);
+      throw new NotFoundException(`Token is not found`);
     }
   }
 }

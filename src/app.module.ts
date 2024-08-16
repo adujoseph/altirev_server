@@ -24,6 +24,7 @@ import { NotificationModule } from './notification/notification.module';
 import { AdminModule } from './admin/admin.module';
 import { PaymentsModule } from './payments/payments.module';
 import { ContactModule } from './contact/contact.module';
+import { ResultsModule } from './results/results.module';
 
 const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
   useClass: TypeOrmConfigService,
@@ -39,7 +40,19 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
       load: [databaseConfig, authConfig, appConfig, mailConfig, fileConfig],
       envFilePath: ['.env'],
     }),
+
     infrastructureDatabaseModule,
+
+    // TypeOrmModule.forRoot({
+    //   type: 'mysql',
+    //   host: process.env.DATABASE_HOST,
+    //   port: Number(process.env.DATABASE_PORT),
+    //   username: process.env.DATABASE_USERNAME,
+    //   password: process.env.DATABASE_PASSWORD,
+    //   database: process.env.DATABASE_NAME,
+    //   entities: [__dirname + '/**/*.schema{.ts,.js}'],
+    //   synchronize: true,
+    // }),
     I18nModule.forRootAsync({
       useFactory: (configService: ConfigService<AllConfigType>) => ({
         fallbackLanguage: configService.getOrThrow('app.fallbackLanguage', {
@@ -74,6 +87,7 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
     AdminModule,
     PaymentsModule,
     ContactModule,
+    ResultsModule,
   ],
 })
 export class AppModule {}

@@ -215,4 +215,8 @@ export class UsersService {
   async remove(id: User['id']): Promise<void> {
     await this.usersRepository.remove(id);
   }
+
+  async findByPhone(phone: string): Promise<NullableType<User>> {
+    return this.usersRepository.findByPhone(phone);
+  }
 }

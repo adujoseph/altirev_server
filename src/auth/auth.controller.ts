@@ -26,6 +26,8 @@ import { User } from '../users/domain/user';
 import { RefreshResponseDto } from './dto/refresh-response.dto';
 import { RegisterResponseDto } from './dto/register-response.dto';
 import { TokenDto } from './dto/token.dto';
+import { RegTokenDto } from './dto/reg-token.dto';
+import { ApiResponseDto } from '../utils/dto/api-response.dto';
 
 @ApiTags('Auth')
 @Controller({
@@ -54,18 +56,36 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async register(
     @Body() createUserDto: AuthRegisterLoginDto,
-  ): Promise<RegisterResponseDto> {
+  ): Promise<LoginResponseDto> {
     return this.service.register(createUserDto);
   }
 
+  @Post('initiate')
+  @ApiOkResponse({
+    type: RegisterResponseDto,
+  })
+  @HttpCode(HttpStatus.OK)
+  async initiateOtp(@Body() tokenDto: RegTokenDto): Promise<any> {
+    return this.service.sendOtp(tokenDto);
+  }
+
+  @Post('resend-otp')
+  @ApiOkResponse({
+    type: RegisterResponseDto,
+  })
+  @HttpCode(HttpStatus.OK)
+  async resendOtp(@Body() tokenDto: RegTokenDto): Promise<any> {
+    return this.service.resendOtp(tokenDto);
+  }
+
   @Post('verifyOtp')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async verifyOtp(@Body() verifyOtpDto: TokenDto): Promise<void> {
+  @HttpCode(HttpStatus.OK)
+  async verifyOtp(@Body() verifyOtpDto: TokenDto): Promise<ApiResponseDto> {
     return this.service.verifyOtpToken(verifyOtpDto);
   }
 
   @Post('confirm')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   async confirmEmail(
     @Body() confirmEmailDto: AuthConfirmEmailDto,
   ): Promise<void> {
@@ -73,7 +93,7 @@ export class AuthController {
   }
 
   @Post('confirm-new')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   async confirmNewEmail(
     @Body() confirmEmailDto: AuthConfirmEmailDto,
   ): Promise<void> {
@@ -81,7 +101,7 @@ export class AuthController {
   }
 
   @Post('forgot-password')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   async forgotPassword(
     @Body() forgotPasswordDto: AuthForgotPasswordDto,
   ): Promise<void> {
@@ -89,7 +109,7 @@ export class AuthController {
   }
 
   @Post('reset-password')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   resetPassword(@Body() resetPasswordDto: AuthResetPasswordDto): Promise<void> {
     return this.service.resetPassword(
       resetPasswordDto.hash,
@@ -131,7 +151,7 @@ export class AuthController {
   @ApiBearerAuth()
   @Post('logout')
   @UseGuards(AuthGuard('jwt'))
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   public async logout(@Request() request): Promise<void> {
     await this.service.logout({
       sessionId: request.user.sessionId,
@@ -158,7 +178,7 @@ export class AuthController {
   @ApiBearerAuth()
   @Delete('me')
   @UseGuards(AuthGuard('jwt'))
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   public async delete(@Request() request): Promise<void> {
     return this.service.softDelete(request.user);
   }
