@@ -29,9 +29,10 @@ import { Session } from '../session/domain/session';
 import { SessionService } from '../session/session.service';
 import { StatusEnum } from '../statuses/statuses.enum';
 import { User } from '../users/domain/user';
-import { RegisterResponseDto } from './dto/register-response.dto';
 import { TokenDto } from './dto/token.dto';
 import { TokenService } from './token.service';
+import { RegTokenDto } from './dto/reg-token.dto';
+import { ApiResponseDto, ApiResponseType } from '../utils/dto/api-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -113,8 +114,8 @@ export class AuthService {
     };
   }
 
-  async register(dto: AuthRegisterLoginDto): Promise<RegisterResponseDto> {
-    const user = await this.usersService.create({
+  async register(dto: AuthRegisterLoginDto): Promise<LoginResponseDto> {
+    await this.usersService.create({
       ...dto,
       email: dto.email,
       role: {
@@ -164,18 +165,23 @@ export class AuthService {
 
     //save generated token
     const tokenData = new TokenDto();
-    tokenData.userAltirevId = user.altirevId;
+    tokenData.email = dto.email;
 
     //hash token for a save
-    const salt = await bcrypt.genSalt();
-    tokenData.token = await bcrypt.hash(otpToken, salt);
+    // const salt = await bcrypt.genSalt();
+    // tokenData.token = await bcrypt.hash(otpToken, salt);
+    tokenData.token = otpToken;
 
     const createdToken = await this.tokenService.createToken(tokenData);
     if (!createdToken) {
       throw new UnprocessableEntityException('Unable to save user token');
     }
 
-    return { userAltirevId: user.altirevId };
+    return await this.validateLogin({
+      email: dto.email,
+      password: dto.password,
+    });
+    // return { userAltirevId: user.altirevId };
   }
 
   private generateOTP() {
@@ -549,31 +555,128 @@ export class AuthService {
     };
   }
 
-  async verifyOtpToken(dto: TokenDto): Promise<void> {
-    const { userAltirevId, token } = dto;
-    // check if user exists
-    const user = await this.usersService.findByAltirevId(userAltirevId);
-    if (!user) {
-      throw new BadRequestException();
-    }
+  async verifyOtpToken(dto: TokenDto): Promise<ApiResponseDto> {
+    const { email, token } = dto;
 
-    // fetch the otp by user
-    const tokenEntity =
-      await this.tokenService.getTokenByUserAltirevId(userAltirevId);
-
-    //verify token
-    let isValidToken = false;
-    if (token != null && tokenEntity.token != null) {
-      isValidToken = await bcrypt.compare(token, tokenEntity.token);
-    }
-    if (!isValidToken) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          password: 'Token is Incorrect',
-        },
+    // fetch the otp by email
+    const tokenEntity = await this.tokenService.getTokenByUserEmail(email);
+    if (!tokenEntity) {
+      throw new BadRequestException({
+        status: ApiResponseType.ERROR,
+        message: 'No token found',
+        data: null,
       });
     }
-    return;
+
+    // isValidToken = await bcrypt.compare(token, tokenEntity.token);
+    const isValidToken = token == tokenEntity.token;
+    if (!isValidToken) {
+      throw new BadRequestException({
+        status: ApiResponseType.ERROR,
+        message: 'Token is Incorrect',
+        data: null,
+      });
+    }
+
+    //once verified, delete from db
+    await this.tokenService.deleteTokenByEmail(tokenEntity.altirevId);
+    return {
+      status: ApiResponseType.SUCCESS,
+      message: 'Token verified',
+      data: null,
+    };
+  }
+
+  async sendOtp(regDto: RegTokenDto) {
+    //check users if the email exists
+    const { email, phone } = regDto;
+
+    // check if user exists
+    const user = await this.usersService.findByEmail(email);
+    if (user) {
+      throw new BadRequestException('User with Email Exists');
+    }
+
+    //check if the token phone exists
+    const userByPhone = await this.usersService.findByPhone(phone);
+    if (userByPhone) {
+      throw new BadRequestException('User with Phone Number Exists');
+    }
+
+    const existingToken = await this.tokenService.getTokenByUserEmail(
+      regDto.email,
+    );
+    if (existingToken) {
+      const responseDto = await this.resendOtp(regDto);
+      if (responseDto.status == ApiResponseType.SUCCESS) {
+        return responseDto;
+      }
+    }
+
+    //generate token
+    const otpToken = this.generateOTP();
+
+    console.log('send TOKEN : ', otpToken);
+
+    //send token by email
+    await this.mailService.userSignUpVerifyOTP({
+      to: regDto.email,
+      data: {
+        otp: otpToken,
+      },
+    });
+
+    //save generated token
+    const tokenData = new TokenDto();
+    tokenData.email = regDto.email;
+
+    //encrypt token for a save
+    // tokenData.token = await encryptData(otpToken);
+    tokenData.token = otpToken;
+    // tokenData.token = bcrypt.encodeBase64(otpToken, 6);
+
+    console.log('send TOKEN : ', tokenData.token);
+
+    const createdToken = await this.tokenService.createToken(tokenData);
+    if (!createdToken) {
+      throw new UnprocessableEntityException('Unable to save user token');
+    }
+
+    const response = new ApiResponseDto();
+    response.status = ApiResponseType.SUCCESS;
+    response.message = 'Token Sent to your email';
+    return response;
+  }
+
+  async resendOtp(regDto: RegTokenDto): Promise<ApiResponseDto> {
+    //check users if the email exists
+    const { email } = regDto;
+    // check if token exists
+    const tokenEntity = await this.tokenService.getTokenByUserEmail(email);
+    if (!tokenEntity) {
+      return {
+        status: ApiResponseType.ERROR,
+        message: 'Token not found email',
+        data: null,
+      };
+    }
+
+    //generate token
+    // const otpToken = bcrypt.decodeBase64(tokenEntity.token, 6);
+    const otpToken = tokenEntity.token;
+    console.log('resend TOKEN : ', otpToken);
+
+    //send token by email
+    await this.mailService.userSignUpVerifyOTP({
+      to: regDto.email,
+      data: {
+        otp: otpToken,
+      },
+    });
+
+    const response = new ApiResponseDto();
+    response.status = ApiResponseType.SUCCESS;
+    response.message = 'Token Sent to your email';
+    return response;
   }
 }

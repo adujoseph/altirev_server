@@ -67,9 +67,7 @@ export class UsersRelationalRepository implements UserRepository {
 
   async findByEmail(email: User['email']): Promise<NullableType<User>> {
     if (!email) return null;
-
     const entity = await this.usersRepository.findOneBy({ email });
-
     return entity ? UserMapper.toDomain(entity) : null;
   }
 
@@ -124,5 +122,11 @@ export class UsersRelationalRepository implements UserRepository {
 
   async remove(id: User['id']): Promise<void> {
     await this.usersRepository.softDelete(id);
+  }
+
+  async findByPhone(phone: User['phoneNumber']): Promise<NullableType<User>> {
+    if (!phone) return null;
+    const entity = await this.usersRepository.findOneBy({ phoneNumber: phone });
+    return entity ? UserMapper.toDomain(entity) : null;
   }
 }
