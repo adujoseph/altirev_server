@@ -9,6 +9,7 @@ import { FilterUserDto, SortUserDto } from './dto/query-user.dto';
 import { UserRepository } from './persistence/user.repository';
 import { User } from './domain/user';
 import bcrypt from 'bcryptjs';
+import { v4 as uuidv4 } from 'uuid';
 import { AuthProvidersEnum } from '../auth/auth-providers.enum';
 import { FilesService } from '../files/files.service';
 import { RoleEnum } from '../roles/roles.enum';
@@ -26,8 +27,8 @@ export class UsersService {
   async create(createProfileDto: CreateUserDto): Promise<User> {
     const clonedPayload = {
       provider: AuthProvidersEnum.email,
-      altirevId: '',
-      otpSecret: '',
+      altirevId: uuidv4(),
+      tenantId: '',
       ...createProfileDto,
     };
 
@@ -44,26 +45,26 @@ export class UsersService {
         throw new UnprocessableEntityException({
           status: HttpStatus.UNPROCESSABLE_ENTITY,
           errors: {
-            email: 'emailAlreadyExists',
+            email: 'Account with Email Already Exist',
           },
         });
       }
     }
 
-    if (clonedPayload.photo?.id) {
-      const fileObject = await this.filesService.findById(
-        clonedPayload.photo.id,
-      );
-      if (!fileObject) {
-        throw new UnprocessableEntityException({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
-          errors: {
-            photo: 'imageNotExists',
-          },
-        });
-      }
-      clonedPayload.photo = fileObject;
-    }
+    // if (clonedPayload.photo?.id) {
+    //   const fileObject = await this.filesService.findById(
+    //     clonedPayload.photo.id,
+    //   );
+    //   if (!fileObject) {
+    //     throw new UnprocessableEntityException({
+    //       status: HttpStatus.UNPROCESSABLE_ENTITY,
+    //       errors: {
+    //         photo: 'imageNotExists',
+    //       },
+    //     });
+    //   }
+    //   clonedPayload.photo = fileObject;
+    // }
 
     if (clonedPayload.role?.id) {
       const roleObject = Object.values(RoleEnum)

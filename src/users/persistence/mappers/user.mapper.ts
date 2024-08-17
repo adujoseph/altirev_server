@@ -10,6 +10,7 @@ export class UserMapper {
     const domainEntity = new User();
     domainEntity.id = raw.id;
     domainEntity.altirevId = raw.altirevId;
+    domainEntity.tenantId = raw.tenantId;
     domainEntity.email = raw.email;
     domainEntity.password = raw.password;
     domainEntity.previousPassword = raw.previousPassword;
@@ -62,6 +63,7 @@ export class UserMapper {
     if (domainEntity.id && typeof domainEntity.id === 'number') {
       persistenceEntity.id = domainEntity.id;
     }
+    persistenceEntity.tenantId = domainEntity.tenantId;
     persistenceEntity.email = domainEntity.email;
     persistenceEntity.password = domainEntity.password;
     persistenceEntity.previousPassword = domainEntity.previousPassword;

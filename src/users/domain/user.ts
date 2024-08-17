@@ -15,6 +15,11 @@ export class User {
   @ApiProperty({
     type: String,
   })
+  tenantId: string;
+
+  @ApiProperty({
+    type: String,
+  })
   altirevId: string;
 
   @ApiProperty({

@@ -84,7 +84,7 @@ export class AuthService {
       throw new UnprocessableEntityException({
         status: HttpStatus.UNPROCESSABLE_ENTITY,
         errors: {
-          password: 'incorrectPassword',
+          password: 'Incorrect Email or Password',
         },
       });
     }
@@ -153,29 +153,29 @@ export class AuthService {
     // });
 
     //generate token
-    const otpToken = this.generateOTP();
+    // const otpToken = this.generateOTP();
 
     //send token by email
-    await this.mailService.userSignUpVerifyOTP({
-      to: dto.email,
-      data: {
-        otp: otpToken,
-      },
-    });
+    // await this.mailService.userSignUpVerifyOTP({
+    //   to: dto.email,
+    //   data: {
+    //     otp: otpToken,
+    //   },
+    // });
 
-    //save generated token
-    const tokenData = new TokenDto();
-    tokenData.email = dto.email;
+    // //save generated token
+    // const tokenData = new TokenDto();
+    // tokenData.email = dto.email;
 
     //hash token for a save
     // const salt = await bcrypt.genSalt();
     // tokenData.token = await bcrypt.hash(otpToken, salt);
-    tokenData.token = otpToken;
-
-    const createdToken = await this.tokenService.createToken(tokenData);
-    if (!createdToken) {
-      throw new UnprocessableEntityException('Unable to save user token');
-    }
+    // tokenData.token = otpToken;
+    //
+    // const createdToken = await this.tokenService.createToken(tokenData);
+    // if (!createdToken) {
+    //   throw new UnprocessableEntityException('Unable to save user token');
+    // }
 
     return await this.validateLogin({
       email: dto.email,
@@ -274,7 +274,7 @@ export class AuthService {
     await this.usersService.update(user.id, user);
   }
 
-  async forgotPassword(email: string): Promise<void> {
+  async forgotPassword(email: string): Promise<ApiResponseDto> {
     const user = await this.usersService.findByEmail(email);
 
     if (!user) {
@@ -311,9 +311,15 @@ export class AuthService {
         tokenExpires,
       },
     });
+
+    return {
+      status: ApiResponseType.SUCCESS,
+      message: 'A reset link has been sent to your email',
+      data: null,
+    };
   }
 
-  async resetPassword(hash: string, password: string): Promise<void> {
+  async resetPassword(hash: string, password: string): Promise<ApiResponseDto> {
     let userId: User['id'];
 
     try {
@@ -353,6 +359,12 @@ export class AuthService {
     });
 
     await this.usersService.update(user.id, user);
+
+    return {
+      status: ApiResponseType.SUCCESS,
+      message: 'Password reset successfully',
+      data: null,
+    };
   }
 
   async me(userJwtPayload: JwtPayloadType): Promise<NullableType<User>> {

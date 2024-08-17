@@ -44,6 +44,12 @@ export class UserEntity extends EntityRelationalHelper {
 
   @ApiProperty({
     type: String,
+  })
+  @Column({ type: String, unique: true, nullable: true })
+  tenantId: string;
+
+  @ApiProperty({
+    type: String,
     example: 'john.doe@example.com',
   })
   // For "string | null" we need to use String type.
