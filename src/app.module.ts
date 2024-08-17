@@ -50,7 +50,7 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
     //   username: process.env.DATABASE_USERNAME,
     //   password: process.env.DATABASE_PASSWORD,
     //   database: process.env.DATABASE_NAME,
-    //   entities: [__dirname + '/**/*.schema{.ts,.js}'],
+    //   // entities: [__dirname + '/**/*.schema{.ts,.js}'],
     //   synchronize: true,
     // }),
     I18nModule.forRootAsync({

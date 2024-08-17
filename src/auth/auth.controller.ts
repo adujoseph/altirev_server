@@ -104,13 +104,15 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async forgotPassword(
     @Body() forgotPasswordDto: AuthForgotPasswordDto,
-  ): Promise<void> {
+  ): Promise<ApiResponseDto> {
     return this.service.forgotPassword(forgotPasswordDto.email);
   }
 
   @Post('reset-password')
   @HttpCode(HttpStatus.OK)
-  resetPassword(@Body() resetPasswordDto: AuthResetPasswordDto): Promise<void> {
+  resetPassword(
+    @Body() resetPasswordDto: AuthResetPasswordDto,
+  ): Promise<ApiResponseDto> {
     return this.service.resetPassword(
       resetPasswordDto.hash,
       resetPasswordDto.password,
