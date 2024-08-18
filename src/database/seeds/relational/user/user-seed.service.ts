@@ -15,14 +15,16 @@ export class UserSeedService {
   ) {}
 
   async run() {
+    //if admin exist in db
     const countAdmin = await this.repository.count({
       where: {
         role: {
-          id: RoleEnum.admin,
+          id: RoleEnum.superadmin,
         },
       },
     });
 
+    //if non create one
     if (!countAdmin) {
       const salt = await bcrypt.genSalt();
       const password = await bcrypt.hash('secret', salt);
@@ -45,6 +47,7 @@ export class UserSeedService {
       );
     }
 
+    //check if any user exists in db
     const countUser = await this.repository.count({
       where: {
         role: {
@@ -53,6 +56,7 @@ export class UserSeedService {
       },
     });
 
+    //if non, create a default user in db
     if (!countUser) {
       const salt = await bcrypt.genSalt();
       const password = await bcrypt.hash('secret', salt);
@@ -65,7 +69,7 @@ export class UserSeedService {
           password,
           role: {
             id: RoleEnum.user,
-            name: 'Admin',
+            name: 'user',
           },
           status: {
             id: StatusEnum.active,

@@ -74,7 +74,7 @@ export class UsersService {
         throw new UnprocessableEntityException({
           status: HttpStatus.UNPROCESSABLE_ENTITY,
           errors: {
-            role: 'roleNotExists',
+            role: 'No such Role',
           },
         });
       }
@@ -88,7 +88,7 @@ export class UsersService {
         throw new UnprocessableEntityException({
           status: HttpStatus.UNPROCESSABLE_ENTITY,
           errors: {
-            status: 'statusNotExists',
+            status: 'Invalid Status',
           },
         });
       }
