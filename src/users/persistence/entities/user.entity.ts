@@ -4,7 +4,6 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -82,7 +81,7 @@ export class UserEntity extends EntityRelationalHelper {
     type: String,
     example: '1234567890',
   })
-  @Index()
+  // @Index()
   @Column({ type: String, nullable: true })
   @Expose({ groups: ['me', 'admin'] })
   socialId?: string | null;
@@ -91,7 +90,7 @@ export class UserEntity extends EntityRelationalHelper {
     type: String,
     example: 'John',
   })
-  @Index()
+  // @Index()
   @Column({ type: String, nullable: true })
   firstName: string | null;
 
@@ -99,7 +98,7 @@ export class UserEntity extends EntityRelationalHelper {
     type: String,
     example: 'Doe',
   })
-  @Index()
+  // @Index()
   @Column({ type: String, nullable: true })
   lastName: string | null;
 

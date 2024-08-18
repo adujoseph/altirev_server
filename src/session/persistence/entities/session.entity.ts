@@ -1,7 +1,6 @@
 import {
   CreateDateColumn,
   Entity,
-  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
   DeleteDateColumn,
@@ -22,7 +21,7 @@ export class SessionEntity extends EntityRelationalHelper {
   @ManyToOne(() => UserEntity, {
     eager: true,
   })
-  @Index()
+  // @Index()
   user: UserEntity;
 
   @Column()
