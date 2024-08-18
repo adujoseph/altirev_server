@@ -42,7 +42,7 @@ jobs:
       - name: Start new PM2 process with name
             
         # run: pm2 start dist/main.js — name altirev
-        run: RUNNER_TRACKING_ID="" && (nohup pm2 start npm --name altirev -- start&)
+        run: RUNNER_TRACKING_ID="" && (nohup pm2 restart npm --name altirev -- start&)
 
       - name: Save PM2 process list
         run: pm2 save
