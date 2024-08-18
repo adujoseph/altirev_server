@@ -2,8 +2,6 @@ import { RoleEntity } from '../../../roles/persistence/entities/role.entity';
 import { StatusEntity } from '../../../statuses/persistence/entities/status.entity';
 import { User } from '../../domain/user';
 import { UserEntity } from '../entities/user.entity';
-import { FileMapper } from '../../../files/persistence/mappers/file.mapper';
-import { FileEntity } from '../../../files/persistence/entities/file.entity';
 
 export class UserMapper {
   static toDomain(raw: UserEntity): User {
@@ -23,9 +21,9 @@ export class UserMapper {
     domainEntity.gender = raw.gender;
     domainEntity.state = raw.state;
     domainEntity.country = raw.country;
-    if (raw.photo) {
-      domainEntity.photo = FileMapper.toDomain(raw.photo);
-    }
+    // if (raw.photo) {
+    //   domainEntity.photo = FileMapper.toDomain(raw.photo);
+    // }
     domainEntity.role = raw.role;
     domainEntity.status = raw.status;
     domainEntity.createdAt = raw.createdAt;
@@ -42,15 +40,15 @@ export class UserMapper {
       role.id = Number(domainEntity.role.id);
     }
 
-    let photo: FileEntity | undefined | null = undefined;
+    // let photo: FileEntity | undefined | null = undefined;
 
-    if (domainEntity.photo) {
-      photo = new FileEntity();
-      photo.id = domainEntity.photo.id;
-      photo.path = domainEntity.photo.path;
-    } else if (domainEntity.photo === null) {
-      photo = null;
-    }
+    // if (domainEntity.photo) {
+    //   photo = new FileEntity();
+    //   photo.id = domainEntity.photo.id;
+    //   photo.path = domainEntity.photo.path;
+    // } else if (domainEntity.photo === null) {
+    //   photo = null;
+    // }
 
     let status: StatusEntity | undefined = undefined;
 
@@ -63,6 +61,7 @@ export class UserMapper {
     if (domainEntity.id && typeof domainEntity.id === 'number') {
       persistenceEntity.id = domainEntity.id;
     }
+    persistenceEntity.photo = domainEntity.photo;
     persistenceEntity.tenantId = domainEntity.tenantId;
     persistenceEntity.email = domainEntity.email;
     persistenceEntity.password = domainEntity.password;
@@ -76,7 +75,6 @@ export class UserMapper {
     persistenceEntity.gender = domainEntity.gender;
     persistenceEntity.state = domainEntity.state;
     persistenceEntity.country = domainEntity.country;
-    persistenceEntity.photo = photo;
     persistenceEntity.role = role;
     persistenceEntity.status = status;
     persistenceEntity.createdAt = domainEntity.createdAt;

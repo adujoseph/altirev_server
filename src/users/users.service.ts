@@ -167,10 +167,8 @@ export class UsersService {
       }
     }
 
-    if (clonedPayload.photo?.id) {
-      const fileObject = await this.filesService.findById(
-        clonedPayload.photo.id,
-      );
+    if (clonedPayload.photo) {
+      const fileObject = await this.filesService.findById(clonedPayload.photo);
       if (!fileObject) {
         throw new UnprocessableEntityException({
           status: HttpStatus.UNPROCESSABLE_ENTITY,
