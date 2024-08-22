@@ -7,8 +7,8 @@ export class SessionMapper {
   static toDomain(raw: SessionEntity): Session {
     const domainEntity = new Session();
     domainEntity.id = raw.id;
-    if (raw.user) {
-      domainEntity.user = UserMapper.toDomain(raw.user);
+    if (raw.userId) {
+      domainEntity.userId = raw.userId;
     }
     domainEntity.hash = raw.hash;
     domainEntity.createdAt = raw.createdAt;
@@ -18,15 +18,12 @@ export class SessionMapper {
   }
 
   static toPersistence(domainEntity: Session): SessionEntity {
-    const user = new UserEntity();
-    user.id = Number(domainEntity.user.id);
-
     const persistenceEntity = new SessionEntity();
     if (domainEntity.id && typeof domainEntity.id === 'number') {
       persistenceEntity.id = domainEntity.id;
     }
     persistenceEntity.hash = domainEntity.hash;
-    persistenceEntity.user = user;
+    persistenceEntity.userId = domainEntity.userId;
     persistenceEntity.createdAt = domainEntity.createdAt;
     persistenceEntity.updatedAt = domainEntity.updatedAt;
     persistenceEntity.deletedAt = domainEntity.deletedAt;

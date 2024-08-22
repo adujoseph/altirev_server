@@ -94,8 +94,9 @@ export class AuthService {
       .update(randomStringGenerator())
       .digest('hex');
 
+    const userId = user.id;
     const session = await this.sessionService.create({
-      user,
+      userId,
       hash,
     });
 
@@ -486,7 +487,7 @@ export class AuthService {
       .update(randomStringGenerator())
       .digest('hex');
 
-    const user = await this.usersService.findById(session.user.id);
+    const user = await this.usersService.findById(session.userId);
 
     if (!user?.role) {
       throw new UnauthorizedException();
@@ -497,7 +498,7 @@ export class AuthService {
     });
 
     const { token, refreshToken, tokenExpires } = await this.getTokensData({
-      id: session.user.id,
+      id: session.userId,
       role: {
         id: user.role.id,
       },
