@@ -18,11 +18,8 @@ export class SessionEntity extends EntityRelationalHelper {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => UserEntity, {
-    eager: true,
-  })
-  // @Index()
-  user: UserEntity;
+  @Column()
+  userId: number;
 
   @Column()
   hash: string;
