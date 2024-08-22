@@ -3,7 +3,6 @@ import { CreateUserDto } from './create-user.dto';
 
 import { Transform, Type } from 'class-transformer';
 import { IsEmail, IsOptional, MinLength } from 'class-validator';
-import { FileDto } from '../../files/dto/file.dto';
 import { RoleDto } from '../../roles/dto/role.dto';
 import { StatusDto } from '../../statuses/dto/status.dto';
 import { lowerCaseTransformer } from '../../utils/transformers/lower-case.transformer';
@@ -13,7 +12,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @Transform(lowerCaseTransformer)
   @IsOptional()
   @IsEmail()
-  email?: string | null;
+  email?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
@@ -22,7 +21,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
   provider?: string;
 
-  socialId?: string | null;
+  socialId?: string;
 
   @ApiPropertyOptional({ example: 'John', type: String })
   @IsOptional()
@@ -32,9 +31,9 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsOptional()
   lastName?: string | null;
 
-  @ApiPropertyOptional({ type: () => FileDto })
+  @ApiPropertyOptional({ type: () => String })
   @IsOptional()
-  photo?: FileDto | null;
+  photo?: string | null;
 
   @ApiPropertyOptional({ type: () => RoleDto })
   @IsOptional()

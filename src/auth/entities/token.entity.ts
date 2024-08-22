@@ -3,8 +3,8 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('otp_tokens')
 export class TokenEntity {
-  @PrimaryGeneratedColumn('uuid')
-  altirevId: string;
+  @PrimaryGeneratedColumn('increment')
+  id: number;
 
   @ApiProperty({
     type: String,

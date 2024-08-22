@@ -1,16 +1,14 @@
 import { Module } from '@nestjs/common';
-import databaseConfig from './database/config/database.config';
 import authConfig from './auth/config/auth.config';
 import appConfig from './config/app.config';
 import mailConfig from './mail/config/mail.config';
 import fileConfig from './files/config/file.config';
+import databaseConfig from './database/config/database.config';
 import path from 'path';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { I18nModule } from 'nestjs-i18n/dist/i18n.module';
 import { HeaderResolver } from 'nestjs-i18n';
-import { TypeOrmConfigService } from './database/typeorm-config.service';
-import { DataSource, DataSourceOptions } from 'typeorm';
 import { AllConfigType } from './config/config.type';
 //Modules
 import { UsersModule } from './users/users.module';
@@ -26,12 +24,12 @@ import { PaymentsModule } from './payments/payments.module';
 import { ContactModule } from './contact/contact.module';
 import { ResultsModule } from './results/results.module';
 
-const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
-  useClass: TypeOrmConfigService,
-  dataSourceFactory: async (options: DataSourceOptions) => {
-    return new DataSource(options).initialize();
-  },
-});
+// const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
+//   useClass: TypeOrmConfigService,
+//   dataSourceFactory: async (options: DataSourceOptions) => {
+//     return new DataSource(options).initialize();
+//   },
+// });
 
 @Module({
   imports: [
@@ -41,18 +39,20 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
       envFilePath: ['.env'],
     }),
 
-    infrastructureDatabaseModule,
+    // infrastructureDatabaseModule,
 
-    // TypeOrmModule.forRoot({
-    //   type: 'mysql',
-    //   host: process.env.DATABASE_HOST,
-    //   port: Number(process.env.DATABASE_PORT),
-    //   username: process.env.DATABASE_USERNAME,
-    //   password: process.env.DATABASE_PASSWORD,
-    //   database: process.env.DATABASE_NAME,
-    //   // entities: [__dirname + '/**/*.schema{.ts,.js}'],
-    //   synchronize: true,
-    // }),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: process.env.DATABASE_HOST,
+      port: Number(process.env.DATABASE_PORT),
+      username: process.env.DATABASE_USERNAME,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
+      // entities: [__dirname + '/**/*.schema{.ts,.js}'],
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE),
+    }),
+
     I18nModule.forRootAsync({
       useFactory: (configService: ConfigService<AllConfigType>) => ({
         fallbackLanguage: configService.getOrThrow('app.fallbackLanguage', {
@@ -76,6 +76,7 @@ const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
     }),
+
     UsersModule,
     FilesModule,
     AuthModule,

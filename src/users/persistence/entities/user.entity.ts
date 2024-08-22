@@ -4,11 +4,8 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  JoinColumn,
-  OneToOne,
   Generated,
 } from 'typeorm';
 import { RoleEntity } from '../../../roles/persistence/entities/role.entity';
@@ -22,7 +19,6 @@ import { EntityRelationalHelper } from '../../../utils/relational-entity-helper'
 // in your project and return an ORM entity directly in response.
 import { Exclude, Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { FileEntity } from '../../../files/persistence/entities/file.entity';
 
 @Entity({
   name: 'user',
@@ -38,13 +34,13 @@ export class UserEntity extends EntityRelationalHelper {
     type: String,
   })
   @Generated('uuid')
-  @Column({ type: String, unique: true, nullable: false })
+  @Column({ type: String, nullable: false })
   altirevId: string;
 
   @ApiProperty({
     type: String,
   })
-  @Column({ type: String, unique: true, nullable: true })
+  @Column({ type: String, nullable: true })
   tenantId: string;
 
   @ApiProperty({
@@ -55,7 +51,7 @@ export class UserEntity extends EntityRelationalHelper {
   // More info: https://github.com/typeorm/typeorm/issues/2567
   @Column({ type: String, unique: true, nullable: true })
   @Expose({ groups: ['me', 'admin'] })
-  email: string | null;
+  email: string;
 
   @Column({ nullable: true })
   @Exclude({ toPlainOnly: true })
@@ -81,7 +77,6 @@ export class UserEntity extends EntityRelationalHelper {
     type: String,
     example: '1234567890',
   })
-  // @Index()
   @Column({ type: String, nullable: true })
   @Expose({ groups: ['me', 'admin'] })
   socialId?: string | null;
@@ -90,7 +85,6 @@ export class UserEntity extends EntityRelationalHelper {
     type: String,
     example: 'John',
   })
-  // @Index()
   @Column({ type: String, nullable: true })
   firstName: string | null;
 
@@ -98,25 +92,20 @@ export class UserEntity extends EntityRelationalHelper {
     type: String,
     example: 'Doe',
   })
-  // @Index()
   @Column({ type: String, nullable: true })
   lastName: string | null;
 
   @ApiProperty({
-    type: () => FileEntity,
+    type: () => String,
   })
-  @OneToOne(() => FileEntity, {
-    eager: true,
-  })
-  @JoinColumn()
-  photo?: FileEntity | null;
+  photo?: string | null;
 
   @ApiProperty({
     type: () => RoleEntity,
   })
-  @ManyToOne(() => RoleEntity, {
-    eager: true,
-  })
+  // @ManyToOne(() => RoleEntity, {
+  //   eager: true,
+  // })
   role?: RoleEntity | null;
 
   @ApiProperty({
@@ -157,9 +146,9 @@ export class UserEntity extends EntityRelationalHelper {
   @ApiProperty({
     type: () => StatusEntity,
   })
-  @ManyToOne(() => StatusEntity, {
-    eager: true,
-  })
+  // @ManyToOne(() => StatusEntity, {
+  //   eager: true,
+  // })
   status?: StatusEntity;
 
   @ApiProperty()
