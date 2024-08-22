@@ -22,8 +22,8 @@ export class TokenService {
     return await this.TokenRepository.findOneBy({ email });
   }
 
-  async deleteTokenByEmail(altirevId: string): Promise<void> {
-    const result = await this.TokenRepository.delete(altirevId);
+  async deleteTokenByEmail(id: number): Promise<void> {
+    const result = await this.TokenRepository.delete(id);
     if (result.affected === 0) {
       throw new NotFoundException(`Token is not found`);
     }

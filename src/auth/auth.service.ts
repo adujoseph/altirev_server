@@ -591,7 +591,7 @@ export class AuthService {
     }
 
     //once verified, delete from db
-    await this.tokenService.deleteTokenByEmail(tokenEntity.altirevId);
+    await this.tokenService.deleteTokenByEmail(tokenEntity.id);
     return {
       status: ApiResponseType.SUCCESS,
       message: 'Token verified',
