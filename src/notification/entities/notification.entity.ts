@@ -7,9 +7,9 @@ import {
 } from 'typeorm';
 
 export enum NoteStatus {
-  PREVIOUS = 'previous',
-  ONGOING = 'ongoing',
-  UPCOMING = 'upcoming',
+  Active = 'active',
+  Inactive = 'inactive',
+  Draft = 'draft',
 }
 
 @Entity()
@@ -27,8 +27,8 @@ export class NotificationEntity {
   status: NoteStatus;
 
   // @ManyToOne(() => UserEntity, (user) => user.id)
-  @Column()
-  createdBy: number;
+  @Column({nullable: true})
+  createdBy: string;
 
   @CreateDateColumn()
   createdAt: Date;

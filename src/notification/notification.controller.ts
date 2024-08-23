@@ -24,7 +24,7 @@ export class NotificationController {
 
   @Get()
   findAll() {
-    return this.notificationService.getAllNotification;
+    return this.notificationService.getAllNotification();
   }
 
   @Get(':id')
@@ -37,7 +37,7 @@ export class NotificationController {
     @Param('id') id: string,
     @Body() updateNotificationDto: UpdateNotificationDto,
   ) {
-    return this.notificationService.updateNotificationStatus(
+    return this.notificationService.updateNotificationStatus(id,
       updateNotificationDto,
     );
   }
