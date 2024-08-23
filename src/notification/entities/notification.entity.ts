@@ -4,9 +4,10 @@ import {
   ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
-  PrimaryGeneratedColumn,
+  PrimaryGeneratedColumn, RelationId,
 } from 'typeorm';
 import { UserEntity } from '../../users/persistence/entities/user.entity';
+import { Index } from 'typeorm/browser';
 
 export enum NoteStatus {
   PREVIOUS = 'previous',
@@ -28,8 +29,9 @@ export class NotificationEntity {
   @Column()
   status: NoteStatus;
 
-  @ManyToOne(() => UserEntity, (user) => user.id)
-  createdBy: UserEntity;
+  // @ManyToOne(() => UserEntity, (user) => user.id)
+  @Column()
+  createdBy: number;
 
   @CreateDateColumn()
   createdAt: Date;
