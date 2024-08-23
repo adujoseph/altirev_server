@@ -1,10 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { AdminStatus, CreateAdminDto } from './dto/create-admin.dto';
+import { AdminStatus } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { AdminEntity } from './entities/admin.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-
 @Injectable()
 export class AdminService {
   constructor(
@@ -12,10 +11,10 @@ export class AdminService {
     private AdminRepsository: Repository<AdminEntity>,
   ) {}
 
-  async createAdminUser(createAdminDto: CreateAdminDto) {
-    const { username, password } = createAdminDto;
-    const new_user = { username, password };
-    await this.AdminRepsository.save(new_user);
+  async createAdminUser(createAdminDto: any) {
+    const { username, password, status } = createAdminDto;
+    const new_user = { username, password, status };
+    await this.AdminRepsository.save(createAdminDto);
     return new_user;
   }
 
@@ -24,7 +23,7 @@ export class AdminService {
     return admins;
   }
 
-  async getAdminUserById(id: number) {
+  async getAdminUserById(id: string) {
     const found = await this.AdminRepsository.findOneBy({ id });
     if (!found) {
       throw new NotFoundException(`Admin with ID ${id} is not found`);
@@ -33,14 +32,14 @@ export class AdminService {
     }
   }
 
-  async updateAdminDetails(id: number, updateAdminDto: UpdateAdminDto) {
+  async updateAdminDetails(id: string, updateAdminDto: UpdateAdminDto) {
     const found = await this.getAdminUserById(id);
     const updatedAdmin = { ...found, updateAdminDto };
     await this.AdminRepsository.save(updatedAdmin);
     return updatedAdmin;
   }
 
-  async suspendAdmin(id: number) {
+  async suspendAdmin(id: string) {
     const found = await this.getAdminUserById(id);
     found.status = AdminStatus.Inactive;
     await this.AdminRepsository.save(found);

@@ -11,6 +11,7 @@ import {
 import { ElectionService } from './election.service';
 import { ElectionStatus } from './election.entity';
 import { ApiTags } from '@nestjs/swagger';
+import { CreateElectionDto } from './dto/create-election.dto';
 
 @ApiTags('Elections')
 @Controller('elections')
@@ -18,7 +19,8 @@ export class ElectionController {
   constructor(private readonly electionService: ElectionService) {}
 
   @Post()
-  async createElection(@Body() createElectionDto: any) {
+  createElection(@Body() createElectionDto: CreateElectionDto) {
+    console.log('Aja one');
     return this.electionService.createElection(createElectionDto);
   }
 

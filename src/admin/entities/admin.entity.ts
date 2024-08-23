@@ -1,16 +1,22 @@
-import { IsNotEmpty } from 'class-validator';
 import { AdminStatus } from '../dto/create-admin.dto';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
+export enum AdminStatus_ {
+  PREVIOUS = 'previous',
+  ONGOING = 'ongoing',
+  UPCOMING = 'upcoming',
+}
+@Entity('Admin')
 export class AdminEntity {
-  @IsNotEmpty()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @IsNotEmpty()
+  @Column()
   username: string;
 
-  @IsNotEmpty()
+  @Column()
   password: string;
 
-  @IsNotEmpty()
-  status: AdminStatus;
+  @Column()
+  status: AdminStatus = AdminStatus.Active;
 }

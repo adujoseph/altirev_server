@@ -11,6 +11,7 @@ export class AdminController {
 
   @Post()
   createAdminUser(@Body() createAdminDto: CreateAdminDto) {
+    console.log('seeeee');
     return this.adminService.createAdminUser(createAdminDto);
   }
 

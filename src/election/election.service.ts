@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Election, ElectionStatus } from './election.entity';
+import { CreateElectionDto } from './dto/create-election.dto';
 
 @Injectable()
 export class ElectionService {
@@ -10,13 +11,12 @@ export class ElectionService {
     private electionRepository: Repository<Election>,
   ) {}
 
-  async;
-  createElection(electionData: any): Promise<Election> {
+  async createElection(electionData: CreateElectionDto): Promise<Election> {
     const election = new Election();
     election.name = electionData.name;
-    election.electionDate = electionData.electionDate;
+    // election.electionDate = electionData.electionDate;
     election.status = ElectionStatus.UPCOMING; // Assuming new elections are upcoming
-    election.createdBy = electionData.createdBy; // Assuming createdBy is provided
+    // election.createdBy = electionData.createdBy; // Assuming createdBy is provided
     return this.electionRepository.save(election);
   }
 
