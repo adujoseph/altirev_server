@@ -23,7 +23,6 @@ export class UserMapper {
     // if (raw.photo) {
     //   domainEntity.photo = FileMapper.toDomain(raw.photo);
     // }
-    domainEntity.role = raw.role;
     domainEntity.status = raw.status;
     domainEntity.createdAt = raw.createdAt;
     domainEntity.updatedAt = raw.updatedAt;

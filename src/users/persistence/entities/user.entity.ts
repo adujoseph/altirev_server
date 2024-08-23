@@ -120,6 +120,7 @@ export class UserEntity extends EntityRelationalHelper {
   @ApiProperty({
     enum: () => RolesEnum,
   })
+  @Column({ type: String, nullable: true })
   role: RolesEnum;
 
   @ApiProperty({
@@ -139,6 +140,7 @@ export class UserEntity extends EntityRelationalHelper {
   @ApiProperty({
     enum: ()=> Gender
   })
+  @Column({ type: String, nullable: true })
   gender: Gender;
 
   @ApiProperty({
@@ -158,6 +160,7 @@ export class UserEntity extends EntityRelationalHelper {
   @ApiProperty({
     enum: () => StatusEnum,
   })
+  @Column({ type: String, nullable: true })
   status: StatusEnum;
 
   @ApiProperty()
