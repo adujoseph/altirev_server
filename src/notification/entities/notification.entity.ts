@@ -1,13 +1,10 @@
 import {
   Column,
   Entity,
-  ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
-  PrimaryGeneratedColumn, RelationId,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
-import { UserEntity } from '../../users/persistence/entities/user.entity';
-import { Index } from 'typeorm/browser';
 
 export enum NoteStatus {
   PREVIOUS = 'previous',
