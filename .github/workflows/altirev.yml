@@ -45,8 +45,8 @@ jobs:
         run: RUNNER_TRACKING_ID="" && (nohup pm2 start npm --name altirev -- start&)
 
         # run migrations
-      - name: Run all Migrations
-        run: npm run migration:run
+#      - name: Run all Migrations
+#        run: npm run migration:run
 
       - name: Seeding all Data
         run: npm run seed:run:relational

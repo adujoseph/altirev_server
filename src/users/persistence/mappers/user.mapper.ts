@@ -17,6 +17,7 @@ export class UserMapper {
     domainEntity.firstName = raw.firstName;
     domainEntity.lastName = raw.lastName;
     domainEntity.username = raw.username;
+    domainEntity.role = raw.role;
     domainEntity.phoneNumber = raw.phoneNumber;
     domainEntity.gender = raw.gender;
     domainEntity.state = raw.state;
