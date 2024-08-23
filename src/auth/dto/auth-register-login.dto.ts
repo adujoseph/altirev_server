@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { lowerCaseTransformer } from '../../utils/transformers/lower-case.transformer';
+import { Gender } from '../../users/persistence/entities/user.entity';
 
 export class AuthRegisterLoginDto {
   @ApiProperty({ example: 'test1@example.com', type: String })
@@ -29,9 +30,9 @@ export class AuthRegisterLoginDto {
   @IsNotEmpty()
   phoneNumber: string;
 
-  @ApiProperty({ example: 'Male | Female' })
+  @ApiProperty({ enum: ()=> Gender})
   @IsNotEmpty()
-  gender: string;
+  gender: Gender;
 
   @ApiProperty({ example: 'Abuja' })
   @IsNotEmpty()

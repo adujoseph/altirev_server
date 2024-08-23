@@ -1,7 +1,6 @@
 import { Exclude, Expose } from 'class-transformer';
-import { Role } from '../../roles/domain/role';
-import { Status } from '../../statuses/domain/status';
 import { ApiProperty } from '@nestjs/swagger';
+import { Gender, RolesEnum, StatusEnum } from '../persistence/entities/user.entity';
 
 const idType = Number;
 
@@ -73,10 +72,9 @@ export class User {
   phoneNumber: string | null;
 
   @ApiProperty({
-    type: String,
-    example: 'male | female',
+    enum: ()=> Gender
   })
-  gender: string | null;
+  gender: Gender;
 
   @ApiProperty({
     type: String,
@@ -96,14 +94,14 @@ export class User {
   photo?: string | null;
 
   @ApiProperty({
-    type: () => Role,
+    enum: () => RolesEnum,
   })
-  role?: Role | null;
+  role: RolesEnum;
 
   @ApiProperty({
-    type: () => Status,
+    enum: () => StatusEnum,
   })
-  status?: Status;
+  status: StatusEnum;
 
   @ApiProperty()
   createdAt: Date;

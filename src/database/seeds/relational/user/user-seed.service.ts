@@ -3,9 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
 import bcrypt from 'bcryptjs';
-import { RoleEnum } from '../../../../roles/roles.enum';
-import { StatusEnum } from '../../../../statuses/statuses.enum';
-import { UserEntity } from '../../../../users/persistence/entities/user.entity';
+import { RolesEnum, StatusEnum, UserEntity } from '../../../../users/persistence/entities/user.entity';
 
 @Injectable()
 export class UserSeedService {
@@ -18,9 +16,7 @@ export class UserSeedService {
     //if admin exist in db
     const countAdmin = await this.repository.count({
       where: {
-        role: {
-          id: RoleEnum.superadmin,
-        },
+        role: RolesEnum.SUPERADMIN,
       },
     });
 
@@ -31,18 +27,12 @@ export class UserSeedService {
 
       await this.repository.save(
         this.repository.create({
-          firstName: 'Super',
-          lastName: 'Admin',
-          email: 'admin@example.com',
+          firstName: 'Watcher',
+          lastName: 'Overlord',
+          email: 'cybersys101@gmail.com',
           password,
-          role: {
-            id: RoleEnum.admin,
-            name: 'Admin',
-          },
-          status: {
-            id: StatusEnum.active,
-            name: 'Active',
-          },
+          role: RolesEnum.SUPERADMIN,
+          status: StatusEnum.ACTIVE
         }),
       );
     }
@@ -50,9 +40,7 @@ export class UserSeedService {
     //check if any user exists in db
     const countUser = await this.repository.count({
       where: {
-        role: {
-          id: RoleEnum.user,
-        },
+        role: RolesEnum.USER,
       },
     });
 
@@ -67,14 +55,8 @@ export class UserSeedService {
           lastName: 'Doe',
           email: 'john.doe@example.com',
           password,
-          role: {
-            id: RoleEnum.user,
-            name: 'user',
-          },
-          status: {
-            id: StatusEnum.active,
-            name: 'Active',
-          },
+          role: RolesEnum.USER,
+          status: StatusEnum.ACTIVE
         }),
       );
     }

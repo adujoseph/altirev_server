@@ -14,7 +14,9 @@ export class CreateAdminDto {
   @IsNotEmpty()
   password: string;
 
-  @ApiProperty()
-  @IsEnum(AdminStatus)
-  status: string;
+  @ApiProperty({
+    enum: () => AdminStatus
+  })
+  // @IsEnum(AdminStatus)/
+  status: AdminStatus;
 }

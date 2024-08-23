@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpStatus,
   Injectable,
   UnprocessableEntityException,
@@ -12,10 +13,9 @@ import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import { AuthProvidersEnum } from '../auth/auth-providers.enum';
 import { FilesService } from '../files/files.service';
-import { RoleEnum } from '../roles/roles.enum';
-import { StatusEnum } from '../statuses/statuses.enum';
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { DeepPartial } from '../utils/types/deep-partial.type';
+import { RolesEnum, StatusEnum } from './persistence/entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -66,24 +66,26 @@ export class UsersService {
     //   clonedPayload.photo = fileObject;
     // }
 
-    if (clonedPayload.role?.id) {
-      const roleObject = Object.values(RoleEnum)
+    if (clonedPayload.role) {
+      const roleObject = Object.values(RolesEnum)
         .map(String)
-        .includes(String(clonedPayload.role.id));
+        .includes(String(clonedPayload.role));
       if (!roleObject) {
-        throw new UnprocessableEntityException({
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
+        throw new BadRequestException({
+          status: HttpStatus.BAD_REQUEST,
           errors: {
             role: 'No such Role',
           },
         });
       }
+    }else {
+      clonedPayload.role = RolesEnum.USER
     }
 
-    if (clonedPayload.status?.id) {
+    if (clonedPayload.status) {
       const statusObject = Object.values(StatusEnum)
         .map(String)
-        .includes(String(clonedPayload.status.id));
+        .includes(String(clonedPayload.status));
       if (!statusObject) {
         throw new UnprocessableEntityException({
           status: HttpStatus.UNPROCESSABLE_ENTITY,
@@ -92,6 +94,8 @@ export class UsersService {
           },
         });
       }
+    }else {
+      clonedPayload.status = StatusEnum.ACTIVE;
     }
 
     return this.usersRepository.create(clonedPayload);
@@ -180,10 +184,10 @@ export class UsersService {
       clonedPayload.photo = fileObject;
     }
 
-    if (clonedPayload.role?.id) {
-      const roleObject = Object.values(RoleEnum)
+    if (clonedPayload.role) {
+      const roleObject = Object.values(RolesEnum)
         .map(String)
-        .includes(String(clonedPayload.role.id));
+        .includes(String(clonedPayload.role));
       if (!roleObject) {
         throw new UnprocessableEntityException({
           status: HttpStatus.UNPROCESSABLE_ENTITY,
@@ -194,10 +198,10 @@ export class UsersService {
       }
     }
 
-    if (clonedPayload.status?.id) {
+    if (clonedPayload.status) {
       const statusObject = Object.values(StatusEnum)
         .map(String)
-        .includes(String(clonedPayload.status.id));
+        .includes(String(clonedPayload.status));
       if (!statusObject) {
         throw new UnprocessableEntityException({
           status: HttpStatus.UNPROCESSABLE_ENTITY,
