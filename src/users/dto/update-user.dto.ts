@@ -3,9 +3,8 @@ import { CreateUserDto } from './create-user.dto';
 
 import { Transform, Type } from 'class-transformer';
 import { IsEmail, IsOptional, MinLength } from 'class-validator';
-import { RoleDto } from '../../roles/dto/role.dto';
-import { StatusDto } from '../../statuses/dto/status.dto';
 import { lowerCaseTransformer } from '../../utils/transformers/lower-case.transformer';
+import { RolesEnum, StatusEnum } from '../persistence/entities/user.entity';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
   @ApiPropertyOptional({ example: 'test1@example.com', type: String })
@@ -35,15 +34,13 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsOptional()
   photo?: string | null;
 
-  @ApiPropertyOptional({ type: () => RoleDto })
+  @ApiPropertyOptional({ enum: () => RolesEnum })
   @IsOptional()
-  @Type(() => RoleDto)
-  role?: RoleDto | null;
+  role: RolesEnum;
 
-  @ApiPropertyOptional({ type: () => StatusDto })
+  @ApiPropertyOptional({ enum: () => StatusEnum })
   @IsOptional()
-  @Type(() => StatusDto)
-  status?: StatusDto;
+  status?: StatusEnum;
 
   hash?: string | null;
 }

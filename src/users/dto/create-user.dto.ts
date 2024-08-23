@@ -7,9 +7,8 @@ import {
   IsOptional,
   MinLength,
 } from 'class-validator';
-import { RoleDto } from '../../roles/dto/role.dto';
-import { StatusDto } from '../../statuses/dto/status.dto';
 import { lowerCaseTransformer } from '../../utils/transformers/lower-case.transformer';
+import { Gender, RolesEnum, StatusEnum } from '../persistence/entities/user.entity';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'test1@example.com', type: String })
@@ -42,9 +41,9 @@ export class CreateUserDto {
   @IsNotEmpty()
   phoneNumber: string | null;
 
-  @ApiProperty({ example: 'Male | Female', type: String })
+  @ApiProperty({ enum: ()=> Gender })
   @IsNotEmpty()
-  gender: string | null;
+  gender: Gender;
 
   @ApiProperty({ example: 'Abuja', type: String })
   @IsNotEmpty()
@@ -58,15 +57,13 @@ export class CreateUserDto {
   @IsOptional()
   photo?: string | null;
 
-  @ApiPropertyOptional({ type: RoleDto })
+  @ApiPropertyOptional({ enum: RolesEnum })
   @IsOptional()
-  @Type(() => RoleDto)
-  role?: RoleDto | null;
+  role: RolesEnum;
 
-  @ApiPropertyOptional({ type: StatusDto })
+  @ApiPropertyOptional({ enum: StatusEnum })
   @IsOptional()
-  @Type(() => StatusDto)
-  status?: StatusDto;
+  status: StatusEnum;
 
   hash?: string | null;
 }

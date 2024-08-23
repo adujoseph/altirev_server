@@ -8,8 +8,6 @@ import {
   UpdateDateColumn,
   Generated,
 } from 'typeorm';
-import { RoleEntity } from '../../../roles/persistence/entities/role.entity';
-import { StatusEntity } from '../../../statuses/persistence/entities/status.entity';
 
 import { AuthProvidersEnum } from '../../../auth/auth-providers.enum';
 import { EntityRelationalHelper } from '../../../utils/relational-entity-helper';
@@ -19,6 +17,25 @@ import { EntityRelationalHelper } from '../../../utils/relational-entity-helper'
 // in your project and return an ORM entity directly in response.
 import { Exclude, Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+
+export enum StatusEnum {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+}
+
+export enum Gender {
+  MALE = 'male',
+  FEMALE = 'female',
+}
+
+export enum RolesEnum {
+  SUPERADMIN = 'superadmin',
+  ADMIN = 'admin',
+  MODERATOR = 'moderator',
+  COMMS = 'comms',
+  AGENT = 'agent',
+  USER = 'user',
+}
 
 @Entity({
   name: 'user',
@@ -101,12 +118,9 @@ export class UserEntity extends EntityRelationalHelper {
   photo?: string | null;
 
   @ApiProperty({
-    type: () => RoleEntity,
+    enum: () => RolesEnum,
   })
-  // @ManyToOne(() => RoleEntity, {
-  //   eager: true,
-  // })
-  role?: RoleEntity | null;
+  role: RolesEnum;
 
   @ApiProperty({
     type: String,
@@ -123,11 +137,9 @@ export class UserEntity extends EntityRelationalHelper {
   phoneNumber: string | null;
 
   @ApiProperty({
-    type: String,
-    example: 'male | female',
+    enum: ()=> Gender
   })
-  @Column({ type: String, nullable: true })
-  gender: string | null;
+  gender: Gender;
 
   @ApiProperty({
     type: String,
@@ -144,12 +156,9 @@ export class UserEntity extends EntityRelationalHelper {
   country: string | null;
 
   @ApiProperty({
-    type: () => StatusEntity,
+    enum: () => StatusEnum,
   })
-  // @ManyToOne(() => StatusEntity, {
-  //   eager: true,
-  // })
-  status?: StatusEntity;
+  status: StatusEnum;
 
   @ApiProperty()
   @CreateDateColumn()

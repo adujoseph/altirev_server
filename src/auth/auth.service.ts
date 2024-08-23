@@ -24,15 +24,14 @@ import { JwtPayloadType } from './strategies/types/jwt-payload.type';
 import { UsersService } from '../users/users.service';
 import { AllConfigType } from '../config/config.type';
 import { MailService } from '../mail/mail.service';
-import { RoleEnum } from '../roles/roles.enum';
 import { Session } from '../session/domain/session';
 import { SessionService } from '../session/session.service';
-import { StatusEnum } from '../statuses/statuses.enum';
 import { User } from '../users/domain/user';
 import { TokenDto } from './dto/token.dto';
 import { TokenService } from './token.service';
 import { RegTokenDto } from './dto/reg-token.dto';
 import { ApiResponseDto, ApiResponseType } from '../utils/dto/api-response.dto';
+import { RolesEnum, StatusEnum } from '../users/persistence/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -117,19 +116,16 @@ export class AuthService {
 
   async register(dto: AuthRegisterLoginDto): Promise<LoginResponseDto> {
     await this.usersService.create({
-      ...dto,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
       email: dto.email,
-      role: {
-        id: RoleEnum.user,
-      },
-      status: {
-        id: StatusEnum.inactive,
-      },
+      role: RolesEnum.USER,
+      status: StatusEnum.ACTIVE,
       username: dto.username,
       phoneNumber: dto.phoneNumber,
       gender: dto.gender,
       state: dto.state,
-      country: dto.country,
+      country: dto.country
     });
 
     // const hash = await this.jwtService.signAsync(
@@ -218,7 +214,7 @@ export class AuthService {
 
     if (
       !user ||
-      user?.status?.id?.toString() !== StatusEnum.inactive.toString()
+      user?.status?.toString() !== StatusEnum.INACTIVE.toString()
     ) {
       throw new NotFoundException({
         status: HttpStatus.NOT_FOUND,
@@ -226,9 +222,7 @@ export class AuthService {
       });
     }
 
-    user.status = {
-      id: StatusEnum.active,
-    };
+    user.status = StatusEnum.ACTIVE
 
     await this.usersService.update(user.id, user);
   }
@@ -268,9 +262,7 @@ export class AuthService {
     }
 
     user.email = newEmail;
-    user.status = {
-      id: StatusEnum.active,
-    };
+    user.status = StatusEnum.ACTIVE
 
     await this.usersService.update(user.id, user);
   }
@@ -499,9 +491,7 @@ export class AuthService {
 
     const { token, refreshToken, tokenExpires } = await this.getTokensData({
       id: session.userId,
-      role: {
-        id: user.role.id,
-      },
+      role: user.role,
       sessionId: session.id,
       hash,
     });

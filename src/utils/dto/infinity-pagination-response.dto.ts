@@ -8,7 +8,7 @@ export class InfinityPaginationResponseDto<T> {
 
 export function InfinityPaginationResponse<T>(classReference: Type<T>) {
   abstract class Pagination {
-    @ApiProperty({ type: [classReference] })
+    @ApiProperty({ type: ()=> classReference })
     data!: T[];
 
     @ApiProperty({

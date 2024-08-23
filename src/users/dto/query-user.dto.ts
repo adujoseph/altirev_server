@@ -7,14 +7,13 @@ import {
 } from 'class-validator';
 import { Transform, Type, plainToInstance } from 'class-transformer';
 import { User } from '../domain/user';
-import { RoleDto } from '../../roles/dto/role.dto';
+import { RolesEnum } from '../persistence/entities/user.entity';
 
 export class FilterUserDto {
-  @ApiPropertyOptional({ type: RoleDto })
+  @ApiPropertyOptional({ enum: RolesEnum })
   @IsOptional()
   @ValidateNested({ each: true })
-  @Type(() => RoleDto)
-  roles?: RoleDto[] | null;
+  roles?: RolesEnum[] | null;
 }
 
 export class SortUserDto {
