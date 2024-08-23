@@ -48,8 +48,8 @@ jobs:
 #      - name: Run all Migrations
 #        run: npm run migration:run
 
-      - name: Seeding all Data
-        run: npm run seed:run:relational
+#      - name: Seeding all Data
+#        run: npm run seed:run:relational
 
       - name: Save PM2 process list
         run: pm2 save
