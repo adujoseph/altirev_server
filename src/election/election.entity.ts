@@ -2,13 +2,11 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
 import { UserEntity } from '../users/persistence/entities/user.entity';
-import { ApiProperty } from '@nestjs/swagger';
-// Assuming User entity exists
 
 export enum ElectionStatus {
   PREVIOUS = 'previous',
@@ -16,25 +14,24 @@ export enum ElectionStatus {
   UPCOMING = 'upcoming',
 }
 
-@Entity()
+@Entity('Elections')
 export class Election {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column()
-  @ApiProperty()
   name: string;
 
-  @Column({ type: 'enum', enum: ElectionStatus })
-  @ApiProperty()
+  @Column({nullable: true})
+  description: string;
+
+  @Column({ type: 'enum', enum: ElectionStatus , default: ElectionStatus.UPCOMING})
   status: ElectionStatus;
 
-  @Column({ type: 'date' })
-  @ApiProperty()
+  @Column({ type: 'datetime'})
   electionDate: Date;
 
   @ManyToOne(() => UserEntity, (user) => user.id)
-  @ApiProperty()
   createdBy: UserEntity;
 
   @CreateDateColumn()

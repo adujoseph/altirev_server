@@ -23,6 +23,7 @@ import { AdminModule } from './admin/admin.module';
 import { PaymentsModule } from './payments/payments.module';
 import { ContactModule } from './contact/contact.module';
 import { ResultsModule } from './results/results.module';
+import { ElectionModule } from './election/election.module';
 
 // const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
 //   useClass: TypeOrmConfigService,
@@ -83,7 +84,7 @@ import { ResultsModule } from './results/results.module';
     SessionModule,
     MailModule,
     MailerModule,
-    // ElectionModule,
+    ElectionModule,
     NotificationModule,
     AdminModule,
     PaymentsModule,

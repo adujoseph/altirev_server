@@ -22,7 +22,7 @@ export class AdminController {
 
   @Get(':id')
   getAdminUserById(@Param('id') id: string) {
-    return this.adminService.getAdminUserById(+id);
+    return this.adminService.getAdminUserById(id);
   }
 
   @Patch(':id')
@@ -30,11 +30,11 @@ export class AdminController {
     @Param('id') id: string,
     @Body() updateAdminDto: UpdateAdminDto,
   ) {
-    return this.adminService.updateAdminDetails(+id, updateAdminDto);
+    return this.adminService.updateAdminDetails(id, updateAdminDto);
   }
 
   @Post(':id')
   suspendAdminUser(@Param('id') id: string) {
-    return this.adminService.suspendAdmin(+id);
+    return this.adminService.suspendAdmin(id);
   }
 }

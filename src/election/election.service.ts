@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Election, ElectionStatus } from './election.entity';
 import { CreateElectionDto } from './dto/create-election.dto';
+import { UpdateElectionDto } from './dto/update-election.dto';
 
 @Injectable()
 export class ElectionService {
@@ -11,27 +12,24 @@ export class ElectionService {
     private electionRepository: Repository<Election>,
   ) {}
 
-  async createElection(electionData: CreateElectionDto): Promise<Election> {
-    const election = new Election();
-    election.name = electionData.name;
-    // election.electionDate = electionData.electionDate;
-    election.status = ElectionStatus.UPCOMING; // Assuming new elections are upcoming
-    // election.createdBy = electionData.createdBy; // Assuming createdBy is provided
-    return this.electionRepository.save(election);
+  async createElection(electionDto: CreateElectionDto): Promise<Election> {
+    console.log({electionDto})
+    const electionData = await this.electionRepository.save(electionDto)
+    return electionData;
   }
 
   async findAll(status: ElectionStatus): Promise<Election[]> {
-    return this.electionRepository.find({ where: { status } });
+    return await this.electionRepository.find({ where: { status } });
   }
 
-  async findOne(id: number): Promise<Election | undefined | null> {
-    return this.electionRepository.findOneBy({ id });
+  async findOne(id: string): Promise<Election | null> {
+    return await this.electionRepository.findOneBy({id})
   }
 
   async updateElection(
-    id: number,
-    electionData: any,
-  ): Promise<Election | undefined> {
+    id: string,
+    electionData: UpdateElectionDto,
+  ): Promise<Election | {}> {
     const election = await this.electionRepository.findOneBy({ id });
     if (election) {
       election.name = electionData.name || election.name;
@@ -40,10 +38,14 @@ export class ElectionService {
       election.status = electionData.status || election.status;
       return this.electionRepository.save(election);
     }
-    return undefined;
+
+    let errorObject = {
+      message: `No election with id ${id} exist`
+    }
+    return errorObject;
   }
 
-  async deleteElection(id: number): Promise<void> {
+  async deleteElection(id: string): Promise<void> {
     await this.electionRepository.delete(id);
   }
 }
