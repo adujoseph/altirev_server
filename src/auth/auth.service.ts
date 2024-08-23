@@ -119,6 +119,7 @@ export class AuthService {
       firstName: dto.firstName,
       lastName: dto.lastName,
       email: dto.email,
+      password: dto.password,
       role: RolesEnum.USER,
       status: StatusEnum.ACTIVE,
       username: dto.username,
