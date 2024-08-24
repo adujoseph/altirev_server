@@ -10,9 +10,7 @@ export class ReportsController {
 
     @Post()
     create(@Body() createReportsDto: CreateReportDto, @UploadedFile() file: any){
-
         if(!file) throw new ForbiddenException('Upload your report evidence')
-        
         return this.reportsService.create(createReportsDto)
     }
 
