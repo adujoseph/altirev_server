@@ -24,6 +24,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { ContactModule } from './contact/contact.module';
 import { ResultsModule } from './results/results.module';
 import { ElectionModule } from './election/election.module';
+import { ReportsModule } from './reports/reports.module';
 
 // const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
 //   useClass: TypeOrmConfigService,
@@ -90,6 +91,7 @@ import { ElectionModule } from './election/election.module';
     PaymentsModule,
     ContactModule,
     ResultsModule,
+    ReportsModule,
   ],
 })
 export class AppModule {}
