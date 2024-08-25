@@ -22,13 +22,17 @@ export class Election {
   @Column()
   name: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   description: string;
 
-  @Column({ type: 'enum', enum: ElectionStatus , default: ElectionStatus.UPCOMING})
+  @Column({
+    type: 'enum',
+    enum: ElectionStatus,
+    default: ElectionStatus.UPCOMING,
+  })
   status: ElectionStatus;
 
-  @Column({ type: 'datetime'})
+  @Column({ type: 'datetime' })
   electionDate: Date;
 
   @ManyToOne(() => UserEntity, (user) => user.id)

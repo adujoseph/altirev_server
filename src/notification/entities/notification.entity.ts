@@ -27,7 +27,7 @@ export class NotificationEntity {
   status: NoteStatus;
 
   // @ManyToOne(() => UserEntity, (user) => user.id)
-  @Column({nullable: true})
+  @Column({ nullable: true })
   createdBy: string;
 
   @CreateDateColumn()

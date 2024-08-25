@@ -13,7 +13,9 @@ export class NotificationService {
   ) {}
 
   async createNotification(createNotificationDto: CreateNotificationDto) {
-    const newTask = await this.NotificationRepsository.save(createNotificationDto);
+    const newTask = await this.NotificationRepsository.save(
+      createNotificationDto,
+    );
     return newTask;
   }
 
@@ -38,13 +40,15 @@ export class NotificationService {
     }
   }
 
-  async updateNotificationStatus(id:string, updateNotificationDto: UpdateNotificationDto) {
+  async updateNotificationStatus(
+    id: string,
+    updateNotificationDto: UpdateNotificationDto,
+  ) {
     const task = await this.getNotificationById(id);
-    if(task)  {
+    if (task) {
       await this.NotificationRepsository.save(updateNotificationDto);
       return task;
-    } 
+    }
     throw new NotFoundException(`Notification with ID ${id} is not found`);
-    
   }
 }

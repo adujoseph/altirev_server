@@ -25,7 +25,7 @@ export class FileEntity extends EntityRelationalHelper {
     type: String,
     example: 'https://example.com/path/to/file.jpg',
   })
-  @Column()
+  @Column({ type: String, nullable: true })
   @Transform(
     ({ value }) => {
       if ((fileConfig() as FileConfig).driver === FileDriver.LOCAL) {

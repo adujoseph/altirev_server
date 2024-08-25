@@ -31,7 +31,7 @@ export class UserMapper {
   }
 
   static toPersistence(domainEntity: User): UserEntity {
-     // let photo: FileEntity | undefined | null = undefined;
+    // let photo: FileEntity | undefined | null = undefined;
 
     // if (domainEntity.photo) {
     //   photo = new FileEntity();

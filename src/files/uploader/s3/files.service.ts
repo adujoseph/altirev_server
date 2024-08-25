@@ -12,14 +12,14 @@ export class FilesS3Service {
 
   async create(file: Express.MulterS3.File): Promise<{ file: FileType }> {
     if (!file) {
+      console.log('Error in file upload');
       throw new UnprocessableEntityException({
         status: HttpStatus.UNPROCESSABLE_ENTITY,
         errors: {
-          file: 'selectFile',
+          file: 'select File',
         },
       });
     }
-
     return {
       file: await this.fileRepository.create({
         path: file.key,

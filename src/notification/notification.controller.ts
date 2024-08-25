@@ -37,7 +37,8 @@ export class NotificationController {
     @Param('id') id: string,
     @Body() updateNotificationDto: UpdateNotificationDto,
   ) {
-    return this.notificationService.updateNotificationStatus(id,
+    return this.notificationService.updateNotificationStatus(
+      id,
       updateNotificationDto,
     );
   }

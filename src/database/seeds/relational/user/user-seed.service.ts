@@ -3,7 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
 import bcrypt from 'bcryptjs';
-import { RolesEnum, StatusEnum, UserEntity } from '../../../../users/persistence/entities/user.entity';
+import {
+  RolesEnum,
+  StatusEnum,
+  UserEntity,
+} from '../../../../users/persistence/entities/user.entity';
 
 @Injectable()
 export class UserSeedService {
@@ -32,7 +36,7 @@ export class UserSeedService {
           email: 'cybersys101@gmail.com',
           password,
           role: RolesEnum.SUPERADMIN,
-          status: StatusEnum.ACTIVE
+          status: StatusEnum.ACTIVE,
         }),
       );
     }
@@ -56,7 +60,7 @@ export class UserSeedService {
           email: 'john.doe@example.com',
           password,
           role: RolesEnum.USER,
-          status: StatusEnum.ACTIVE
+          status: StatusEnum.ACTIVE,
         }),
       );
     }

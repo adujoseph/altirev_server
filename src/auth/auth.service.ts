@@ -31,7 +31,10 @@ import { TokenDto } from './dto/token.dto';
 import { TokenService } from './token.service';
 import { RegTokenDto } from './dto/reg-token.dto';
 import { ApiResponseDto, ApiResponseType } from '../utils/dto/api-response.dto';
-import { RolesEnum, StatusEnum } from '../users/persistence/entities/user.entity';
+import {
+  RolesEnum,
+  StatusEnum,
+} from '../users/persistence/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -126,7 +129,7 @@ export class AuthService {
       phoneNumber: dto.phoneNumber,
       gender: dto.gender,
       state: dto.state,
-      country: dto.country
+      country: dto.country,
     });
 
     // const hash = await this.jwtService.signAsync(
@@ -213,17 +216,14 @@ export class AuthService {
 
     const user = await this.usersService.findById(userId);
 
-    if (
-      !user ||
-      user?.status?.toString() !== StatusEnum.INACTIVE.toString()
-    ) {
+    if (!user || user?.status?.toString() !== StatusEnum.INACTIVE.toString()) {
       throw new NotFoundException({
         status: HttpStatus.NOT_FOUND,
         error: `notFound`,
       });
     }
 
-    user.status = StatusEnum.ACTIVE
+    user.status = StatusEnum.ACTIVE;
 
     await this.usersService.update(user.id, user);
   }
@@ -263,7 +263,7 @@ export class AuthService {
     }
 
     user.email = newEmail;
-    user.status = StatusEnum.ACTIVE
+    user.status = StatusEnum.ACTIVE;
 
     await this.usersService.update(user.id, user);
   }

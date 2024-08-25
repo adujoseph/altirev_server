@@ -38,7 +38,7 @@ export class UsersRelationalRepository implements UserRepository {
     if (filterOptions?.roles?.length) {
       // @ts-ignore
       where.role = filterOptions.roles.map((role) => ({
-        role: role.valueOf()
+        role: role.valueOf(),
       }));
     }
 

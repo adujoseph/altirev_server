@@ -78,8 +78,8 @@ export class UsersService {
           },
         });
       }
-    }else {
-      clonedPayload.role = RolesEnum.USER
+    } else {
+      clonedPayload.role = RolesEnum.USER;
     }
 
     if (clonedPayload.status) {
@@ -94,7 +94,7 @@ export class UsersService {
           },
         });
       }
-    }else {
+    } else {
       clonedPayload.status = StatusEnum.ACTIVE;
     }
 

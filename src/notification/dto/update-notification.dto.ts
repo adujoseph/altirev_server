@@ -3,7 +3,6 @@ import { NoteStatus } from '../entities/notification.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateNotificationDto {
-
   @ApiProperty()
   @IsNotEmpty()
   @IsOptional()

@@ -8,7 +8,11 @@ import {
   MinLength,
 } from 'class-validator';
 import { lowerCaseTransformer } from '../../utils/transformers/lower-case.transformer';
-import { Gender, RolesEnum, StatusEnum } from '../persistence/entities/user.entity';
+import {
+  Gender,
+  RolesEnum,
+  StatusEnum,
+} from '../persistence/entities/user.entity';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'test1@example.com', type: String })
@@ -41,7 +45,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   phoneNumber: string | null;
 
-  @ApiProperty({ enum: ()=> Gender })
+  @ApiProperty({ enum: () => Gender })
   @IsNotEmpty()
   gender: Gender;
 

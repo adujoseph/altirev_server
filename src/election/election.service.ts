@@ -13,8 +13,8 @@ export class ElectionService {
   ) {}
 
   async createElection(electionDto: CreateElectionDto): Promise<Election> {
-    console.log({electionDto})
-    const electionData = await this.electionRepository.save(electionDto)
+    console.log({ electionDto });
+    const electionData = await this.electionRepository.save(electionDto);
     return electionData;
   }
 
@@ -23,7 +23,7 @@ export class ElectionService {
   }
 
   async findOne(id: string): Promise<Election | null> {
-    return await this.electionRepository.findOneBy({id})
+    return await this.electionRepository.findOneBy({ id });
   }
 
   async updateElection(
@@ -40,8 +40,8 @@ export class ElectionService {
     }
 
     let errorObject = {
-      message: `No election with id ${id} exist`
-    }
+      message: `No election with id ${id} exist`,
+    };
     return errorObject;
   }
 

@@ -1,6 +1,10 @@
 import { Exclude, Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { Gender, RolesEnum, StatusEnum } from '../persistence/entities/user.entity';
+import {
+  Gender,
+  RolesEnum,
+  StatusEnum,
+} from '../persistence/entities/user.entity';
 
 const idType = Number;
 
@@ -72,7 +76,7 @@ export class User {
   phoneNumber: string | null;
 
   @ApiProperty({
-    enum: ()=> Gender
+    enum: () => Gender,
   })
   gender: Gender;
 

@@ -30,7 +30,7 @@ export class AuthRegisterLoginDto {
   @IsNotEmpty()
   phoneNumber: string;
 
-  @ApiProperty({ enum: ()=> Gender})
+  @ApiProperty({ enum: () => Gender })
   @IsNotEmpty()
   gender: Gender;
 

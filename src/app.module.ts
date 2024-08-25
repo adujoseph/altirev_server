@@ -22,15 +22,18 @@ import { NotificationModule } from './notification/notification.module';
 import { AdminModule } from './admin/admin.module';
 import { PaymentsModule } from './payments/payments.module';
 import { ContactModule } from './contact/contact.module';
-import { ResultsModule } from './results/results.module';
 import { ElectionModule } from './election/election.module';
-
 // const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
 //   useClass: TypeOrmConfigService,
 //   dataSourceFactory: async (options: DataSourceOptions) => {
 //     return new DataSource(options).initialize();
 //   },
 // });
+
+import { ResultsModule } from './results/results.module';
+import { FilesS3Service } from './files/uploader/s3/files.service';
+import { FilesLocalModule } from './files/uploader/local/files.module';
+import { FilesS3Module } from './files/uploader/s3/files.module';
 
 @Module({
   imports: [
@@ -39,9 +42,6 @@ import { ElectionModule } from './election/election.module';
       load: [databaseConfig, authConfig, appConfig, mailConfig, fileConfig],
       envFilePath: ['.env'],
     }),
-
-    // infrastructureDatabaseModule,
-
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DATABASE_HOST,
@@ -53,6 +53,10 @@ import { ElectionModule } from './election/election.module';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE),
     }),
+
+    // infrastructureDatabaseModule,
+
+    UsersModule,
 
     // I18nModule.forRootAsync({
     //   useFactory: (configService: ConfigService<AllConfigType>) => ({
@@ -78,8 +82,10 @@ import { ElectionModule } from './election/election.module';
     //   inject: [ConfigService],
     // }),
 
-    UsersModule,
+    ResultsModule,
     FilesModule,
+    // FilesS3Module,
+    // FilesLocalModule,
     AuthModule,
     SessionModule,
     MailModule,
@@ -89,7 +95,6 @@ import { ElectionModule } from './election/election.module';
     AdminModule,
     PaymentsModule,
     ContactModule,
-    ResultsModule,
   ],
 })
 export class AppModule {}

@@ -68,7 +68,7 @@ export class SessionRelationalRepository implements SessionRepository {
 
   async deleteByUserId(conditions: { userId: User['id'] }): Promise<void> {
     await this.sessionRepository.softDelete({
-        userId: conditions.userId
+      userId: conditions.userId,
     });
   }
 
