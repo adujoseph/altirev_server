@@ -1,4 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { ReportStatus } from './dto/create-report.dto';
 
 @Entity('reports')
 export class ReportEntity {
@@ -9,6 +10,9 @@ export class ReportEntity {
   title: string;
 
   @Column()
+  userId: string;
+
+  @Column()
   ward: string;
 
   @Column()
@@ -16,6 +20,9 @@ export class ReportEntity {
 
   @Column()
   message: string;
+
+  @Column({default: ReportStatus.Pending})
+  status: ReportStatus
 
   @Column({ nullable: true })
   videoUrl: string;
