@@ -14,23 +14,23 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TokenEntity } from './entities/token.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([TokenEntity]),
-    UsersModule,
-    SessionModule,
-    PassportModule,
-    MailModule,
-    JwtModule.register({}),
-  ],
-  // inject: [],
-  controllers: [AuthController],
-  providers: [
-    AuthService,
-    TokenService,
-    JwtStrategy,
-    JwtRefreshStrategy,
-    AnonymousStrategy,
-  ],
-  exports: [AuthService, TokenService],
+    imports: [
+        TypeOrmModule.forFeature([TokenEntity]),
+        UsersModule,
+        SessionModule,
+        PassportModule,
+        MailModule,
+        JwtModule.register({}),
+    ],
+    // inject: [],
+    controllers: [AuthController],
+    providers: [
+        AuthService,
+        TokenService,
+        JwtStrategy,
+        JwtRefreshStrategy,
+        AnonymousStrategy,
+    ],
+    exports: [AuthService, TokenService],
 })
 export class AuthModule {}

@@ -5,9 +5,9 @@ import { FileType } from './domain/file';
 
 @Injectable()
 export class FilesService {
-  constructor(private readonly fileRepository: FileRepository) {}
+    constructor(private readonly fileRepository: FileRepository) {}
 
-  findById(id: FileType['id']): Promise<any> {
-    return this.fileRepository.findById(id);
-  }
+    findById(id: FileType['id']): Promise<any> {
+        return this.fileRepository.findById(id);
+    }
 }
