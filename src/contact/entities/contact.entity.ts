@@ -1,14 +1,14 @@
 import { IsNotEmpty } from 'class-validator';
 export class Contact {
-  @IsNotEmpty()
-  id: number;
+    @IsNotEmpty()
+    id: number;
 
-  @IsNotEmpty()
-  name: string;
+    @IsNotEmpty()
+    name: string;
 
-  @IsNotEmpty()
-  email: string;
+    @IsNotEmpty()
+    email: string;
 
-  @IsNotEmpty()
-  message: string;
+    @IsNotEmpty()
+    message: string;
 }

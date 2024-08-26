@@ -2,6 +2,7 @@ import {
   BadRequestException,
   HttpStatus,
   Injectable,
+  InternalServerErrorException,
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -16,13 +17,18 @@ import { FilesService } from '../files/files.service';
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { DeepPartial } from '../utils/types/deep-partial.type';
 import { RolesEnum, StatusEnum } from './persistence/entities/user.entity';
+import * as process from 'node:process';
+import axios from 'axios';
+import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly usersRepository: UserRepository,
     private readonly filesService: FilesService,
-  ) {}
+    private readonly subscriptionsService: SubscriptionsService,
+  ) {
+  }
 
   async create(createProfileDto: CreateUserDto): Promise<User> {
     const clonedPayload = {
@@ -32,9 +38,25 @@ export class UsersService {
       ...createProfileDto,
     };
 
+    if (clonedPayload.paymentRef) {
+      let response = await this.subscriptionsService.verifyPayment(clonedPayload.paymentRef);
+      if (response.data.status != true || response.data.data.status != "success") {
+        throw new BadRequestException("Payment Verification Failed")
+      }
+
+      const resp = await this.subscriptionsService.saveTransaction(clonedPayload.planId, response.data.data);
+      if (!resp) {
+        throw new InternalServerErrorException("Error Saving Transaction details")
+      }
+      clonedPayload.role = RolesEnum.MODERATOR;
+    }
+
     if (clonedPayload.password) {
       const salt = await bcrypt.genSalt();
-      clonedPayload.password = await bcrypt.hash(clonedPayload.password, salt);
+      clonedPayload.password = await bcrypt.hash(
+        clonedPayload.password,
+        salt,
+      );
     }
 
     if (clonedPayload.email) {
@@ -78,8 +100,8 @@ export class UsersService {
           },
         });
       }
-    }else {
-      clonedPayload.role = RolesEnum.USER
+    } else {
+      clonedPayload.role = RolesEnum.USER;
     }
 
     if (clonedPayload.status) {
@@ -94,18 +116,14 @@ export class UsersService {
           },
         });
       }
-    }else {
+    } else {
       clonedPayload.status = StatusEnum.ACTIVE;
     }
 
     return this.usersRepository.create(clonedPayload);
   }
 
-  findManyWithPagination({
-    filterOptions,
-    sortOptions,
-    paginationOptions,
-  }: {
+  findManyWithPagination({ filterOptions, sortOptions, paginationOptions }: {
     filterOptions?: FilterUserDto | null;
     sortOptions?: SortUserDto[] | null;
     paginationOptions: IPaginationOptions;
@@ -129,23 +147,11 @@ export class UsersService {
     return this.usersRepository.findByAltirevId(altirevId);
   }
 
-  findBySocialIdAndProvider({
-    socialId,
-    provider,
-  }: {
-    socialId: User['socialId'];
-    provider: User['provider'];
-  }): Promise<NullableType<User>> {
-    return this.usersRepository.findBySocialIdAndProvider({
-      socialId,
-      provider,
-    });
+  findBySocialIdAndProvider({ socialId, provider }: { socialId: User['socialId']; provider: User['provider']; }): Promise<NullableType<User>> {
+    return this.usersRepository.findBySocialIdAndProvider({ socialId, provider });
   }
 
-  async update(
-    id: User['id'],
-    payload: DeepPartial<User>,
-  ): Promise<User | null> {
+  async update( id: User['id'], payload: DeepPartial<User> ): Promise<User | null> {
     const clonedPayload = { ...payload };
 
     if (
@@ -153,7 +159,10 @@ export class UsersService {
       clonedPayload.previousPassword !== clonedPayload.password
     ) {
       const salt = await bcrypt.genSalt();
-      clonedPayload.password = await bcrypt.hash(clonedPayload.password, salt);
+      clonedPayload.password = await bcrypt.hash(
+        clonedPayload.password,
+        salt,
+      );
     }
 
     if (clonedPayload.email) {
@@ -172,7 +181,9 @@ export class UsersService {
     }
 
     if (clonedPayload.photo) {
-      const fileObject = await this.filesService.findById(clonedPayload.photo);
+      const fileObject = await this.filesService.findById(
+        clonedPayload.photo,
+      );
       if (!fileObject) {
         throw new UnprocessableEntityException({
           status: HttpStatus.UNPROCESSABLE_ENTITY,
@@ -222,4 +233,5 @@ export class UsersService {
   async findByPhone(phone: string): Promise<NullableType<User>> {
     return this.usersRepository.findByPhone(phone);
   }
+
 }

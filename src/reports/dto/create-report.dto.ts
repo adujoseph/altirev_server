@@ -7,9 +7,9 @@ export enum ReportStatus {
   Rejected = 'rejected'
 }
 export class CreateReportDto {
-  @ApiProperty()
-  @IsString()
-  title: string;
+    @ApiProperty()
+    @IsString()
+    title: string;
 
   @ApiProperty()
   @IsString()
@@ -19,13 +19,13 @@ export class CreateReportDto {
   @IsString()
   ward: string;
 
-  @ApiProperty()
-  @IsString()
-  pollingUnit: string;
+    @ApiProperty()
+    @IsString()
+    pollingUnit: string;
 
-  @ApiProperty()
-  @IsString()
-  message: string;
+    @ApiProperty()
+    @IsString()
+    message: string;
 
   @ApiProperty()
   @IsEnum(ReportStatus)
@@ -35,11 +35,11 @@ export class CreateReportDto {
   @IsOptional()
   videoUrl?: string;
 
-  @ApiProperty()
-  @IsOptional()
-  audioUrl?: string;
+    @ApiProperty()
+    @IsOptional()
+    audioUrl?: string;
 
-  @ApiProperty()
-  @IsOptional()
-  imageUrl?: string;
+    @ApiProperty()
+    @IsOptional()
+    imageUrl?: string;
 }
