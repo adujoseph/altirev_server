@@ -25,6 +25,7 @@ import { ResultsModule } from './results/results.module';
 import { ElectionModule } from './election/election.module';
 import { ReportsModule } from './reports/reports.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
+import { PlansModule } from './plans/plans.module';
 
 // const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
 //   useClass: TypeOrmConfigService,
@@ -60,6 +61,7 @@ import { SubscriptionsModule } from './subscriptions/subscriptions.module';
             // entities: [__dirname + '/**/*.schema{.ts,.js}'],
             entities: [__dirname + '/**/*.entity{.ts,.js}'],
             synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE),
+            autoLoadEntities: true
         }),
 
         // I18nModule.forRootAsync({
@@ -98,6 +100,7 @@ import { SubscriptionsModule } from './subscriptions/subscriptions.module';
         ContactModule,
         ResultsModule,
         ReportsModule,
+        PlansModule,
     ],
 })
 export class AppModule {}
