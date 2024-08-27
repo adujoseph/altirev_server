@@ -1,5 +1,10 @@
-
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    CreateDateColumn,
+    UpdateDateColumn,
+} from 'typeorm';
 import { ReportStatus } from './dto/create-report.dto';
 
 @Entity('reports')
@@ -10,11 +15,11 @@ export class ReportEntity {
     @Column()
     title: string;
 
-  @Column()
-  userId: string;
+    @Column()
+    userId: string;
 
-  @Column()
-  ward: string;
+    @Column()
+    ward: string;
 
     @Column()
     pollingUnit: string;
@@ -22,11 +27,14 @@ export class ReportEntity {
     @Column()
     message: string;
 
-  @Column({default: ReportStatus.Pending})
-  status: ReportStatus
+    @Column({ default: ReportStatus.Pending })
+    status: ReportStatus;
 
-  @Column({ nullable: true })
-  videoUrl: string;
+    @Column({ nullable: true })
+    fileUrl: string;
+
+    @Column({ nullable: true })
+    videoUrl: string;
 
     @Column({ nullable: true })
     audioUrl: string;
