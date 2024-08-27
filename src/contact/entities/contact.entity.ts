@@ -1,14 +1,27 @@
 import { IsNotEmpty } from 'class-validator';
-export class Contact {
-    @IsNotEmpty()
-    id: number;
+import { Column, CreateDateColumn, Entity, PrimaryColumnCannotBeNullableError, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-    @IsNotEmpty()
+
+@Entity()
+export class ContactEntity {
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
+
+    @Column()
     name: string;
 
-    @IsNotEmpty()
+    @Column()
     email: string;
 
-    @IsNotEmpty()
+    @Column()
     message: string;
+
+    @Column({default: false})
+    isReplied: Boolean
+
+    @CreateDateColumn()
+    created_at: Date
+
+    @UpdateDateColumn()
+    updated_at: Date
 }

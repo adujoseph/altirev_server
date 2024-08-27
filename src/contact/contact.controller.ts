@@ -29,7 +29,7 @@ export class ContactController {
 
     @Get(':id')
     findOne(@Param('id') id: string) {
-        return this.contactService.findOne(+id);
+        return this.contactService.findOne(id);
     }
 
     @Patch(':id')

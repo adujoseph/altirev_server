@@ -1,19 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
+import { ContactEntity } from './entities/contact.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class ContactService {
-    create(createContactDto: CreateContactDto) {
-        return createContactDto;
+    constructor(
+        @InjectRepository(ContactEntity)
+        private contactRepository: Repository<ContactEntity>
+    ){}
+    async create(createContactDto: CreateContactDto) {
+        return await this.contactRepository.save(createContactDto)
     }
 
-    findAll() {
-        return `This action returns all contact`;
+    async findAll() {
+        return await this.contactRepository.find();
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} contact`;
+    async findOne(id: string) {
+        const contact_message = await this.contactRepository.findOne({where: {id}})
+        if(!contact_message){
+            throw new BadRequestException()
+        }
+        return contact_message;
     }
 
     update(id: number, updateContactDto: UpdateContactDto) {
