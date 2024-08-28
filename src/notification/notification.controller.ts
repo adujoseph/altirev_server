@@ -32,19 +32,19 @@ export class NotificationController {
     return this.notificationService.getNotificationById(id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateNotificationDto: UpdateNotificationDto,
-  ) {
-    return this.notificationService.updateNotificationStatus(
-      id,
-      updateNotificationDto,
-    );
-  }
+    @Patch(':id')
+    update(
+        @Param('id') id: string,
+        @Body() updateNotificationDto: UpdateNotificationDto,
+    ) {
+        return this.notificationService.updateNotificationStatus(
+            id,
+            updateNotificationDto,
+        );
+    }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.notificationService.deleteNotificationById(id);
-  }
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.notificationService.deleteNotificationById(id);
+    }
 }

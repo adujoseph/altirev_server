@@ -10,62 +10,65 @@ import { IPaginationOptions } from '../../../../../utils/types/pagination-option
 
 @Injectable()
 export class ResultsRelationalRepository implements ResultsRepository {
-  constructor(
-    @InjectRepository(ResultsEntity)
-    private readonly resultsRepository: Repository<ResultsEntity>,
-  ) {}
+    constructor(
+        @InjectRepository(ResultsEntity)
+        private readonly resultsRepository: Repository<ResultsEntity>,
+    ) {}
 
-  async create(data: Results): Promise<Results> {
-    const persistenceModel = ResultsMapper.toPersistence(data);
-    const newEntity = await this.resultsRepository.save(
-      this.resultsRepository.create(persistenceModel),
-    );
-    return ResultsMapper.toDomain(newEntity);
-  }
-
-  async findAllWithPagination({
-    paginationOptions,
-  }: {
-    paginationOptions: IPaginationOptions;
-  }): Promise<Results[]> {
-    const entities = await this.resultsRepository.find({
-      skip: (paginationOptions.page - 1) * paginationOptions.limit,
-      take: paginationOptions.limit,
-    });
-
-    return entities.map((user) => ResultsMapper.toDomain(user));
-  }
-
-  async findById(id: Results['id']): Promise<NullableType<Results>> {
-    const entity = await this.resultsRepository.findOne({
-      where: { id },
-    });
-
-    return entity ? ResultsMapper.toDomain(entity) : null;
-  }
-
-  async update(id: Results['id'], payload: Partial<Results>): Promise<Results> {
-    const entity = await this.resultsRepository.findOne({
-      where: { id },
-    });
-
-    if (!entity) {
-      throw new Error('Record not found');
+    async create(data: Results): Promise<Results> {
+        const persistenceModel = ResultsMapper.toPersistence(data);
+        const newEntity = await this.resultsRepository.save(
+            this.resultsRepository.create(persistenceModel),
+        );
+        return ResultsMapper.toDomain(newEntity);
     }
 
-    const updatedEntity = await this.resultsRepository.save(
-      this.resultsRepository.create(
-        ResultsMapper.toPersistence({
-          ...ResultsMapper.toDomain(entity),
-          ...payload,
-        }),
-      ),
-    );
+    async findAllWithPagination({
+        paginationOptions,
+    }: {
+        paginationOptions: IPaginationOptions;
+    }): Promise<Results[]> {
+        const entities = await this.resultsRepository.find({
+            skip: (paginationOptions.page - 1) * paginationOptions.limit,
+            take: paginationOptions.limit,
+        });
 
-    return ResultsMapper.toDomain(updatedEntity);
-  }
+        return entities.map((user) => ResultsMapper.toDomain(user));
+    }
 
-  async remove(id: Results['id']): Promise<void> {
-    await this.resultsRepository.delete(id);
-  }
+    async findById(id: Results['id']): Promise<NullableType<Results>> {
+        const entity = await this.resultsRepository.findOne({
+            where: { id },
+        });
+
+        return entity ? ResultsMapper.toDomain(entity) : null;
+    }
+
+    async update(
+        id: Results['id'],
+        payload: Partial<Results>,
+    ): Promise<Results> {
+        const entity = await this.resultsRepository.findOne({
+            where: { id },
+        });
+
+        if (!entity) {
+            throw new Error('Record not found');
+        }
+
+        const updatedEntity = await this.resultsRepository.save(
+            this.resultsRepository.create(
+                ResultsMapper.toPersistence({
+                    ...ResultsMapper.toDomain(entity),
+                    ...payload,
+                }),
+            ),
+        );
+
+        return ResultsMapper.toDomain(updatedEntity);
+    }
+
+    async remove(id: Results['id']): Promise<void> {
+        await this.resultsRepository.delete(id);
+    }
 }

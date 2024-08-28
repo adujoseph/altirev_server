@@ -20,9 +20,13 @@ import { MailModule } from './mail/mail.module';
 // import { ElectionModule } from './election/election.module';
 import { NotificationModule } from './notification/notification.module';
 import { AdminModule } from './admin/admin.module';
-import { PaymentsModule } from './payments/payments.module';
 import { ContactModule } from './contact/contact.module';
+import { ResultsModule } from './results/results.module';
 import { ElectionModule } from './election/election.module';
+import { ReportsModule } from './reports/reports.module';
+import { SubscriptionsModule } from './subscriptions/subscriptions.module';
+import { PlansModule } from './plans/plans.module';
+
 // const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
 //   useClass: TypeOrmConfigService,
 //   dataSourceFactory: async (options: DataSourceOptions) => {
@@ -30,71 +34,72 @@ import { ElectionModule } from './election/election.module';
 //   },
 // });
 
-import { ResultsModule } from './results/results.module';
-import { FilesS3Service } from './files/uploader/s3/files.service';
-import { FilesLocalModule } from './files/uploader/local/files.module';
-import { FilesS3Module } from './files/uploader/s3/files.module';
-
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [databaseConfig, authConfig, appConfig, mailConfig, fileConfig],
-      envFilePath: ['.env'],
-    }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DATABASE_HOST,
-      port: Number(process.env.DATABASE_PORT),
-      username: process.env.DATABASE_USERNAME,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      // entities: [__dirname + '/**/*.schema{.ts,.js}'],
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE),
-    }),
+    imports: [
+        ConfigModule.forRoot({
+            isGlobal: true,
+            load: [
+                databaseConfig,
+                authConfig,
+                appConfig,
+                mailConfig,
+                fileConfig,
+            ],
+            envFilePath: ['.env'],
+        }),
 
-    // infrastructureDatabaseModule,
+        // infrastructureDatabaseModule,
 
-    UsersModule,
+        TypeOrmModule.forRoot({
+            type: 'mysql',
+            host: process.env.DATABASE_HOST,
+            port: Number(process.env.DATABASE_PORT),
+            username: process.env.DATABASE_USERNAME,
+            password: process.env.DATABASE_PASSWORD,
+            database: process.env.DATABASE_NAME,
+            // entities: [__dirname + '/**/*.schema{.ts,.js}'],
+            entities: [__dirname + '/**/*.entity{.ts,.js}'],
+            synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE),
+            autoLoadEntities: true,
+        }),
 
-    // I18nModule.forRootAsync({
-    //   useFactory: (configService: ConfigService<AllConfigType>) => ({
-    //     fallbackLanguage: configService.getOrThrow('app.fallbackLanguage', {
-    //       infer: true,
-    //     }),
-    //     // loaderOptions: { path: path.join(__dirname, '/i18n/'), watch: true },
-    //   }),
-    //   resolvers: [
-    //     {
-    //       use: HeaderResolver,
-    //       useFactory: (configService: ConfigService<AllConfigType>) => {
-    //         return [
-    //           configService.get('app.headerLanguage', {
-    //             infer: true,
-    //           }),
-    //         ];
-    //       },
-    //       inject: [ConfigService],
-    //     },
-    //   ],
-    //   imports: [ConfigModule],
-    //   inject: [ConfigService],
-    // }),
-
-    ResultsModule,
-    FilesModule,
-    // FilesS3Module,
-    // FilesLocalModule,
-    AuthModule,
-    SessionModule,
-    MailModule,
-    MailerModule,
-    ElectionModule,
-    NotificationModule,
-    AdminModule,
-    PaymentsModule,
-    ContactModule,
-  ],
+        // I18nModule.forRootAsync({
+        //   useFactory: (configService: ConfigService<AllConfigType>) => ({
+        //     fallbackLanguage: configService.getOrThrow('app.fallbackLanguage', {
+        //       infer: true,
+        //     }),
+        //     // loaderOptions: { path: path.join(__dirname, '/i18n/'), watch: true },
+        //   }),
+        //   resolvers: [
+        //     {
+        //       use: HeaderResolver,
+        //       useFactory: (configService: ConfigService<AllConfigType>) => {
+        //         return [
+        //           configService.get('app.headerLanguage', {
+        //             infer: true,
+        //           }),
+        //         ];
+        //       },
+        //       inject: [ConfigService],
+        //     },
+        //   ],
+        //   imports: [ConfigModule],
+        //   inject: [ConfigService],
+        // }),
+        SubscriptionsModule,
+        UsersModule,
+        FilesModule,
+        AuthModule,
+        SessionModule,
+        MailModule,
+        MailerModule,
+        ElectionModule,
+        NotificationModule,
+        AdminModule,
+        ContactModule,
+        ResultsModule,
+        ReportsModule,
+        PlansModule,
+    ],
 })
 export class AppModule {}

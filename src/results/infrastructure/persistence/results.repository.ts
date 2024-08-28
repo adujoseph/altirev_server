@@ -4,22 +4,22 @@ import { IPaginationOptions } from '../../../utils/types/pagination-options';
 import { Results } from '../../domain/results';
 
 export abstract class ResultsRepository {
-  abstract create(
-    data: Omit<Results, 'id' | 'createdAt' | 'updatedAt'>,
-  ): Promise<Results>;
+    abstract create(
+        data: Omit<Results, 'id' | 'createdAt' | 'updatedAt'>,
+    ): Promise<Results>;
 
-  abstract findAllWithPagination({
-    paginationOptions,
-  }: {
-    paginationOptions: IPaginationOptions;
-  }): Promise<Results[]>;
+    abstract findAllWithPagination({
+        paginationOptions,
+    }: {
+        paginationOptions: IPaginationOptions;
+    }): Promise<Results[]>;
 
-  abstract findById(id: Results['id']): Promise<NullableType<Results>>;
+    abstract findById(id: Results['id']): Promise<NullableType<Results>>;
 
-  abstract update(
-    id: Results['id'],
-    payload: DeepPartial<Results>,
-  ): Promise<Results | null>;
+    abstract update(
+        id: Results['id'],
+        payload: DeepPartial<Results>,
+    ): Promise<Results | null>;
 
-  abstract remove(id: Results['id']): Promise<void>;
+    abstract remove(id: Results['id']): Promise<void>;
 }

@@ -5,9 +5,9 @@ import { MailConfig } from '../mail/config/mail-config.type';
 import { DatabaseConfig } from '../database/config/database-config.type';
 
 export type AllConfigType = {
-  app: AppConfig;
-  auth: AuthConfig;
-  file: FileConfig;
-  mail: MailConfig;
-  database: DatabaseConfig;
+    app: AppConfig;
+    auth: AuthConfig;
+    file: FileConfig;
+    mail: MailConfig;
+    database: DatabaseConfig;
 };

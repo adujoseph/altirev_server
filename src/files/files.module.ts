@@ -13,20 +13,20 @@ import { FilesS3PresignedService } from './uploader/s3-presigned/files.service';
 const infrastructurePersistenceModule = RelationalFilePersistenceModule;
 
 const infrastructureUploaderModule =
-  (fileConfig() as FileConfig).driver === FileDriver.LOCAL
-    ? FilesLocalModule
-    : (fileConfig() as FileConfig).driver === FileDriver.S3
-      ? FilesS3Module
-      : FilesS3PresignedModule;
+    (fileConfig() as FileConfig).driver === FileDriver.LOCAL
+        ? FilesLocalModule
+        : (fileConfig() as FileConfig).driver === FileDriver.S3
+          ? FilesS3Module
+          : FilesS3PresignedModule;
 
 @Module({
-  imports: [infrastructurePersistenceModule, FilesLocalModule, FilesS3Module],
-  providers: [FilesService, FilesS3Service, FilesLocalService],
-  exports: [
-    FilesService,
-    FilesS3Service,
-    FilesLocalService,
-    infrastructurePersistenceModule,
-  ],
+    imports: [infrastructurePersistenceModule, FilesLocalModule, FilesS3Module],
+    providers: [FilesService, FilesS3Service, FilesLocalService],
+    exports: [
+        FilesService,
+        FilesS3Service,
+        FilesLocalService,
+        infrastructurePersistenceModule,
+    ],
 })
 export class FilesModule {}

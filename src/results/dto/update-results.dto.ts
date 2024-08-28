@@ -6,32 +6,32 @@ import { IsNotEmpty } from 'class-validator';
 import { Column } from 'typeorm';
 
 export class UpdateResultsDto extends PartialType(CreateResultsDto) {
-  @ApiProperty({
-    enum: () => ElectionType,
-  })
-  @IsNotEmpty()
-  electionType: ElectionType;
+    @ApiProperty({
+        enum: () => ElectionType,
+    })
+    @IsNotEmpty()
+    electionType: ElectionType;
 
-  @ApiProperty({
-    type: Number,
-  })
-  @IsNotEmpty()
-  accreditedVoters: number;
+    @ApiProperty({
+        type: Number,
+    })
+    @IsNotEmpty()
+    accreditedVoters: number;
 
-  @ApiProperty({
-    type: Number,
-  })
-  voteCasted: number;
+    @ApiProperty({
+        type: Number,
+    })
+    voteCasted: number;
 
-  @ApiProperty({
-    type: Map<String, Number>,
-  })
-  @IsNotEmpty()
-  counts: Map<string, number>;
+    @ApiProperty({
+        type: Map<String, Number>,
+    })
+    @IsNotEmpty()
+    counts: Map<string, number>;
 
-  @ApiProperty({
-    type: String,
-  })
-  @IsNotEmpty()
-  ctcFilePath: string;
+    @ApiProperty({
+        type: String,
+    })
+    @IsNotEmpty()
+    ctcFilePath: string;
 }

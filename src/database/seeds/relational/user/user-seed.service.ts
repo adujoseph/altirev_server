@@ -4,9 +4,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import bcrypt from 'bcryptjs';
 import {
-  RolesEnum,
-  StatusEnum,
-  UserEntity,
+    RolesEnum,
+    StatusEnum,
+    UserEntity,
 } from '../../../../users/persistence/entities/user.entity';
 
 @Injectable()
@@ -29,17 +29,17 @@ export class UserSeedService {
       const salt = await bcrypt.genSalt();
       const password = await bcrypt.hash('secret', salt);
 
-      await this.repository.save(
-        this.repository.create({
-          firstName: 'Watcher',
-          lastName: 'Overlord',
-          email: 'cybersys101@gmail.com',
-          password,
-          role: RolesEnum.SUPERADMIN,
-          status: StatusEnum.ACTIVE,
-        }),
-      );
-    }
+            await this.repository.save(
+                this.repository.create({
+                    firstName: 'Watcher',
+                    lastName: 'Overlord',
+                    email: 'cybersys101@gmail.com',
+                    password,
+                    role: RolesEnum.SUPERADMIN,
+                    status: StatusEnum.ACTIVE,
+                }),
+            );
+        }
 
     //check if any user exists in db
     const countUser = await this.repository.count({
@@ -53,16 +53,16 @@ export class UserSeedService {
       const salt = await bcrypt.genSalt();
       const password = await bcrypt.hash('secret', salt);
 
-      await this.repository.save(
-        this.repository.create({
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john.doe@example.com',
-          password,
-          role: RolesEnum.USER,
-          status: StatusEnum.ACTIVE,
-        }),
-      );
+            await this.repository.save(
+                this.repository.create({
+                    firstName: 'John',
+                    lastName: 'Doe',
+                    email: 'john.doe@example.com',
+                    password,
+                    role: RolesEnum.USER,
+                    status: StatusEnum.ACTIVE,
+                }),
+            );
+        }
     }
-  }
 }

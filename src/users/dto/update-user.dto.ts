@@ -7,40 +7,40 @@ import { lowerCaseTransformer } from '../../utils/transformers/lower-case.transf
 import { RolesEnum, StatusEnum } from '../persistence/entities/user.entity';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
-  @ApiPropertyOptional({ example: 'test1@example.com', type: String })
-  @Transform(lowerCaseTransformer)
-  @IsOptional()
-  @IsEmail()
-  email?: string;
+    @ApiPropertyOptional({ example: 'test1@example.com', type: String })
+    @Transform(lowerCaseTransformer)
+    @IsOptional()
+    @IsEmail()
+    email?: string;
 
-  @ApiPropertyOptional()
-  @IsOptional()
-  @MinLength(6)
-  password?: string;
+    @ApiPropertyOptional()
+    @IsOptional()
+    @MinLength(6)
+    password?: string;
 
-  provider?: string;
+    provider?: string;
 
-  socialId?: string;
+    socialId?: string;
 
-  @ApiPropertyOptional({ example: 'John', type: String })
-  @IsOptional()
-  firstName?: string | null;
+    @ApiPropertyOptional({ example: 'John', type: String })
+    @IsOptional()
+    firstName?: string | null;
 
-  @ApiPropertyOptional({ example: 'Doe', type: String })
-  @IsOptional()
-  lastName?: string | null;
+    @ApiPropertyOptional({ example: 'Doe', type: String })
+    @IsOptional()
+    lastName?: string | null;
 
-  @ApiPropertyOptional({ type: () => String })
-  @IsOptional()
-  photo?: string | null;
+    @ApiPropertyOptional({ type: () => String })
+    @IsOptional()
+    photo?: string | null;
 
-  @ApiPropertyOptional({ enum: () => RolesEnum })
-  @IsOptional()
-  role: RolesEnum;
+    @ApiPropertyOptional({ enum: () => RolesEnum })
+    @IsOptional()
+    role: RolesEnum;
 
-  @ApiPropertyOptional({ enum: () => StatusEnum })
-  @IsOptional()
-  status?: StatusEnum;
+    @ApiPropertyOptional({ enum: () => StatusEnum })
+    @IsOptional()
+    status?: StatusEnum;
 
-  hash?: string | null;
+    hash?: string | null;
 }

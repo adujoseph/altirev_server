@@ -137,11 +137,11 @@ export class UserEntity extends EntityRelationalHelper {
   @Column({ type: String, nullable: true })
   phoneNumber: string | null;
 
-  @ApiProperty({
-    enum: () => Gender,
-  })
-  @Column({ type: String, nullable: true })
-  gender: Gender;
+    @ApiProperty({
+        enum: () => Gender,
+    })
+    @Column({ type: String, nullable: true })
+    gender: Gender;
 
   @ApiProperty({
     type: String,

@@ -1,29 +1,29 @@
 import {
-  HttpStatus,
-  Injectable,
-  UnprocessableEntityException,
+    HttpStatus,
+    Injectable,
+    UnprocessableEntityException,
 } from '@nestjs/common';
 import { FileRepository } from '../../persistence/file.repository';
 import { FileType } from '../../domain/file';
 
 @Injectable()
 export class FilesS3Service {
-  constructor(private readonly fileRepository: FileRepository) {}
+    constructor(private readonly fileRepository: FileRepository) {}
 
-  async create(file: Express.MulterS3.File): Promise<{ file: FileType }> {
-    if (!file) {
-      console.log('Error in file upload');
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          file: 'select File',
-        },
-      });
+    async create(file: Express.MulterS3.File): Promise<{ file: FileType }> {
+        if (!file) {
+            console.log('Error in file upload');
+            throw new UnprocessableEntityException({
+                status: HttpStatus.UNPROCESSABLE_ENTITY,
+                errors: {
+                    file: 'select File',
+                },
+            });
+        }
+        return {
+            file: await this.fileRepository.create({
+                path: file.key,
+            }),
+        };
     }
-    return {
-      file: await this.fileRepository.create({
-        path: file.key,
-      }),
-    };
-  }
 }
