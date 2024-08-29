@@ -35,8 +35,8 @@ export class CreatePlansDto {
 
 
     @ApiProperty()
-    @IsArray()
-    features: string[];
+    @IsString()
+    features: string;
 
 
     @ApiProperty()

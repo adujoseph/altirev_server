@@ -30,8 +30,10 @@ export class PlansEntity {
     @Column()
     pricing: Number;
 
-    @Column("text", { array: true })
-    features: string[];
+    // @Column("text", { array: true })
+    // features: string[];
+    @Column()
+    feature: string
 
     @Column()
     link: string;
