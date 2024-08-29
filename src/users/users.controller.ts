@@ -36,9 +36,9 @@ import { RolesEnum } from './persistence/entities/user.entity';
 import { Roles } from '../auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 
-@ApiBearerAuth()
-@Roles(RolesEnum.ADMIN)
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+// @ApiBearerAuth()
+// @Roles(RolesEnum.ADMIN)
+// @UseGuards(AuthGuard('jwt'), RolesGuard)
 @ApiTags('Users')
 @Controller({
     path: 'users',
