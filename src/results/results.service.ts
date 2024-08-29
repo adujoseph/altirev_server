@@ -27,11 +27,11 @@ export class ResultsService {
         return election;
     }
 
-    update(id: number, updateResultDto: UpdateResultDto) {
+    update(id: string, updateResultDto: UpdateResultDto) {
         return updateResultDto;
     }
 
-    remove(id: number) {
+    remove(id: string) {
         return `This action removes a #${id} result`;
     }
 }
