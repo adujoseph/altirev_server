@@ -32,8 +32,8 @@ export class PlansEntity {
 
     // @Column("text", { array: true })
     // features: string[];
-    @Column()
-    feature: string
+    @Column({nullable: true})
+    feature: string;
 
     @Column()
     link: string;

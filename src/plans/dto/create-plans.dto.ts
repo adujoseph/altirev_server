@@ -36,7 +36,7 @@ export class CreatePlansDto {
 
     @ApiProperty()
     @IsString()
-    features: string;
+    feature: string;
 
 
     @ApiProperty()
