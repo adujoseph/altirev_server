@@ -19,7 +19,7 @@ export class PlansEntity {
     sub_code: Number;
 
     @Column()
-    description: string;
+    subtitle: string;
 
     @Column()
     maxSubscriber: Number;
@@ -30,8 +30,13 @@ export class PlansEntity {
     @Column()
     pricing: Number;
 
+    // @Column("text", { array: true })
+    // features: string[];
+    @Column({nullable: true})
+    feature: string;
+
     @Column()
-    features: string;
+    link: string;
 
     @CreateDateColumn()
     created_at: Date;

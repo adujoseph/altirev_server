@@ -8,15 +8,19 @@ import { CreatePlansDto } from './dto/create-plans.dto';
 export class PlansService {
     constructor(
         @InjectRepository(PlansEntity)
-        private PlansRepsository: Repository<PlansEntity>,
+        private PlansRepository: Repository<PlansEntity>
     ) {}
 
     async createPlans(createPlansDto: CreatePlansDto): Promise<PlansEntity> {
-        const newPlans = await this.PlansRepsository.save(createPlansDto);
+        const newPlans = await this.PlansRepository.save(createPlansDto);
         return newPlans;
     }
 
     async getPlans(): Promise<PlansEntity[]> {
-        return await this.PlansRepsository.find();
+        return await this.PlansRepository.find();
+    }
+
+    async deletePlan(id: string){
+        return await this.PlansRepository.delete(id).then(() => {});
     }
 }
