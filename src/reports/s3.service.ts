@@ -14,10 +14,10 @@ export class S3Service {
 
     constructor() {
         this.s3 = new S3Client({
-            region: process.env.AWS_S3_REGION,
+            region: process.env.AWS_S3_REGION ?? '',
             credentials: {
-                accessKeyId: process.env.ACCESS_KEY_ID,
-                secretAccessKey: process.env.SECRET_ACCESS_KEY,
+                accessKeyId: process.env.ACCESS_KEY_ID ?? '',
+                secretAccessKey: process.env.SECRET_ACCESS_KEY ?? '',
             },
         });
     }
