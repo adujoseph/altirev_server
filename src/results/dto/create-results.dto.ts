@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
+import { Optional } from '@nestjs/common';
 
 export enum ElectionType {
     PRESIDENTIAL = 'PRESIDENTIAL',
@@ -43,5 +44,5 @@ export class CreateResultsDto {
 
     @ApiProperty({ type: 'string', format: 'binary', required: true })
     // @IsNotEmpty()
-    file: Express.MulterS3.File;
+    file: Express.Multer.File;
 }

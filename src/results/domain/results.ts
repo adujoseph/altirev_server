@@ -42,13 +42,18 @@ export class Results {
     @ApiProperty({
         type: Number,
     })
-    @IsNotEmpty()
     userAltirevId: string;
 
+    // @ApiProperty({
+    //     type: FileType,
+    // })
+    //
+    // fileData: FileType;
+
     @ApiProperty({
-        type: FileType,
+        type: String,
     })
-    fileData: FileType;
+    fileUrl: string;
 
     @ApiProperty()
     createdAt: Date;

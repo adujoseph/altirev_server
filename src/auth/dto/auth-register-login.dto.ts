@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { lowerCaseTransformer } from '../../utils/transformers/lower-case.transformer';
 import { Gender } from '../../users/persistence/entities/user.entity';
@@ -41,4 +41,12 @@ export class AuthRegisterLoginDto {
     @ApiProperty({ example: 'Nigeria' })
     @IsNotEmpty()
     country: string;
+
+    @ApiProperty({ example: 'xY0kj3343r2' })
+    @IsOptional()
+    paymentRef: string;
+
+    @ApiProperty()
+    @IsOptional()
+    planId: string;
 }

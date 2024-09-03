@@ -19,7 +19,7 @@ export class PlansController {
     }
 
     @Delete(':id')
-    removePlan(@Param('id') id: string){
-        return this.planService.deletePlan(id)
+    removePlan(@Param('id') id: string) {
+        return this.planService.deletePlan(id);
     }
 }

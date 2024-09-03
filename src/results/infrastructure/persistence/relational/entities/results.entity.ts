@@ -50,19 +50,26 @@ export class ResultsEntity extends EntityRelationalHelper {
     @Column({ name: 'election_counts', type: 'json', nullable: false })
     counts: Map<string, number>;
 
-    @ApiProperty({
-        type: FileType,
-    })
-    @IsNotEmpty()
-    // @Column({ name: 'ctc_file', type: String, nullable: false })
-    @OneToOne(() => FileEntity, {
-        eager: true,
-    })
-    @JoinColumn()
-    file: FileType;
+    // @ApiProperty({
+    //     type: FileType,
+    // })
+    // @IsNotEmpty()
+    // // @Column({ name: 'ctc_file', type: String, nullable: false })
+    // @OneToOne(() => FileEntity, {
+    //     eager: true,
+    // })
+    // @JoinColumn()
+    // file: FileType;
 
-    @ApiProperty()
-    @IsNotEmpty()
+    @ApiProperty({
+        type: String,
+    })
+    @Column({ name: 'file_url', type: String, nullable: false })
+    fileUrl: string;
+
+    @ApiProperty({
+        type: String,
+    })
     @Column({ name: 'user_id', type: String, nullable: false })
     userAltirevId: string;
 

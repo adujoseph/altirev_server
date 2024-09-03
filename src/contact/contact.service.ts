@@ -9,10 +9,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 export class ContactService {
     constructor(
         @InjectRepository(ContactEntity)
-        private contactRepository: Repository<ContactEntity>
-    ){}
+        private contactRepository: Repository<ContactEntity>,
+    ) {}
     async create(createContactDto: CreateContactDto) {
-        return await this.contactRepository.save(createContactDto)
+        return await this.contactRepository.save(createContactDto);
     }
 
     async findAll() {
@@ -20,9 +20,11 @@ export class ContactService {
     }
 
     async findOne(id: string) {
-        const contact_message = await this.contactRepository.findOne({where: {id}})
-        if(!contact_message){
-            throw new BadRequestException()
+        const contact_message = await this.contactRepository.findOne({
+            where: { id },
+        });
+        if (!contact_message) {
+            throw new BadRequestException();
         }
         return contact_message;
     }

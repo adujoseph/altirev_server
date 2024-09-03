@@ -1,6 +1,12 @@
 import { IsNotEmpty } from 'class-validator';
-import { Column, CreateDateColumn, Entity, PrimaryColumnCannotBeNullableError, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    PrimaryColumnCannotBeNullableError,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class ContactEntity {
@@ -16,12 +22,12 @@ export class ContactEntity {
     @Column()
     message: string;
 
-    @Column({default: false})
-    isReplied: Boolean
+    @Column({ default: false })
+    isReplied: Boolean;
 
     @CreateDateColumn()
-    created_at: Date
+    created_at: Date;
 
     @UpdateDateColumn()
-    updated_at: Date
+    updated_at: Date;
 }

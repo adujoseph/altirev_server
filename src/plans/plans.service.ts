@@ -8,7 +8,7 @@ import { CreatePlansDto } from './dto/create-plans.dto';
 export class PlansService {
     constructor(
         @InjectRepository(PlansEntity)
-        private PlansRepository: Repository<PlansEntity>
+        private PlansRepository: Repository<PlansEntity>,
     ) {}
 
     async createPlans(createPlansDto: CreatePlansDto): Promise<PlansEntity> {
@@ -20,7 +20,7 @@ export class PlansService {
         return await this.PlansRepository.find();
     }
 
-    async deletePlan(id: string){
+    async deletePlan(id: string) {
         return await this.PlansRepository.delete(id).then(() => {});
     }
 }

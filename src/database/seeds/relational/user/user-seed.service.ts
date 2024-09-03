@@ -11,23 +11,23 @@ import {
 
 @Injectable()
 export class UserSeedService {
-  constructor(
-    @InjectRepository(UserEntity)
-    private repository: Repository<UserEntity>,
-  ) {}
+    constructor(
+        @InjectRepository(UserEntity)
+        private repository: Repository<UserEntity>,
+    ) {}
 
-  async run() {
-    //if admin exist in db
-    const countAdmin = await this.repository.count({
-      where: {
-        role: RolesEnum.SUPERADMIN,
-      },
-    });
+    async run() {
+        //if admin exist in db
+        const countAdmin = await this.repository.count({
+            where: {
+                role: RolesEnum.SUPERADMIN,
+            },
+        });
 
-    //if non create one
-    if (!countAdmin) {
-      const salt = await bcrypt.genSalt();
-      const password = await bcrypt.hash('secret', salt);
+        //if non create one
+        if (!countAdmin) {
+            const salt = await bcrypt.genSalt();
+            const password = await bcrypt.hash('secret', salt);
 
             await this.repository.save(
                 this.repository.create({
@@ -41,17 +41,17 @@ export class UserSeedService {
             );
         }
 
-    //check if any user exists in db
-    const countUser = await this.repository.count({
-      where: {
-        role: RolesEnum.USER,
-      },
-    });
+        //check if any user exists in db
+        const countUser = await this.repository.count({
+            where: {
+                role: RolesEnum.USER,
+            },
+        });
 
-    //if non, create a default user in db
-    if (!countUser) {
-      const salt = await bcrypt.genSalt();
-      const password = await bcrypt.hash('secret', salt);
+        //if non, create a default user in db
+        if (!countUser) {
+            const salt = await bcrypt.genSalt();
+            const password = await bcrypt.hash('secret', salt);
 
             await this.repository.save(
                 this.repository.create({

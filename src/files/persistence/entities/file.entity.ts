@@ -25,7 +25,7 @@ export class FileEntity extends EntityRelationalHelper {
         type: String,
         example: 'https://example.com/path/to/file.jpg',
     })
-    @Column()
+    @Column({ type: String, nullable: true })
     @Transform(
         ({ value }) => {
             if ((fileConfig() as FileConfig).driver === FileDriver.LOCAL) {
@@ -50,7 +50,6 @@ export class FileEntity extends EntityRelationalHelper {
                         (fileConfig() as FileConfig).awsDefaultS3Bucket ?? '',
                     Key: value,
                 });
-
                 return getSignedUrl(s3, command, { expiresIn: 3600 });
             }
 

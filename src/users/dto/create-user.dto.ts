@@ -70,4 +70,12 @@ export class CreateUserDto {
     status: StatusEnum;
 
     hash?: string | null;
+
+    @ApiPropertyOptional({ type: () => String })
+    @IsOptional()
+    paymentRef: string;
+
+    @ApiPropertyOptional({ type: () => String })
+    @IsOptional()
+    planId: string;
 }
