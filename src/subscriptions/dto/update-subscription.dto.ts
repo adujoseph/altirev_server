@@ -6,12 +6,12 @@ import { CreateSubscriptionDto } from './create-subscription.dto';
 import { IsEmail, IsNotEmpty } from 'class-validator';
 
 export class UpdateSubscriptionDto extends PartialType(CreateSubscriptionDto) {
-  @ApiProperty({type: String})
-  @IsNotEmpty()
-  @IsEmail()
-  email: string;
+    @ApiProperty({ type: String })
+    @IsNotEmpty()
+    @IsEmail()
+    email: string;
 
-  @ApiProperty({type: String})
-  @IsNotEmpty()
-  amount: string;
+    @ApiProperty({ type: String })
+    @IsNotEmpty()
+    amount: string;
 }

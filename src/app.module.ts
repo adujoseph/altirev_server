@@ -34,7 +34,6 @@ import { PlansModule } from './plans/plans.module';
 //   },
 // });
 
-
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -61,7 +60,7 @@ import { PlansModule } from './plans/plans.module';
             // entities: [__dirname + '/**/*.schema{.ts,.js}'],
             entities: [__dirname + '/**/*.entity{.ts,.js}'],
             synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE),
-            autoLoadEntities: true
+            autoLoadEntities: true,
         }),
 
         // I18nModule.forRootAsync({

@@ -10,7 +10,11 @@ import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
 const infrastructurePersistenceModule = RelationalUserPersistenceModule;
 
 @Module({
-    imports: [infrastructurePersistenceModule, FilesModule, SubscriptionsModule],
+    imports: [
+        infrastructurePersistenceModule,
+        FilesModule,
+        SubscriptionsModule,
+    ],
     // imports: [TypeOrmModule.forFeature([User])],
     controllers: [UsersController],
     providers: [UsersService],

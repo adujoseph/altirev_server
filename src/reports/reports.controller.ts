@@ -39,7 +39,7 @@ export class ReportsController {
         }
 
         const fileUrl = await this.s3Service.uploadFile(file, 'File');
-        createReportsDto.fileUrl = fileUrl;     
+        createReportsDto.fileUrl = fileUrl;
         return this.reportsService.create(createReportsDto);
     }
 
