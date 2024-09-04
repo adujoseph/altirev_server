@@ -32,8 +32,8 @@ export class ReportsService {
     async updateReport_(id: string, electionData: UpdateReportDto) {
         let report = await this.reportsRepository.findOneBy({ id });
         if (report) {
-         report = {...report, ...electionData}
-         return this.reportsRepository.save(report)
+            report = { ...report, ...electionData };
+            return this.reportsRepository.save(report);
         } else {
             let errorObject = {
                 message: `No election with id ${id} exist`,
@@ -42,15 +42,18 @@ export class ReportsService {
         }
     }
 
-    async updateReport(id: string, updateReportDto: UpdateReportDto): Promise<ReportEntity> {
+    async updateReport(
+        id: string,
+        updateReportDto: UpdateReportDto,
+    ): Promise<ReportEntity> {
         const report = await this.reportsRepository.findOne({ where: { id } });
         if (!report) {
-          throw new NotFoundException(`Report with ID ${id} not found`);
+            throw new NotFoundException(`Report with ID ${id} not found`);
         }
-    
+
         const updatedReport = Object.assign(report, updateReportDto);
         return await this.reportsRepository.save(updatedReport);
-      }
+    }
 }
 
 // reports/reports.service.ts

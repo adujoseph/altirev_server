@@ -54,7 +54,6 @@ export enum ReportStatus {
 //     imageUrl?: string;
 // }
 
-
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateReportDto } from './create-report.dto';
 
