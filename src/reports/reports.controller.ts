@@ -39,7 +39,26 @@ export class ReportsController {
         }
 
         const fileUrl = await this.s3Service.uploadFile(file, 'File');
-        createReportsDto.fileUrl = fileUrl;     
+        createReportsDto.fileUrl = fileUrl;
+        return this.reportsService.create(createReportsDto);
+    }
+
+    @UseInterceptors(FileInterceptor('file'))
+    @Post('/file-upload')
+    async createFileUpload(@UploadedFile() file: Express.Multer.File) {
+        if (!file) {
+            throw new BadRequestException('Upload a file for evidence');
+        }
+        const fileUrl = await this.s3Service.uploadFile(file, 'File');
+
+        return {
+            message: 'file uploaded successfully',
+            fileUrl,
+        };
+    }
+
+    @Post('/submit-report')
+    async createReport(@Body() createReportsDto: CreateReportDto) {
         return this.reportsService.create(createReportsDto);
     }
 
