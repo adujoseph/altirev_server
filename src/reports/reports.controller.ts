@@ -6,6 +6,7 @@ import {
     ForbiddenException,
     Get,
     Param,
+    Patch,
     Post,
     UploadedFile,
     UseInterceptors,
@@ -19,6 +20,8 @@ import {
     FilesInterceptor,
 } from '@nestjs/platform-express';
 import { S3Service } from './s3.service';
+import { UpdateReportDto } from './dto/update-report.dto';
+import { ReportEntity } from './reports.entity';
 
 @ApiTags('Reports')
 @Controller('reports')
@@ -70,6 +73,14 @@ export class ReportsController {
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.reportsService.findOne(id);
+    }
+
+    @Patch(':id')
+    async updateReport(
+        @Param('id') id: string,
+        @Body() updateReportDto: UpdateReportDto,
+    ): Promise<ReportEntity> {
+        return this.reportsService.updateReport(id, updateReportDto);
     }
 
     @Delete(':id')
