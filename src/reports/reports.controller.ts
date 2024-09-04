@@ -6,6 +6,7 @@ import {
     ForbiddenException,
     Get,
     Param,
+    Patch,
     Post,
     UploadedFile,
     UseInterceptors,
@@ -19,6 +20,8 @@ import {
     FilesInterceptor,
 } from '@nestjs/platform-express';
 import { S3Service } from './s3.service';
+import { UpdateReportDto } from './dto/update-report.dto';
+import { ReportEntity } from './reports.entity';
 
 @ApiTags('Reports')
 @Controller('reports')
@@ -40,6 +43,28 @@ export class ReportsController {
 
         const fileUrl = await this.s3Service.uploadFile(file, 'File');
         createReportsDto.fileUrl = fileUrl;
+<<<<<<< HEAD
+        return this.reportsService.create(createReportsDto);
+    }
+
+    @UseInterceptors(FileInterceptor('file'))
+    @Post('/file-upload')
+    async createFileUpload(@UploadedFile() file: Express.Multer.File) {
+        if (!file) {
+            throw new BadRequestException('Upload a file for evidence');
+        }
+        const fileUrl = await this.s3Service.uploadFile(file, 'File');
+
+        return {
+            message: 'file uploaded successfully',
+            fileUrl,
+        };
+    }
+
+    @Post('/submit-report')
+    async createReport(@Body() createReportsDto: CreateReportDto) {
+=======
+>>>>>>> develop
         return this.reportsService.create(createReportsDto);
     }
 
@@ -51,6 +76,14 @@ export class ReportsController {
     @Get(':id')
     findOne(@Param('id') id: string) {
         return this.reportsService.findOne(id);
+    }
+
+    @Patch(':id')
+    async updateReport(
+        @Param('id') id: string,
+        @Body() updateReportDto: UpdateReportDto,
+    ): Promise<ReportEntity> {
+        return this.reportsService.updateReport(id, updateReportDto);
     }
 
     @Delete(':id')
