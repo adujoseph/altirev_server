@@ -9,6 +9,6 @@ import { S3Service } from './s3.service';
     imports: [TypeOrmModule.forFeature([ReportEntity])],
     providers: [ReportsService, S3Service],
     controllers: [ReportsController],
-    exports: [ReportsService],
+    exports: [ReportsService, S3Service],
 })
 export class ReportsModule {}

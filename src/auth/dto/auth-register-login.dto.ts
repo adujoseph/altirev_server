@@ -42,11 +42,11 @@ export class AuthRegisterLoginDto {
     @IsNotEmpty()
     country: string;
 
-    @ApiProperty({ type: String })
+    @ApiProperty({ example: 'xY0kj3343r2' })
     @IsOptional()
     paymentRef: string;
 
-    @ApiProperty({ type: String })
+    @ApiProperty()
     @IsOptional()
     planId: string;
 }

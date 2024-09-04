@@ -8,15 +8,16 @@ import { PlanEntity } from './infrastructure/persistence/relational/entities/pla
 import { TransactionsEntity } from './infrastructure/persistence/relational/entities/transactions.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      SubscriptionEntity,
-      PlanEntity,
-      TransactionsEntity
-    ]),
-    RelationalSubscriptionPersistenceModule],
-  controllers: [SubscriptionsController],
-  providers: [SubscriptionsService],
-  exports: [SubscriptionsService, RelationalSubscriptionPersistenceModule],
+    imports: [
+        TypeOrmModule.forFeature([
+            SubscriptionEntity,
+            PlanEntity,
+            TransactionsEntity,
+        ]),
+        RelationalSubscriptionPersistenceModule,
+    ],
+    controllers: [SubscriptionsController],
+    providers: [SubscriptionsService],
+    exports: [SubscriptionsService, RelationalSubscriptionPersistenceModule],
 })
 export class SubscriptionsModule {}

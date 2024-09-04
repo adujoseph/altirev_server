@@ -5,13 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SubscriptionEntity } from './entities/subscription.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([SubscriptionEntity])],
-  providers: [
-    {
-      provide: SubscriptionRepository,
-      useClass: SubscriptionRelationalRepository,
-    },
-  ],
-  exports: [SubscriptionRepository],
+    imports: [TypeOrmModule.forFeature([SubscriptionEntity])],
+    providers: [
+        {
+            provide: SubscriptionRepository,
+            useClass: SubscriptionRelationalRepository,
+        },
+    ],
+    exports: [SubscriptionRepository],
 })
 export class RelationalSubscriptionPersistenceModule {}

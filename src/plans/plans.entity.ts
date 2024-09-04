@@ -32,7 +32,7 @@ export class PlansEntity {
 
     // @Column("text", { array: true })
     // features: string[];
-    @Column({nullable: true})
+    @Column({ nullable: true })
     feature: string;
 
     @Column()

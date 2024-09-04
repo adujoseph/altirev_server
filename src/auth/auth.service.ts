@@ -133,7 +133,7 @@ export class AuthService {
             state: dto.state,
             country: dto.country,
             paymentRef: dto.paymentRef,
-            planId: dto.planId
+            planId: dto.planId,
         });
 
         // const hash = await this.jwtService.signAsync(
@@ -232,7 +232,17 @@ export class AuthService {
                 error: `notFound`,
             });
         }
+        if (
+            !user ||
+            user?.status?.toString() !== StatusEnum.INACTIVE.toString()
+        ) {
+            throw new NotFoundException({
+                status: HttpStatus.NOT_FOUND,
+                error: `notFound`,
+            });
+        }
 
+        user.status = StatusEnum.ACTIVE;
         user.status = StatusEnum.ACTIVE;
 
         await this.usersService.update(user.id, user);

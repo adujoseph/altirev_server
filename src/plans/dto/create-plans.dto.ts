@@ -1,5 +1,11 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsNotEmpty, isNumber, IsNumber, IsString } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import {
+    IsArray,
+    IsNotEmpty,
+    isNumber,
+    IsNumber,
+    IsString,
+} from 'class-validator';
 
 export class CreatePlansDto {
     @ApiProperty()
@@ -7,16 +13,14 @@ export class CreatePlansDto {
     @IsNotEmpty()
     title: string;
 
-
     @ApiProperty()
     @IsNumber()
     sub_code: Number;
 
-
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    subtitle: string;
+    description: string;
 
     @ApiProperty()
     @IsNumber()
@@ -33,11 +37,9 @@ export class CreatePlansDto {
     @IsNotEmpty()
     pricing: Number;
 
-
     @ApiProperty()
     @IsString()
     feature: string;
-
 
     @ApiProperty()
     @IsString()

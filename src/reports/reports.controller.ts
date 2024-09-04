@@ -43,6 +43,7 @@ export class ReportsController {
 
         const fileUrl = await this.s3Service.uploadFile(file, 'File');
         createReportsDto.fileUrl = fileUrl;
+<<<<<<< HEAD
         return this.reportsService.create(createReportsDto);
     }
 
@@ -62,6 +63,8 @@ export class ReportsController {
 
     @Post('/submit-report')
     async createReport(@Body() createReportsDto: CreateReportDto) {
+=======
+>>>>>>> develop
         return this.reportsService.create(createReportsDto);
     }
 

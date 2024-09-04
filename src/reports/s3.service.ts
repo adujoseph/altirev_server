@@ -10,7 +10,7 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class S3Service {
     private s3: S3Client;
-    private readonly bucketName = process.env.AWS_S3_BUCKET_NAME;
+    private readonly bucketName = process.env.AWS_DEFAULT_S3_BUCKET;
 
     constructor() {
         this.s3 = new S3Client({
@@ -25,15 +25,16 @@ export class S3Service {
     async uploadFile(
         file: Express.Multer.File,
         folder: string,
-    ): Promise<string | undefined> {
+    ): Promise<string> {
         const key = `${folder}/${uuidv4()}-${file.originalname}`;
         const command = new PutObjectCommand({
             Bucket: this.bucketName,
             Key: key,
             Body: file.buffer,
             ContentType: file.mimetype,
-            ACL: 'public-read',
+            // ACL: 'public-read',
         });
+        console.log('bucket name ::', this.bucketName);
         try {
             await this.s3.send(command);
             return `https://${this.bucketName}.s3.eu-north-1.amazonaws.com/${key}`;

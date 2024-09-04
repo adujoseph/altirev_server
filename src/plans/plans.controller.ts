@@ -3,13 +3,10 @@ import { PlansService } from './plans.service';
 import { CreatePlansDto } from './dto/create-plans.dto';
 import { ApiTags } from '@nestjs/swagger';
 
-
 @ApiTags('Plans')
 @Controller('plans')
 export class PlansController {
-    constructor(
-        private readonly planService: PlansService
-    ) {}
+    constructor(private readonly planService: PlansService) {}
 
     @Post()
     create(@Body() createPlansDto: CreatePlansDto) {
@@ -22,7 +19,7 @@ export class PlansController {
     }
 
     @Delete(':id')
-    removePlan(@Param('id') id: string){
-        return this.planService.deletePlan(id)
+    removePlan(@Param('id') id: string) {
+        return this.planService.deletePlan(id);
     }
 }
