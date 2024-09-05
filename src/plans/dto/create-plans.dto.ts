@@ -14,6 +14,11 @@ export class CreatePlansDto {
     title: string;
 
     @ApiProperty()
+    @IsString()
+    @IsNotEmpty()
+    subtitle: string;
+
+    @ApiProperty()
     @IsNumber()
     sub_code: Number;
 
