@@ -4,12 +4,8 @@ import appConfig from './config/app.config';
 import mailConfig from './mail/config/mail.config';
 import fileConfig from './files/config/file.config';
 import databaseConfig from './database/config/database.config';
-import path from 'path';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { I18nModule } from 'nestjs-i18n/dist/i18n.module';
-import { HeaderResolver } from 'nestjs-i18n';
-import { AllConfigType } from './config/config.type';
 //Modules
 import { UsersModule } from './users/users.module';
 import { FilesModule } from './files/files.module';

@@ -21,14 +21,14 @@ import { PollingEntity } from './infrastructure/persistence/relational/entities/
 
 @Module({
     imports: [
-      TypeOrmModule.forFeature([
-        ResultsEntity,
-          CountryEntity,
-          StateEntity,
-          LgaEntity,
-          WardEntity,
-          PollingEntity,
-      ]),
+        TypeOrmModule.forFeature([
+            ResultsEntity,
+            CountryEntity,
+            StateEntity,
+            LgaEntity,
+            WardEntity,
+            PollingEntity,
+        ]),
         UsersModule,
         FilesModule,
         ReportsModule,

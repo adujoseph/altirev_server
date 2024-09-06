@@ -38,6 +38,9 @@ import {
 
 @Injectable()
 export class AuthService {
+    updateUserRole(user: any) {
+        console.log(user);
+    }
     constructor(
         private jwtService: JwtService,
         private usersService: UsersService,

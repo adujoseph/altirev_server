@@ -10,11 +10,7 @@ import { WardEntity } from './entities/ward.entity';
 import { PollingEntity } from './entities/pu.entity';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([
-            ResultsEntity
-        ]),
-    ],
+    imports: [TypeOrmModule.forFeature([ResultsEntity])],
     providers: [
         {
             provide: ResultsRepository,

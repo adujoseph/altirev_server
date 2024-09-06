@@ -24,6 +24,7 @@ import { StateEntity } from './infrastructure/persistence/relational/entities/st
 import { PollingEntity } from './infrastructure/persistence/relational/entities/pu.entity';
 import { WardEntity } from './infrastructure/persistence/relational/entities/ward.entity';
 import { LgaEntity } from './infrastructure/persistence/relational/entities/lga.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class ResultsService {
@@ -43,55 +44,104 @@ export class ResultsService {
         private s3Service: S3Service,
     ) {}
 
-    async doData(): Promise<String> {
-        console.log('In JSON Data Service .....');
+    async doData(): Promise<string> {
+        console.log('Init Seeding .....');
+
         const data = fs.readFileSync('src/results/data.json');
         const dataArray = JSON.parse(data.toString());
 
         try {
             const countryEntity = new CountryEntity();
-            countryEntity.country = "Nigeria";
+            countryEntity.country = 'Nigeria'.toUpperCase();
 
             const count = await this.countryRepository.find({});
-            if (count.length != 0){
+            if (count.length != 0) {
+                console.log('Seed Already done');
                 return 'Seed Already done';
             }
-            const savedCountry = await this.countryRepository.save(countryEntity);
+            const savedCountry =
+                await this.countryRepository.save(countryEntity);
 
+            const arrayState: StateEntity[] = [];
+            const arrayLga: LgaEntity[] = [];
+            const arrayWard: WardEntity[] = [];
+            const arrayPU: PollingEntity[] = [];
             for (let i = 0; i < dataArray.length; i++) {
-                let stateObject = dataArray[i];
-                // console.log('---' + stateObject.state);
-                //save state name to db
-                const state = await this.stateRepository.save({countryId: savedCountry.id, stateName: stateObject.state});
+                const stateObject = dataArray[i];
+                const st = new StateEntity();
+                st.id = uuidv4();
+                st.countryId = savedCountry.id;
+                st.stateName = stateObject.state
+                    .replace(/-/g, ' ')
+                    .toUpperCase();
+                arrayState.push(st);
 
-                let lgArray = stateObject.lgas;
+                // const state = await this.stateRepository.save(st);
+
+                const lgArray = stateObject.lgas;
                 for (let j = 0; j < lgArray.length; j++) {
-                    let lgaObject = lgArray[j];
-                    // console.log('------' + lgaObject.lga);
+                    const lgaObject = lgArray[j];
                     // save lga name to db in lgas table
-                    const lg = await this.lgaRepository.save({stateId: state.id, lgaName: lgaObject.lga});
+                    const lg = new LgaEntity();
+                    lg.id = uuidv4();
+                    lg.stateId = st.id;
+                    lg.lgaName = lgaObject.lga.replace(/-/g, ' ').toUpperCase();
+                    arrayLga.push(lg);
+                    // const lg = await this.lgaRepository.save({
+                    //     stateId: state.id,
+                    //     lgaName: lgaObject.lga.replace(/-/g, ' ').toUpperCase(),
+                    // });
 
-                    let wardsArray = lgaObject.wards;
+                    const wardsArray = lgaObject.wards;
                     for (let k = 0; k < wardsArray.length; k++) {
-                        let wardsObject = wardsArray[k];
-                        // console.log('---------' + wardsObject.ward);
+                        const wardsObject = wardsArray[k];
                         // save ward to db in wards table
-                        const ward = await this.wardRepository.save({lgaId: lg.id, wardName: wardsObject.ward});
+                        const wd = new WardEntity();
+                        wd.id = uuidv4();
+                        wd.lgaId = lg.id;
+                        wd.wardName = wardsObject.ward
+                            .replace(/-/g, ' ')
+                            .toUpperCase();
+                        arrayWard.push(wd);
+                        //         const ward = await this.wardRepository.save({
+                        //             lgaId: lg.id,
+                        //             wardName: wardsObject.ward
+                        //                 .replace(/-/g, ' ')
+                        //                 .toUpperCase(),
+                        //         });
 
-                        let puArray = wardsObject.polling_units;
+                        const puArray = wardsObject.polling_units;
                         for (let k = 0; k < puArray.length; k++) {
                             // console.log('------------' + puArray[k]);
-                            // save pu to db in pu table
-                            await this.pollingRepository.save({wardId: ward.id, pollingUnit: puArray[k]});
+                            //             // save pu to db in pu table
+                            const pu = new PollingEntity();
+                            pu.id = uuidv4();
+                            pu.wardId = wd.id;
+                            pu.pollingUnit = puArray[k]
+                                .replace(/-/g, ' ')
+                                .toUpperCase();
+                            arrayPU.push(pu);
+                            //             await this.pollingRepository.save({
+                            //                 wardId: ward.id,
+                            //                 pollingUnit: puArray[k]
+                            //                     .replace(/-/g, ' ')
+                            //                     .toUpperCase(),
+                            //             });
                         }
                     }
                 }
             }
-        }catch (error) {
+
+            await this.stateRepository.save(arrayState);
+            await this.lgaRepository.save(arrayLga);
+            await this.wardRepository.save(arrayWard);
+            await this.pollingRepository.save(arrayPU);
+            console.log('Location Data Seeding Completed');
+        } catch (error) {
             console.log(error);
         }
 
-        return "Seeding Location Data ................";
+        return 'Seeding Location Data ................';
     }
 
     async create(
@@ -170,5 +220,21 @@ export class ResultsService {
 
     async getResultByAgent(userAltirevId: Results['userAltirevId']) {
         return this.resultsRepository.findByAgent(userAltirevId);
+    }
+
+    async getAllStates(countryId: string): Promise<StateEntity[]> {
+        return this.stateRepository.find({ where: { countryId: countryId } });
+    }
+
+    async getAllLgas(stateId: string): Promise<LgaEntity[]> {
+        return this.lgaRepository.find({ where: { stateId: stateId } });
+    }
+
+    async getAllWards(lgaId: string): Promise<WardEntity[]> {
+        return this.wardRepository.find({ where: { lgaId: lgaId } });
+    }
+
+    async getAllPU(wardId: string): Promise<PollingEntity[]> {
+        return this.pollingRepository.find({ where: { wardId: wardId } });
     }
 }

@@ -23,5 +23,7 @@ export abstract class ResultsRepository {
 
     abstract remove(id: Results['id']): Promise<void>;
 
-    abstract findByAgent(userAltirevId: Results['userAltirevId']) : Promise<NullableType<Results>>;
+    abstract findByAgent(
+        userAltirevId: Results['userAltirevId'],
+    ): Promise<NullableType<Results>>;
 }
