@@ -14,6 +14,12 @@ import { ElectionType } from '../../../../dto/create-results.dto';
 import { FileEntity } from '../../../../../files/persistence/entities/file.entity';
 import { FileType } from '../../../../../files/domain/file';
 
+export enum ResultStatus {
+    PROCESSING = 'processing',
+    COMPLETED = 'completed',
+    REJECTED = 'rejected',
+}
+
 @Entity({
     name: 'election_results',
 })
@@ -72,6 +78,36 @@ export class ResultsEntity extends EntityRelationalHelper {
     })
     @Column({ name: 'user_id', type: String, nullable: false })
     userAltirevId: string;
+
+    @ApiProperty({
+        type: String,
+    })
+    @Column({ type: String, nullable: false })
+    state: string;
+
+    @ApiProperty({
+        type: String,
+    })
+    @Column({ type: String, nullable: false })
+    lga: string;
+
+    @ApiProperty({
+        type: String,
+    })
+    @Column({ type: String, nullable: false })
+    ward: string;
+
+    @ApiProperty({
+        type: String,
+    })
+    @Column({ type: String, nullable: false })
+    pollingUnit: string;
+
+    @ApiProperty({
+        enum: () => ResultStatus,
+    })
+    @Column({ type: String, nullable: false })
+    status: ResultStatus;
 
     @ApiProperty()
     @CreateDateColumn()

@@ -35,8 +35,8 @@ import { FileResponseDto } from '../files/uploader/s3/dto/file-response.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Results')
-@ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
+// @ApiBearerAuth()
+// @UseGuards(AuthGuard('jwt'))
 @Controller({
     path: 'results',
     version: '1',
@@ -120,5 +120,11 @@ export class ResultsController {
     })
     remove(@Param('id') id: string) {
         return this.resultsService.remove(id);
+    }
+
+    @Get('location/:id')
+    async getJSONData(@Param('id') id: string) {
+        console.log('Init Seeding .....');
+        await this.resultsService.doData();
     }
 }
