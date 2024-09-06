@@ -22,7 +22,7 @@ export class PlansEntity {
     subtitle: string;
 
     @Column()
-    description: Number;
+    description: string;
 
     @Column({nullable: true})
     maxSubscriber: Number;

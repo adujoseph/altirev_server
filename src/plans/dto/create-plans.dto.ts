@@ -20,37 +20,30 @@ export class CreatePlansDto {
     subtitle: string;
 
     @ApiProperty()
-    @IsNumber()
     @IsOptional()
-    sub_code: Number;
+    sub_code?: Number;
 
     @ApiProperty()
     @IsString()
-    @IsOptional()
     description: string;
 
     @ApiProperty()
-    @IsNumber()
     @IsOptional()
     maxSubscriber: Number;
 
     @ApiProperty()
-    @IsNumber()
     @IsOptional()
-    minSubscriber: Number;
+    minSubscriber?: Number;
 
     @ApiProperty()
-    @IsNumber()
     @IsOptional()
-    pricing: Number;
+    pricing?: Number;
 
     @ApiProperty()
-    @IsString()
     @IsOptional()
-    feature: string;
+    feature?: string;
 
     @ApiProperty()
     @IsString()
-    @IsOptional()
     link: string;
 }
