@@ -38,9 +38,6 @@ import {
 
 @Injectable()
 export class AuthService {
-    updateUserRole(user: any) {
-        console.log(user);
-    }
     constructor(
         private jwtService: JwtService,
         private usersService: UsersService,
@@ -731,4 +728,20 @@ export class AuthService {
         response.message = 'Token Sent to your email';
         return response;
     }
+
+    // async updateUserRole(
+    //     userJwtPayload: JwtPayloadType,
+    //     userDto: AuthUpdateDto,
+    // ): Promise<NullableType<User>> {
+    //     const currentUser = await this.usersService.findById(userJwtPayload.id);
+
+    //     if (!currentUser) {
+    //         throw new UnprocessableEntityException({
+    //             status: HttpStatus.UNPROCESSABLE_ENTITY,
+    //             errors: {
+    //                 user: 'userNotFound',
+    //             },
+    //         });
+    //     }
+    // }
 }
