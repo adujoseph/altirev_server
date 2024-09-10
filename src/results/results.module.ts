@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ResultsService } from './results.service';
 import { ResultsController } from './results.controller';
 import { RelationalResultsPersistenceModule } from './infrastructure/persistence/relational/relational-persistence.module';
@@ -28,7 +28,7 @@ import { ElectionModule } from '../election/election.module';
         UsersModule,
         FilesModule,
         ReportsModule,
-        ElectionModule,
+        forwardRef(() => ElectionModule),
         RelationalResultsPersistenceModule,
     ],
     controllers: [ResultsController],

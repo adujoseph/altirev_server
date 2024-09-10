@@ -39,7 +39,7 @@ export class CreateResultsDto {
     voteCasted: number;
 
     @ApiProperty({
-        type: Map<String, Number>,
+        type: Map<string, number>,
     })
     @IsNotEmpty()
     counts: Map<string, number>;

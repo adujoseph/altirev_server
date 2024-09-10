@@ -11,6 +11,7 @@ import {
 import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
 import { IsEnum, IsNotEmpty } from 'class-validator';
 import { ElectionType } from '../../../../dto/create-results.dto';
+import { LocationEntity } from '../../../../../election/entities/location.entity';
 // import { Election } from '../../../../../election/election.entity';
 
 export enum ResultStatus {
@@ -31,7 +32,7 @@ export class ResultsEntity extends EntityRelationalHelper {
     // @ManyToOne(() => Election, {
     //     eager: true,
     // })
-    election: string;
+    electionId: string;
 
     @IsNotEmpty()
     @Column({ name: 'election_type', type: String, nullable: false })
@@ -67,17 +68,20 @@ export class ResultsEntity extends EntityRelationalHelper {
     @Column({ name: 'user_id', type: String, nullable: false })
     userAltirevId: string;
 
-    @Column({ type: String, nullable: false })
-    state: string;
+    // @Column({ type: String, nullable: false })
+    // state: string;
 
-    @Column({ type: String, nullable: false })
-    lga: string;
+    // @Column({ type: String, nullable: false })
+    // lga: string;
 
-    @Column({ type: String, nullable: false })
-    ward: string;
+    // @Column({ type: String, nullable: false })
+    // ward: string;
 
-    @Column({ type: String, nullable: false })
-    pollingUnit: string;
+    // @Column({ type: String, nullable: false })
+    // pollingUnit: string;
+
+    @OneToOne(() => LocationEntity, (location) => location.id)
+    location: LocationEntity;
 
     @Column({ type: String, nullable: false })
     status: ResultStatus;

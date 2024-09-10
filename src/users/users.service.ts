@@ -17,8 +17,6 @@ import { FilesService } from '../files/files.service';
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { DeepPartial } from '../utils/types/deep-partial.type';
 import { RolesEnum, StatusEnum } from './persistence/entities/user.entity';
-import * as process from 'node:process';
-import axios from 'axios';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 
 @Injectable()
@@ -38,7 +36,7 @@ export class UsersService {
         };
 
         if (clonedPayload.paymentRef) {
-            let response = await this.subscriptionsService.verifyPayment(
+            const response = await this.subscriptionsService.verifyPayment(
                 clonedPayload.paymentRef,
             );
             if (
