@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Election, ElectionStatus } from './election.entity';
 import { CreateElectionDto } from './dto/create-election.dto';
 import { UpdateElectionDto } from './dto/update-election.dto';
+import { GetElectionsFilterDto } from './dto/get-election.dto';
 
 @Injectable()
 export class ElectionService {
@@ -13,13 +14,54 @@ export class ElectionService {
     ) {}
 
     async createElection(electionDto: CreateElectionDto): Promise<Election> {
-        console.log({ electionDto });
+        const electionDate = new Date(electionDto.electionDate);
+        const currentDate = new Date();
+        if (electionDate < currentDate) {
+            electionDto.status = ElectionStatus.PREVIOUS;
+        } else if (electionDate.toDateString() === currentDate.toDateString()) {
+            electionDto.status = ElectionStatus.ONGOING;
+        } else {
+            electionDto.status = ElectionStatus.UPCOMING;
+        }
         const electionData = await this.electionRepository.save(electionDto);
         return electionData;
     }
 
     async findAll(status: ElectionStatus): Promise<Election[]> {
-        return await this.electionRepository.find({ where: { status } });
+        const currentDate = new Date();
+        if(status){
+            return await this.electionRepository.find({ where: { status } });
+        }
+        return await this.electionRepository.find()   
+    }
+
+
+    async getAllElections(filterDto: GetElectionsFilterDto): Promise<Election[]> {
+        const { status, search, page = 1, limit = 10, sortField = 'date', sortDirection = 'ASC' } = filterDto;
+
+        const query = this.electionRepository.createQueryBuilder('election');
+
+        // Apply filtering by status
+        if (status) {
+            query.andWhere('election.status = :status', { status });
+        }
+
+        // Apply search functionality
+        if (search) {
+            query.andWhere(
+                '(election.name LIKE :search OR election.description LIKE :search)',
+                { search: `%${search}%` },
+            );
+        }
+
+        // Apply sorting
+        query.orderBy(`election.${sortField}`, sortDirection);
+
+        // Apply pagination
+        query.skip((page - 1) * limit).take(limit);
+
+        const elections = await query.getMany();
+        return elections;
     }
 
     async findOne(id: string): Promise<Election | null> {

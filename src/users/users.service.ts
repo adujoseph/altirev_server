@@ -172,6 +172,7 @@ export class UsersService {
             provider,
         });
     }
+  
 
     async update(
         id: User['id'],
@@ -258,4 +259,6 @@ export class UsersService {
     async findByPhone(phone: string): Promise<NullableType<User>> {
         return this.usersRepository.findByPhone(phone);
     }
+
+
 }

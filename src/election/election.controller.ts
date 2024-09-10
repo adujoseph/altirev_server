@@ -13,6 +13,7 @@ import { ElectionStatus } from './election.entity';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateElectionDto } from './dto/create-election.dto';
 import { UpdateElectionDto } from './dto/update-election.dto';
+import { GetElectionsFilterDto } from './dto/get-election.dto';
 
 @ApiTags('Elections')
 @Controller('Elections')
@@ -27,6 +28,12 @@ export class ElectionController {
     @Get()
     async findAllElections(@Query('status') status: ElectionStatus) {
         return this.electionService.findAll(status);
+    }
+
+
+    @Get('/all')
+    async getAllElections(@Query() filterDto: GetElectionsFilterDto) {
+        return this.electionService.getAllElections(filterDto);
     }
 
     @Get(':id')

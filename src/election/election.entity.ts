@@ -22,6 +22,9 @@ export class Election {
     @Column()
     name: string;
 
+    @Column()
+    userId: string;
+
     @Column({ nullable: true })
     description: string;
 

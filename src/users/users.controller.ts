@@ -126,6 +126,20 @@ export class UsersController {
         return this.usersService.update(id, updateProfileDto);
     }
 
+    @Patch('/role/:id')
+    @HttpCode(HttpStatus.OK)
+    @ApiParam({
+        name: 'id',
+        type: String,
+        required: true,
+    })
+    updateRole(
+        @Param('id') id: User['id'],
+        @Body() updateProfileDto: UpdateUserDto,
+    ): Promise<User | null> {
+        return this.usersService.update(id, updateProfileDto);
+    }
+
     @Delete(':id')
     @ApiParam({
         name: 'id',
