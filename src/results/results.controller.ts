@@ -133,6 +133,11 @@ export class ResultsController {
         await this.resultsService.doData();
     }
 
+    @Get('public/countries')
+    async getCountries() {
+        return await this.resultsService.getCountries();
+    }
+
     // pi.altirev.com/api/public/{countryId}/states
     @Get('public/:countryId/states')
     @ApiParam({ name: 'countryId', type: String, required: true })

@@ -222,6 +222,10 @@ export class ResultsService {
         return this.resultsRepository.findByAgent(userAltirevId);
     }
 
+    async getCountries() {
+        return this.countryRepository.find();
+    }
+
     async getAllStates(countryId: string): Promise<StateEntity[]> {
         return this.stateRepository.find({ where: { countryId: countryId } });
     }
