@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 import { ElectionType } from '../dto/create-results.dto';
-import { Column } from 'typeorm';
-import { FileType } from '../../files/domain/file';
+import { ResultStatus } from '../infrastructure/persistence/relational/entities/results.entity';
 
 export class Results {
     @ApiProperty({
         type: String,
     })
+    @IsOptional()
     id: string;
 
     @ApiProperty({
@@ -33,12 +33,6 @@ export class Results {
     @IsNotEmpty()
     counts: Map<string, number>;
 
-    // @ApiProperty({
-    //   type: String
-    // })
-    // @IsNotEmpty()
-    // ctcFilePath: string
-
     @ApiProperty({
         type: Number,
     })
@@ -54,6 +48,31 @@ export class Results {
         type: String,
     })
     fileUrl: string;
+
+    @ApiProperty({
+        type: String,
+    })
+    state: string;
+
+    @ApiProperty({
+        type: String,
+    })
+    lga: string;
+
+    @ApiProperty({
+        type: String,
+    })
+    ward: string;
+
+    @ApiProperty({
+        type: String,
+    })
+    pollingUnit: string;
+
+    @ApiProperty({
+        enum: () => ResultStatus,
+    })
+    status: ResultStatus;
 
     @ApiProperty()
     createdAt: Date;

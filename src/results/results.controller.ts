@@ -12,11 +12,10 @@ import {
     UploadedFile,
 } from '@nestjs/common';
 import { ResultsService } from './results.service';
-import { CreateResultsDto, ElectionType } from './dto/create-results.dto';
+import { CreateResultsDto } from './dto/create-results.dto';
 import { UpdateResultsDto } from './dto/update-results.dto';
 import {
     ApiBearerAuth,
-    ApiBody,
     ApiConsumes,
     ApiCreatedResponse,
     ApiOkResponse,
@@ -35,8 +34,8 @@ import { FileResponseDto } from '../files/uploader/s3/dto/file-response.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Results')
-@ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'))
+// @ApiBearerAuth()
+// @UseGuards(AuthGuard('jwt'))
 @Controller({
     path: 'results',
     version: '1',
@@ -120,5 +119,50 @@ export class ResultsController {
     })
     remove(@Param('id') id: string) {
         return this.resultsService.remove(id);
+    }
+
+    @Get('agents/:id')
+    @ApiOkResponse({ type: Results })
+    @ApiParam({ name: 'agentId' })
+    async getResultByAgent(@Param('id') id: string) {
+        return await this.resultsService.getResultByAgent(id);
+    }
+
+    @Get('location/seed')
+    async getJSONData() {
+        await this.resultsService.doData();
+    }
+
+    @Get('public/countries')
+    async getCountries() {
+        return await this.resultsService.getCountries();
+    }
+
+    // pi.altirev.com/api/public/{countryId}/states
+    @Get('public/:countryId/states')
+    @ApiParam({ name: 'countryId', type: String, required: true })
+    async getStates(@Param('countryId') countryId: string) {
+        return await this.resultsService.getAllStates(countryId);
+    }
+
+    // api.altirev.com/api/public/{stateId}/localgovt
+    @Get('public/:stateId/localgovt')
+    @ApiParam({ name: 'stateId', type: String, required: true })
+    async getLgas(@Param('stateId') stateId: string) {
+        return await this.resultsService.getAllLgas(stateId);
+    }
+
+    // api.altirev.com/api/public/{localGovtId}/wards
+    @Get('public/:lgaId/wards')
+    @ApiParam({ name: 'lgaId', type: String, required: true })
+    async getWards(@Param('lgaId') lgaId: string) {
+        return await this.resultsService.getAllWards(lgaId);
+    }
+
+    // api.altirev.com/api/public/{wardId}/pu
+    @Get('public/:wardId/pu')
+    @ApiParam({ name: 'wardId', type: String, required: true })
+    async getPollingUnits(@Param('wardId') wardId: string) {
+        return await this.resultsService.getAllPU(wardId);
     }
 }

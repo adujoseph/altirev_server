@@ -44,6 +44,16 @@ export class ResultsRelationalRepository implements ResultsRepository {
         return entity ? ResultsMapper.toDomain(entity) : null;
     }
 
+    async findByAgent(
+        userAltirevId: Results['userAltirevId'],
+    ): Promise<NullableType<Results>> {
+        const entity = await this.resultsRepository.findOne({
+            where: { userAltirevId },
+        });
+
+        return entity ? ResultsMapper.toDomain(entity) : null;
+    }
+
     async update(
         id: Results['id'],
         payload: Partial<Results>,

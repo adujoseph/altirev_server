@@ -177,6 +177,19 @@ export class AuthController {
         return this.service.update(request.user, userDto);
     }
 
+    // @Patch('roles')
+    // @UseGuards(AuthGuard('jwt'))
+    // @HttpCode(HttpStatus.OK)
+    // @ApiOkResponse({
+    //     type: User,
+    // })
+    // public updateSingleUserRole(
+    //     @Request() request,
+    //     @Body() userDto: AuthUpdateDto,
+    // ): Promise<NullableType<User>> {
+    //     return this.service.updateUserRole(request.user, userDto);
+    // }
+
     @ApiBearerAuth()
     @Delete('me')
     @UseGuards(AuthGuard('jwt'))
