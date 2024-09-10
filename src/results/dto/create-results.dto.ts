@@ -14,6 +14,12 @@ export class CreateResultsDto {
     // Don't forget to use the class-validator decorators in the DTO properties.
 
     @ApiProperty({
+        type: String,
+    })
+    @IsNotEmpty()
+    electionId: string;
+
+    @ApiProperty({
         enum: () => ElectionType,
     })
     @IsNotEmpty()

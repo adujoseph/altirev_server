@@ -9,10 +9,9 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
-import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty } from 'class-validator';
 import { ElectionType } from '../../../../dto/create-results.dto';
-import { Election } from '../../../../../election/election.entity';
+// import { Election } from '../../../../../election/election.entity';
 
 export enum ResultStatus {
     PROCESSING = 'processing',
@@ -29,11 +28,10 @@ export class ResultsEntity extends EntityRelationalHelper {
 
     @IsNotEmpty()
     @Column({ name: 'election_id', type: String, nullable: false })
-    @ManyToOne(() => Election, {
-        eager: true,
-    })
-    @JoinColumn()
-    electionId: string;
+    // @ManyToOne(() => Election, {
+    //     eager: true,
+    // })
+    election: string;
 
     @IsNotEmpty()
     @Column({ name: 'election_type', type: String, nullable: false })

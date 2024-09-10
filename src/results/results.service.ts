@@ -1,7 +1,9 @@
 import {
     BadRequestException,
+    ForbiddenException,
     Injectable,
     InternalServerErrorException,
+    NotFoundException,
     UnauthorizedException,
 } from '@nestjs/common';
 import { CreateResultsDto } from './dto/create-results.dto';
@@ -25,6 +27,8 @@ import { PollingEntity } from './infrastructure/persistence/relational/entities/
 import { WardEntity } from './infrastructure/persistence/relational/entities/ward.entity';
 import { LgaEntity } from './infrastructure/persistence/relational/entities/lga.entity';
 import { v4 as uuidv4 } from 'uuid';
+import { ElectionService } from '../election/election.service';
+import { ElectionStatus } from '../election/election.entity';
 
 @Injectable()
 export class ResultsService {
@@ -42,6 +46,7 @@ export class ResultsService {
         private pollingRepository: Repository<PollingEntity>,
         private readonly userService: UsersService,
         private s3Service: S3Service,
+        private electionService: ElectionService,
     ) {}
 
     async doData(): Promise<string> {
@@ -162,6 +167,17 @@ export class ResultsService {
         );
         if (!user) {
             throw new UnauthorizedException('User with Altirev ID not found');
+        }
+
+        const election = await this.electionService.findOne(
+            createResultsDto.electionId,
+        );
+        if (!election) {
+            throw new NotFoundException('Election not found');
+        }
+
+        if (election.status !== ElectionStatus.ONGOING) {
+            throw new ForbiddenException('Election is not ongoing');
         }
 
         const fileUrl = await this.s3Service.uploadFile(file, 'File');

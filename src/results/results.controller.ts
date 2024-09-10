@@ -128,7 +128,7 @@ export class ResultsController {
         return await this.resultsService.getResultByAgent(id);
     }
 
-    @Get('location/:id')
+    @Get('location/seed')
     async getJSONData() {
         await this.resultsService.doData();
     }
