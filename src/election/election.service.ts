@@ -40,7 +40,7 @@ export class ElectionService {
             throw new UnauthorizedException('Unauthorized Request');
         }
 
-        const user = await this.userService.findByAltirevId(locationDto.user);
+        const user = await this.userService.findByEmail(locationDto.email);
         if (!user) {
             throw new Error('User not found');
         }
@@ -59,7 +59,7 @@ export class ElectionService {
         locationData.pollingUnit = pu;
         locationData.user = UserMapper.toPersistence(user);
 
-        if (locationDto.hasOwnProperty('role') && locationDto.role === null) {
+        if (locationDto.hasOwnProperty('role') && locationDto.role != null) {
             const updatedUser = await this.userService.update(user.id, {
                 tenantId: moderator.tenantId,
                 role: locationData.role,

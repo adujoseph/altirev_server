@@ -21,7 +21,7 @@ export class CreateLocationDto {
 
     @ApiProperty({ type: String })
     @IsNotEmpty()
-    user: string;
+    email: string;
 
     @ApiProperty({ enum: () => RolesEnum })
     @IsOptional()
