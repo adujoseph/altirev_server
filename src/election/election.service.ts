@@ -52,30 +52,39 @@ export class ElectionService {
             throw new Error('User not found');
         }
 
-        // const userLocation = await this.getLocationByUser(user.altirevId);
-
         const state = await this.resultService.getState(locationDto.state);
         const lga = await this.resultService.getLga(locationDto.lga);
         const ward = await this.resultService.getWard(locationDto.ward);
         const pu = await this.resultService.getPU(locationDto.pollingUnit);
 
         const locationData = new LocationEntity();
-        locationData.state = state;
-        locationData.lga = lga;
-        locationData.ward = ward;
-        locationData.pollingUnit = pu;
-        locationData.user = UserMapper.toPersistence(user);
 
-        if (locationDto.hasOwnProperty('role') && locationDto.role != null) {
-            const updatedUser = await this.userService.update(user.id, {
-                tenantId: moderator.tenantId,
-                role: locationData.role,
-            });
-            if (!updatedUser) {
-                throw new Error('Unable to update User Role');
+        const userLocation = await this.getLocationByUser(user.altirevId);
+        if (!userLocation) {
+            locationData.state = state;
+            locationData.lga = lga;
+            locationData.ward = ward;
+            locationData.pollingUnit = pu;
+            locationData.user = UserMapper.toPersistence(user);
+            if (
+                locationDto.hasOwnProperty('role') &&
+                locationDto.role != null
+            ) {
+                const updatedUser = await this.userService.update(user.id, {
+                    tenantId: moderator.tenantId,
+                    role: locationData.role,
+                });
+                if (!updatedUser) {
+                    throw new Error('Unable to update User Role');
+                }
             }
+            return await this.locationRepository.save(locationData);
         }
-        return await this.locationRepository.save(locationData);
+        userLocation.state = locationData.state;
+        userLocation.lga = locationData.lga;
+        userLocation.ward = locationData.ward;
+        userLocation.pollingUnit = locationData.pollingUnit;
+        return await this.locationRepository.save(userLocation);
     }
 
     async getLocationByUser(userId: string) {
