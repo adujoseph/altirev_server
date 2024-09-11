@@ -56,6 +56,7 @@ export class UsersService {
                 );
             }
             clonedPayload.role = RolesEnum.MODERATOR;
+            clonedPayload.tenantId = uuidv4();
         }
 
         if (clonedPayload.password) {
