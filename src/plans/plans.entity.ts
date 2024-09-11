@@ -15,19 +15,22 @@ export class PlansEntity {
     @Column()
     title: string;
 
-    @Column()
+    @Column({nullable: true})
     sub_code: Number;
 
-    @Column()
+    @Column({nullable: true})
     subtitle: string;
 
     @Column()
+    description: string;
+
+    @Column({nullable: true})
     maxSubscriber: Number;
 
-    @Column()
+    @Column({nullable: true})
     minSubscriber: Number;
 
-    @Column()
+    @Column({nullable: true})
     pricing: Number;
 
     // @Column("text", { array: true })

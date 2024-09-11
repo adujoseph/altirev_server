@@ -10,7 +10,7 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class S3Service {
     private s3: S3Client;
-    private readonly bucketName = process.env.AWS_DEFAULT_S3_BUCKET;
+    private readonly bucketName = process.env.AWS_S3_BUCKET_NAME;
 
     constructor() {
         this.s3 = new S3Client({
@@ -32,7 +32,7 @@ export class S3Service {
             Key: key,
             Body: file.buffer,
             ContentType: file.mimetype,
-            // ACL: 'public-read',
+            ACL: 'public-read',
         });
         console.log('bucket name ::', this.bucketName);
         try {

@@ -4,6 +4,7 @@ import {
     IsNotEmpty,
     isNumber,
     IsNumber,
+    IsOptional,
     IsString,
 } from 'class-validator';
 
@@ -14,32 +15,33 @@ export class CreatePlansDto {
     title: string;
 
     @ApiProperty()
-    @IsNumber()
-    sub_code: Number;
+    @IsString()
+    @IsOptional()
+    subtitle: string;
+
+    @ApiProperty()
+    @IsOptional()
+    sub_code?: Number;
 
     @ApiProperty()
     @IsString()
-    @IsNotEmpty()
     description: string;
 
     @ApiProperty()
-    @IsNumber()
-    @IsNotEmpty()
+    @IsOptional()
     maxSubscriber: Number;
 
     @ApiProperty()
-    @IsNumber()
-    @IsNotEmpty()
-    minSubscriber: Number;
+    @IsOptional()
+    minSubscriber?: Number;
 
     @ApiProperty()
-    @IsNumber()
-    @IsNotEmpty()
-    pricing: Number;
+    @IsOptional()
+    pricing?: Number;
 
     @ApiProperty()
-    @IsString()
-    feature: string;
+    @IsOptional()
+    feature?: string;
 
     @ApiProperty()
     @IsString()
