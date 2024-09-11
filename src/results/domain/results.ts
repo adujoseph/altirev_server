@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional } from 'class-validator';
 import { ElectionType } from '../dto/create-results.dto';
 import { ResultStatus } from '../infrastructure/persistence/relational/entities/results.entity';
+import { LocationEntity } from '../../election/entities/location.entity';
 
 export class Results {
     @ApiProperty({
@@ -9,6 +10,12 @@ export class Results {
     })
     @IsOptional()
     id: string;
+
+    @ApiProperty({
+        type: String,
+    })
+    @IsNotEmpty()
+    electionId: string;
 
     @ApiProperty({
         enum: () => ElectionType,
@@ -28,7 +35,7 @@ export class Results {
     voteCasted: number;
 
     @ApiProperty({
-        type: Map<String, Number>,
+        type: Map<string, number>,
     })
     @IsNotEmpty()
     counts: Map<string, number>;
@@ -50,24 +57,29 @@ export class Results {
     fileUrl: string;
 
     @ApiProperty({
-        type: String,
+        type: LocationEntity,
     })
-    state: string;
+    location: LocationEntity;
 
-    @ApiProperty({
-        type: String,
-    })
-    lga: string;
+    // @ApiProperty({
+    //     type: String,
+    // })
+    // state: string;
 
-    @ApiProperty({
-        type: String,
-    })
-    ward: string;
+    // @ApiProperty({
+    //     type: String,
+    // })
+    // lga: string;
 
-    @ApiProperty({
-        type: String,
-    })
-    pollingUnit: string;
+    // @ApiProperty({
+    //     type: String,
+    // })
+    // ward: string;
+
+    // @ApiProperty({
+    //     type: String,
+    // })
+    // pollingUnit: string;
 
     @ApiProperty({
         enum: () => ResultStatus,

@@ -6,7 +6,7 @@ import {
     UpdateDateColumn,
     ManyToOne,
 } from 'typeorm';
-import { UserEntity } from '../users/persistence/entities/user.entity';
+import { UserEntity } from '../../users/persistence/entities/user.entity';
 
 export enum ElectionStatus {
     PREVIOUS = 'previous',

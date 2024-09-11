@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsEnum, IsNotEmpty, IsOptional } from 'class-validator';
-import { ElectionStatus } from '../election.entity';
+import { IsDateString, IsEnum, IsNotEmpty } from 'class-validator';
+import { ElectionStatus } from '../entities/election.entity';
 
 export enum AdminStatus {
     Active = 'active',
@@ -21,8 +21,8 @@ export class CreateElectionDto {
 
     @ApiProperty()
     @IsEnum(ElectionStatus)
-    @IsOptional()
-    status?: ElectionStatus;
+    @IsNotEmpty()
+    status: ElectionStatus;
 
     @ApiProperty()
     @IsDateString()

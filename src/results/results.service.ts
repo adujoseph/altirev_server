@@ -1,6 +1,8 @@
 import {
     BadRequestException,
     ForbiddenException,
+    forwardRef,
+    Inject,
     Injectable,
     InternalServerErrorException,
     NotFoundException,
@@ -28,7 +30,7 @@ import { WardEntity } from './infrastructure/persistence/relational/entities/war
 import { LgaEntity } from './infrastructure/persistence/relational/entities/lga.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { ElectionService } from '../election/election.service';
-import { ElectionStatus } from '../election/election.entity';
+import { ElectionStatus } from '../election/entities/election.entity';
 
 @Injectable()
 export class ResultsService {
@@ -46,6 +48,7 @@ export class ResultsService {
         private pollingRepository: Repository<PollingEntity>,
         private readonly userService: UsersService,
         private s3Service: S3Service,
+        @Inject(forwardRef(() => ElectionService))
         private electionService: ElectionService,
     ) {}
 
@@ -182,17 +185,19 @@ export class ResultsService {
 
         const fileUrl = await this.s3Service.uploadFile(file, 'File');
 
+        const locationInfo = await this.electionService.getLocationByUser(
+            user.altirevId,
+        );
+
         const result = new Results();
+        result.electionId = createResultsDto.electionId;
         result.userAltirevId = createResultsDto.userAltirevId;
         result.electionType = createResultsDto.electionType;
         result.accreditedVoters = createResultsDto.accreditedVoters;
         result.voteCasted = createResultsDto.voteCasted;
         result.counts = createResultsDto.counts;
         result.fileUrl = fileUrl;
-        result.state = '';
-        result.lga = '';
-        result.ward = '';
-        result.pollingUnit = '';
+        result.location = locationInfo;
         result.status = ResultStatus.PROCESSING;
 
         const resultEntity = ResultsMapper.toPersistence(result);
@@ -242,19 +247,40 @@ export class ResultsService {
         return this.countryRepository.find();
     }
 
+    async getCountry(countryId: string) {
+        return this.countryRepository.findOneOrFail({
+            where: { id: countryId },
+        });
+    }
+
     async getAllStates(countryId: string): Promise<StateEntity[]> {
         return this.stateRepository.find({ where: { countryId: countryId } });
+    }
+
+    async getState(stateId: string) {
+        return this.stateRepository.findOneOrFail({ where: { id: stateId } });
     }
 
     async getAllLgas(stateId: string): Promise<LgaEntity[]> {
         return this.lgaRepository.find({ where: { stateId: stateId } });
     }
 
+    async getLga(lgaId: string) {
+        return this.lgaRepository.findOneOrFail({ where: { id: lgaId } });
+    }
+
     async getAllWards(lgaId: string): Promise<WardEntity[]> {
         return this.wardRepository.find({ where: { lgaId: lgaId } });
+    }
+    async getWard(wardId: string) {
+        return this.wardRepository.findOneOrFail({ where: { id: wardId } });
     }
 
     async getAllPU(wardId: string): Promise<PollingEntity[]> {
         return this.pollingRepository.find({ where: { wardId: wardId } });
+    }
+
+    async getPU(puId: string) {
+        return this.pollingRepository.findOneOrFail({ where: { id: puId } });
     }
 }

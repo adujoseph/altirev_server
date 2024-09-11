@@ -1,7 +1,7 @@
 import { PartialType, ApiPropertyOptional } from '@nestjs/swagger';
 import { CreateUserDto } from './create-user.dto';
 
-import { Transform, Type } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import { IsEmail, IsOptional, MinLength } from 'class-validator';
 import { lowerCaseTransformer } from '../../utils/transformers/lower-case.transformer';
 import { RolesEnum, StatusEnum } from '../persistence/entities/user.entity';

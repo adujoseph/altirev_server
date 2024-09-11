@@ -6,17 +6,18 @@ import {
     Delete,
     Param,
     Body,
+    Request,
     Query,
 } from '@nestjs/common';
 import { ElectionService } from './election.service';
-import { ElectionStatus } from './election.entity';
+import { ElectionStatus } from './entities/election.entity';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateElectionDto } from './dto/create-election.dto';
 import { UpdateElectionDto } from './dto/update-election.dto';
-import { GetElectionsFilterDto } from './dto/get-election.dto';
+import { CreateLocationDto } from './dto/create-location.dto';
 
-@ApiTags('Elections')
-@Controller('Elections')
+@ApiTags('elections')
+@Controller('elections')
 export class ElectionController {
     constructor(private readonly electionService: ElectionService) {}
 
@@ -25,15 +26,20 @@ export class ElectionController {
         return this.electionService.createElection(createElectionDto);
     }
 
+    @Post('/role/location')
+    createUpdateUserRole(
+        @Request() request,
+        @Body() createUpdateUserRole: CreateLocationDto,
+    ) {
+        return this.electionService.updateUserRoleAndLocation(
+            request.user,
+            createUpdateUserRole,
+        );
+    }
+
     @Get()
     async findAllElections(@Query('status') status: ElectionStatus) {
         return this.electionService.findAll(status);
-    }
-
-
-    @Get('/all')
-    async getAllElections(@Query() filterDto: GetElectionsFilterDto) {
-        return this.electionService.getAllElections(filterDto);
     }
 
     @Get(':id')
