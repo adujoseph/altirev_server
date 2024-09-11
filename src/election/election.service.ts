@@ -15,6 +15,7 @@ import { ResultsService } from '../results/results.service';
 import { UsersService } from '../users/users.service';
 import { UserMapper } from '../users/persistence/mappers/user.mapper';
 import { JwtPayloadType } from '../auth/strategies/types/jwt-payload.type';
+import { User } from '../users/domain/user';
 
 @Injectable()
 export class ElectionService {
@@ -70,10 +71,13 @@ export class ElectionService {
                 locationDto.hasOwnProperty('role') &&
                 locationDto.role != null
             ) {
-                const updatedUser = await this.userService.update(user.id, {
-                    tenantId: moderator.tenantId,
-                    role: locationData.role,
-                });
+                const user = new User();
+                user.tenantId = moderator.tenantId;
+                user.role = locationData.role;
+                const updatedUser = await this.userService.update(
+                    user.id,
+                    user,
+                );
                 if (!updatedUser) {
                     throw new Error('Unable to update User Role');
                 }
