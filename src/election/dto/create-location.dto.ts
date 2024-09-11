@@ -23,6 +23,10 @@ export class CreateLocationDto {
     @IsNotEmpty()
     email: string;
 
+    @ApiProperty({ type: String })
+    @IsNotEmpty()
+    modId: string;
+
     @ApiProperty({ enum: () => RolesEnum })
     @IsOptional()
     role: RolesEnum;

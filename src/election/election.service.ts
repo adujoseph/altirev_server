@@ -1,4 +1,9 @@
-import { forwardRef, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+    forwardRef,
+    Inject,
+    Injectable,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Election, ElectionStatus } from './entities/election.entity';
@@ -35,7 +40,9 @@ export class ElectionService {
     ): Promise<LocationEntity> {
         console.log({ locationDto });
 
-        const moderator = await this.userService.findById(userJwtPayload.id);
+        const moderator = await this.userService.findByAltirevId(
+            locationDto.modId,
+        );
         if (!moderator) {
             throw new UnauthorizedException('Unauthorized Request');
         }
