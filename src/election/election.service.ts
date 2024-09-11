@@ -40,6 +40,7 @@ export class ElectionService {
         locationDto: CreateLocationDto,
     ): Promise<LocationEntity> {
         console.log({ locationDto });
+        console.log({userJwtPayload}, 'show jwt');
 
         const moderator = await this.userService.findByAltirevId(
             locationDto.modId,
