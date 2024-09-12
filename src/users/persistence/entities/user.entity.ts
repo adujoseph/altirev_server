@@ -155,6 +155,27 @@ export class UserEntity extends EntityRelationalHelper {
 
     @ApiProperty({
         type: String,
+        example: 'Abuja',
+    })
+    @Column({ type: String, nullable: true })
+    local_govt: string | null;
+
+    @ApiProperty({
+        type: String,
+        example: 'Abuja',
+    })
+    @Column({ type: String, nullable: true })
+    ward: string | null;
+
+    @ApiProperty({
+        type: String,
+        example: 'Abuja',
+    })
+    @Column({ type: String, nullable: true })
+    polling_unit: string | null;
+
+    @ApiProperty({
+        type: String,
         example: 'Nigeria',
     })
     @Column({ type: String, nullable: true })
