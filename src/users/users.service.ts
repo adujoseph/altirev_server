@@ -16,12 +16,21 @@ import { AuthProvidersEnum } from '../auth/auth-providers.enum';
 import { FilesService } from '../files/files.service';
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { DeepPartial } from '../utils/types/deep-partial.type';
-import { RolesEnum, StatusEnum } from './persistence/entities/user.entity';
+import {
+    RolesEnum,
+    StatusEnum,
+    UserEntity,
+} from './persistence/entities/user.entity';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 
 @Injectable()
 export class UsersService {
     constructor(
+        @InjectRepository(UserEntity)
+        private UserRepository: Repository<UserEntity>,
         private readonly usersRepository: UserRepository,
         private readonly filesService: FilesService,
         private readonly subscriptionsService: SubscriptionsService,
@@ -80,21 +89,6 @@ export class UsersService {
                 });
             }
         }
-
-        // if (clonedPayload.photo?.id) {
-        //   const fileObject = await this.filesService.findById(
-        //     clonedPayload.photo.id,
-        //   );
-        //   if (!fileObject) {
-        //     throw new UnprocessableEntityException({
-        //       status: HttpStatus.UNPROCESSABLE_ENTITY,
-        //       errors: {
-        //         photo: 'imageNotExists',
-        //       },
-        //     });
-        //   }
-        //   clonedPayload.photo = fileObject;
-        // }
 
         if (clonedPayload.role) {
             const roleObject = Object.values(RolesEnum)
@@ -172,6 +166,24 @@ export class UsersService {
         });
     }
 
+    async updateRole(updateRole: UpdateUserRoleDto): Promise<any> {
+        const user = await this.UserRepository.findOneBy({ email: updateRole.email });
+        if(user){
+            user.tenantId = updateRole.moderator_tenant_id,
+            user.state = updateRole.role
+            user.local_govt = updateRole.local_govt
+            user.ward = updateRole.ward
+            user.polling_unit = updateRole.polling_unit
+            user.role = updateRole.role
+            return await this.UserRepository.save(user)
+        } else {
+            throw new UnprocessableEntityException({
+                status: HttpStatus.UNPROCESSABLE_ENTITY,
+                message:  'user with this email does not exist',
+                error: true
+            });
+        }
+    }
     async update(
         id: User['id'],
         payload: DeepPartial<User>,
