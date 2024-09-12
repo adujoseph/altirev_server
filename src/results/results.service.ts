@@ -238,7 +238,7 @@ export class ResultsService {
         try {
             return await this.resultsRepository.create(result);
         } catch (error) {
-            console.log('error :: ', error);
+            console.log('Failed to Save Result :: ', error);
         }
         return new Results();
     }
