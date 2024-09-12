@@ -5,9 +5,8 @@ export class ResultsMapper {
     static toDomain(raw: ResultsEntity): Results {
         const domainObject = new Results();
         domainObject.id = raw.id;
-        domainObject.electionId = raw.electionId;
+        domainObject.election = raw.election;
         domainObject.userAltirevId = raw.userAltirevId;
-        domainObject.electionType = raw.electionType;
         domainObject.accreditedVoters = raw.accreditedVoters;
         domainObject.voteCasted = raw.voteCasted;
         domainObject.counts = raw.counts;
@@ -27,8 +26,7 @@ export class ResultsMapper {
         }
 
         persistenceEntity.userAltirevId = domainEntity.userAltirevId;
-        persistenceEntity.electionId = domainEntity.electionId;
-        persistenceEntity.electionType = domainEntity.electionType;
+        persistenceEntity.election = domainEntity.election;
         persistenceEntity.accreditedVoters = domainEntity.accreditedVoters;
         persistenceEntity.voteCasted = domainEntity.voteCasted;
         persistenceEntity.counts = domainEntity.counts;

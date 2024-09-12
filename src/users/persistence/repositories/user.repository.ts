@@ -84,6 +84,25 @@ export class UsersRelationalRepository implements UserRepository {
         return entity ? UserMapper.toDomain(entity) : null;
     }
 
+    async findUserLocation(
+        altirevId: User['altirevId'],
+    ): Promise<NullableType<User>> {
+        if (!altirevId) return null;
+
+        // const entity = await this.usersRepository.findOne({
+        //     where: { altirevId },
+        //     relations: {location: },
+        // });
+
+        const entity = await this.usersRepository
+            .createQueryBuilder('user')
+            .leftJoinAndSelect('user.location', 'location') // Joins the location with the user
+            .where('user.altirevId = :altirevId', { altirevId: altirevId })
+            .getOne();
+
+        return entity ? UserMapper.toDomain(entity) : null;
+    }
+
     async findBySocialIdAndProvider({
         socialId,
         provider,

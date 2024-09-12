@@ -31,6 +31,7 @@ import { LgaEntity } from './infrastructure/persistence/relational/entities/lga.
 import { v4 as uuidv4 } from 'uuid';
 import { ElectionService } from '../election/election.service';
 import { ElectionStatus } from '../election/entities/election.entity';
+import { LocationEntity } from '../election/entities/location.entity';
 
 @Injectable()
 export class ResultsService {
@@ -175,6 +176,7 @@ export class ResultsService {
         const election = await this.electionService.findOne(
             createResultsDto.electionId,
         );
+        console.log(election);
         if (!election) {
             throw new NotFoundException('Election not found');
         }
@@ -188,11 +190,13 @@ export class ResultsService {
         const locationInfo = await this.electionService.getLocationByUser(
             user.altirevId,
         );
+        // if (!locationInfo) {
+        //     result.location = new LocationEntity();
+        // }
 
         const result = new Results();
-        result.electionId = createResultsDto.electionId;
+        result.election = election;
         result.userAltirevId = createResultsDto.userAltirevId;
-        result.electionType = createResultsDto.electionType;
         result.accreditedVoters = createResultsDto.accreditedVoters;
         result.voteCasted = createResultsDto.voteCasted;
         result.counts = createResultsDto.counts;

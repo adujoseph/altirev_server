@@ -18,6 +18,7 @@ import { IPaginationOptions } from '../utils/types/pagination-options';
 import { DeepPartial } from '../utils/types/deep-partial.type';
 import { RolesEnum, StatusEnum } from './persistence/entities/user.entity';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
+import { LocationEntity } from '../election/entities/location.entity';
 
 @Injectable()
 export class UsersService {
@@ -32,6 +33,7 @@ export class UsersService {
             provider: AuthProvidersEnum.email,
             altirevId: uuidv4(),
             tenantId: '',
+            location: new LocationEntity(),
             ...createProfileDto,
         };
 
@@ -159,6 +161,10 @@ export class UsersService {
         return this.usersRepository.findByAltirevId(altirevId);
     }
 
+    async findUserLocation(altirevId: string): Promise<NullableType<User>> {
+        return await this.usersRepository.findUserLocation(altirevId);
+    }
+
     findBySocialIdAndProvider({
         socialId,
         provider,
@@ -177,11 +183,11 @@ export class UsersService {
         payload: DeepPartial<User>,
     ): Promise<User | null> {
         const clonedPayload = { ...payload };
-
         if (
             clonedPayload.password &&
             clonedPayload.previousPassword !== clonedPayload.password
         ) {
+            console.log('checking for old password, then update');
             const salt = await bcrypt.genSalt();
             clonedPayload.password = await bcrypt.hash(
                 clonedPayload.password,
@@ -220,6 +226,7 @@ export class UsersService {
         }
 
         if (clonedPayload.role) {
+            console.log('role exists, then update');
             const roleObject = Object.values(RolesEnum)
                 .map(String)
                 .includes(String(clonedPayload.role));
@@ -246,7 +253,6 @@ export class UsersService {
                 });
             }
         }
-
         return this.usersRepository.update(id, clonedPayload);
     }
 

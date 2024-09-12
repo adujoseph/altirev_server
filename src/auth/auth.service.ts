@@ -35,6 +35,7 @@ import {
     RolesEnum,
     StatusEnum,
 } from '../users/persistence/entities/user.entity';
+import { ElectionService } from '../election/election.service';
 
 @Injectable()
 export class AuthService {
@@ -45,11 +46,13 @@ export class AuthService {
         private mailService: MailService,
         private tokenService: TokenService,
         private configService: ConfigService<AllConfigType>,
+        private electionService: ElectionService,
     ) {}
 
     async validateLogin(
         loginDto: AuthEmailLoginDto,
     ): Promise<LoginResponseDto> {
+        console.log('validating pass .... ', loginDto.password);
         const user = await this.usersService.findByEmail(loginDto.email);
 
         if (!user) {
@@ -110,6 +113,11 @@ export class AuthService {
             sessionId: session.id,
             hash,
         });
+
+        const userLocation = await this.electionService.getLocationByUser(
+            user.altirevId,
+        );
+        user.location = userLocation;
 
         return {
             refreshToken,
@@ -181,7 +189,7 @@ export class AuthService {
         // if (!createdToken) {
         //   throw new UnprocessableEntityException('Unable to save user token');
         // }
-
+        console.log(dto.email, dto.password);
         return await this.validateLogin({
             email: dto.email,
             password: dto.password,

@@ -7,6 +7,8 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
     Generated,
+    OneToOne,
+    JoinColumn,
 } from 'typeorm';
 
 import { AuthProvidersEnum } from '../../../auth/auth-providers.enum';
@@ -17,6 +19,7 @@ import { EntityRelationalHelper } from '../../../utils/relational-entity-helper'
 // in your project and return an ORM entity directly in response.
 import { Exclude, Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { LocationEntity } from '../../../election/entities/location.entity';
 
 export enum StatusEnum {
     ACTIVE = 'active',
@@ -67,7 +70,7 @@ export class UserEntity extends EntityRelationalHelper {
     // For "string | null" we need to use String type.
     // More info: https://github.com/typeorm/typeorm/issues/2567
     @Column({ type: String, unique: true, nullable: true })
-    @Expose({ groups: ['me', 'admin'] })
+    // @Expose({ groups: ['me', 'admin'] })
     email: string;
 
     @Column({ nullable: true })
@@ -162,6 +165,10 @@ export class UserEntity extends EntityRelationalHelper {
     })
     @Column({ type: String, nullable: true })
     status: StatusEnum;
+
+    @OneToOne(() => LocationEntity, (location) => location.id)
+    @JoinColumn()
+    location: LocationEntity;
 
     @ApiProperty()
     @CreateDateColumn()

@@ -3,7 +3,6 @@ import {
     PrimaryGeneratedColumn,
     CreateDateColumn,
     UpdateDateColumn,
-    ManyToOne,
     OneToOne,
     JoinColumn,
 } from 'typeorm';
@@ -34,7 +33,7 @@ export class LocationEntity {
     @JoinColumn()
     pollingUnit: PollingEntity;
 
-    @ManyToOne(() => UserEntity, (user) => user.altirevId)
+    @OneToOne(() => UserEntity, (user) => user.altirevId)
     @JoinColumn()
     user: UserEntity;
 

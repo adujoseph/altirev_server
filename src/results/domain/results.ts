@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional } from 'class-validator';
-import { ElectionType } from '../dto/create-results.dto';
 import { ResultStatus } from '../infrastructure/persistence/relational/entities/results.entity';
 import { LocationEntity } from '../../election/entities/location.entity';
+import { JoinColumn, OneToOne } from 'typeorm';
+import { Election } from '../../election/entities/election.entity';
 
 export class Results {
     @ApiProperty({
@@ -14,14 +15,13 @@ export class Results {
     @ApiProperty({
         type: String,
     })
-    @IsNotEmpty()
-    electionId: string;
-
+    // @IsNotEmpty()
+    // electionId: string;
     @ApiProperty({
-        enum: () => ElectionType,
+        type: Election,
     })
     @IsNotEmpty()
-    electionType: ElectionType;
+    election: Election;
 
     @ApiProperty({
         type: Number,

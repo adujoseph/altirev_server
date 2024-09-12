@@ -5,7 +5,7 @@ import {
     UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Any, Repository } from 'typeorm';
 import { Election, ElectionStatus } from './entities/election.entity';
 import { CreateElectionDto } from './dto/create-election.dto';
 import { UpdateElectionDto } from './dto/update-election.dto';
@@ -39,8 +39,6 @@ export class ElectionService {
         userJwtPayload: JwtPayloadType,
         locationDto: CreateLocationDto,
     ): Promise<LocationEntity> {
-        console.log({ locationDto });
-
         const moderator = await this.userService.findByAltirevId(
             locationDto.modId,
         );
@@ -59,45 +57,34 @@ export class ElectionService {
         const pu = await this.resultService.getPU(locationDto.pollingUnit);
 
         const locationData = new LocationEntity();
-
-        const userLocation = await this.getLocationByUser(user.altirevId);
-        if (!userLocation) {
-            locationData.state = state;
-            locationData.lga = lga;
-            locationData.ward = ward;
-            locationData.pollingUnit = pu;
-            locationData.user = UserMapper.toPersistence(user);
-            if (
-                locationDto.hasOwnProperty('role') &&
-                locationDto.role != null
-            ) {
-                const user = new User();
-                user.tenantId = moderator.tenantId;
-                user.role = locationData.role;
-                const updatedUser = await this.userService.update(
-                    user.id,
-                    user,
-                );
-                if (!updatedUser) {
-                    throw new Error('Unable to update User Role');
-                }
+        locationData.state = state;
+        locationData.lga = lga;
+        locationData.ward = ward;
+        locationData.pollingUnit = pu;
+        locationData.user = UserMapper.toPersistence(user);
+        if (locationDto.hasOwnProperty('role') && locationDto.role != null) {
+            const newUser = new User();
+            newUser.tenantId = moderator.tenantId;
+            newUser.role = locationDto.role;
+            console.log(
+                'checking user before updating ::: ',
+                moderator.tenantId,
+                locationDto.role,
+            );
+            const updatedUser = await this.userService.update(user.id, newUser);
+            if (!updatedUser) {
+                throw new Error('Unable to update User Role');
             }
-            return await this.locationRepository.save(locationData);
         }
-        userLocation.state = locationData.state;
-        userLocation.lga = locationData.lga;
-        userLocation.ward = locationData.ward;
-        userLocation.pollingUnit = locationData.pollingUnit;
-        return await this.locationRepository.save(userLocation);
+        //lets insert or update the user location
+        await this.locationRepository.upsert(locationData, ['user']);
+        return await this.getLocationByUser(locationData.user.altirevId);
     }
 
-    async getLocationByUser(userId: string) {
-        const userDomain = await this.userService.findByAltirevId(userId);
-        if (!userDomain) {
-            throw new Error('User not found');
-        }
-        return this.locationRepository.findOneOrFail({
-            where: { user: UserMapper.toPersistence(userDomain) },
+    async getLocationByUser(userId: string): Promise<any> {
+        return await this.locationRepository.findOne({
+            where: { user: { altirevId: userId } }, // Query by foreign key (user)
+            relations: ['user', 'state', 'lga', 'ward', 'pollingUnit'], // Include the user relation if necessary
         });
     }
 

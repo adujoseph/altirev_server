@@ -5,6 +5,7 @@ import {
     RolesEnum,
     StatusEnum,
 } from '../persistence/entities/user.entity';
+import { LocationEntity } from '../../election/entities/location.entity';
 
 const idType = Number;
 
@@ -106,6 +107,11 @@ export class User {
         enum: () => StatusEnum,
     })
     status: StatusEnum;
+
+    @ApiProperty({
+        type: LocationEntity,
+    })
+    location: LocationEntity;
 
     @ApiProperty()
     createdAt: Date;

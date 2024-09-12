@@ -5,8 +5,11 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     ManyToOne,
+    OneToOne,
+    JoinColumn,
 } from 'typeorm';
 import { UserEntity } from '../../users/persistence/entities/user.entity';
+import { ResultsEntity } from '../../results/infrastructure/persistence/relational/entities/results.entity';
 
 export enum ElectionStatus {
     PREVIOUS = 'previous',
@@ -37,6 +40,10 @@ export class Election {
 
     @Column({ type: 'datetime' })
     electionDate: Date;
+
+    @OneToOne(() => ResultsEntity, (result) => result.id)
+    @JoinColumn()
+    results: ResultsEntity;
 
     @ManyToOne(() => UserEntity, (user) => user.id)
     createdBy: UserEntity;
