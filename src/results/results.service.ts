@@ -238,7 +238,7 @@ export class ResultsService {
         try {
             return await this.resultsRepository.create(result);
         } catch (error) {
-            console.log(error);
+            console.log('error :: ', error);
         }
         return new Results();
     }
