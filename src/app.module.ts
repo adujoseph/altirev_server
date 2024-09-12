@@ -56,7 +56,8 @@ import { LocationModule } from './location/location.module';
             database: process.env.DATABASE_NAME,
             // entities: [__dirname + '/**/*.schema{.ts,.js}'],
             entities: [__dirname + '/**/*.entity{.ts,.js}'],
-            synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE),
+           // synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE),
+            synchronize: true,
             autoLoadEntities: true,
         }),
 

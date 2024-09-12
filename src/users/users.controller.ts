@@ -35,6 +35,7 @@ import { infinityPagination } from '../utils/infinity-pagination';
 import { RolesEnum } from './persistence/entities/user.entity';
 import { Roles } from '../auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
+import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 
 // @ApiBearerAuth()
 // @Roles(RolesEnum.ADMIN)
@@ -126,18 +127,9 @@ export class UsersController {
         return this.usersService.update(id, updateProfileDto);
     }
 
-    @Patch('/role/:id')
-    @HttpCode(HttpStatus.OK)
-    @ApiParam({
-        name: 'id',
-        type: String,
-        required: true,
-    })
-    updateRole(
-        @Param('id') id: User['id'],
-        @Body() updateProfileDto: UpdateUserDto,
-    ): Promise<User | null> {
-        return this.usersService.update(id, updateProfileDto);
+    @Post('/role')
+    updateRole(@Body() updateRoleDto: UpdateUserRoleDto): Promise<any> {
+        return this.usersService.updateRole(updateRoleDto);
     }
 
     @Delete(':id')
