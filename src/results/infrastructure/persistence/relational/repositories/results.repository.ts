@@ -39,9 +39,24 @@ export class ResultsRelationalRepository implements ResultsRepository {
     async findById(id: Results['id']): Promise<NullableType<Results>> {
         const entity = await this.resultsRepository.findOne({
             where: { id },
+            relations: ['election'],
+        });
+        console.log(entity);
+        return entity ? ResultsMapper.toDomain(entity) : null;
+    }
+
+    async findByElection(
+        electionId: Results['election']['id'],
+    ): Promise<Results> {
+        const entity = await this.resultsRepository.findOne({
+            where: { election: { id: electionId } },
         });
 
-        return entity ? ResultsMapper.toDomain(entity) : null;
+        if (!entity) {
+            throw new Error('Result not found for election: ' + electionId);
+        }
+
+        return ResultsMapper.toDomain(entity);
     }
 
     async findByAgent(

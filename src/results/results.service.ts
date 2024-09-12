@@ -31,7 +31,6 @@ import { LgaEntity } from './infrastructure/persistence/relational/entities/lga.
 import { v4 as uuidv4 } from 'uuid';
 import { ElectionService } from '../election/election.service';
 import { ElectionStatus } from '../election/entities/election.entity';
-import { LocationEntity } from '../election/entities/location.entity';
 
 @Injectable()
 export class ResultsService {
@@ -245,6 +244,10 @@ export class ResultsService {
 
     async getResultByAgent(userAltirevId: Results['userAltirevId']) {
         return this.resultsRepository.findByAgent(userAltirevId);
+    }
+
+    async getResultByElection(electionId: Results['election']['id']) {
+        return await this.resultsRepository.findByElection(electionId);
     }
 
     async getCountries() {

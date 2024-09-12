@@ -16,6 +16,7 @@ import { UsersService } from '../users/users.service';
 import { UserMapper } from '../users/persistence/mappers/user.mapper';
 import { JwtPayloadType } from '../auth/strategies/types/jwt-payload.type';
 import { User } from '../users/domain/user';
+import { ResultsMapper } from '../results/infrastructure/persistence/relational/mappers/results.mapper';
 
 @Injectable()
 export class ElectionService {
@@ -93,7 +94,19 @@ export class ElectionService {
     }
 
     async findOne(id: string): Promise<Election | null> {
-        return await this.electionRepository.findOneBy({ id });
+        const election = await this.electionRepository.findOneBy({ id });
+        if (!election) {
+            throw new Error('Could not Specified election');
+        }
+        const result = await this.resultService.getResultByElection(
+            election.id,
+        );
+        if (!result) {
+            console.log('Could not find result for election');
+        }
+        election.results = ResultsMapper.toPersistence(result);
+
+        return election;
     }
 
     async updateElection(
