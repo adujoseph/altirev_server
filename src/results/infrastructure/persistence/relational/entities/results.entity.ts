@@ -48,6 +48,7 @@ export class ResultsEntity extends EntityRelationalHelper {
     location: LocationEntity;
 
     @OneToOne(() => Election, (election) => election.id)
+    @JoinColumn()
     election: Election;
 
     @Column({ type: String, nullable: false })

@@ -16,6 +16,8 @@ export abstract class ResultsRepository {
 
     abstract findById(id: Results['id']): Promise<NullableType<Results>>;
 
+    abstract findByElection(id: Results['election']['id']): Promise<Results>;
+
     abstract update(
         id: Results['id'],
         payload: DeepPartial<Results>,
