@@ -21,10 +21,17 @@ export abstract class UserRepository {
     }): Promise<User[]>;
 
     abstract findById(id: User['id']): Promise<NullableType<User>>;
+
     abstract findByEmail(email: User['email']): Promise<NullableType<User>>;
+
     abstract findByAltirevId(
         altrevId: User['altirevId'],
     ): Promise<NullableType<User>>;
+
+    abstract findUserLocation(
+        altrevId: User['altirevId'],
+    ): Promise<NullableType<User>>;
+
     abstract findBySocialIdAndProvider({
         socialId,
         provider,

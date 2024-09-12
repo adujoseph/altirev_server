@@ -1,14 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import { Optional } from '@nestjs/common';
-
-export enum ElectionType {
-    PRESIDENTIAL = 'PRESIDENTIAL',
-    GUBERNATORIAL = 'GUBERNATORIAL',
-    SENATORIAL = 'SENATORIAL',
-    REPRESENTATIVE = 'REPRESENTATIVE',
-    CHAIRMAN = 'CHAIRMAN',
-}
 
 export class CreateResultsDto {
     // Don't forget to use the class-validator decorators in the DTO properties.
@@ -18,12 +9,6 @@ export class CreateResultsDto {
     })
     @IsNotEmpty()
     electionId: string;
-
-    @ApiProperty({
-        enum: () => ElectionType,
-    })
-    @IsNotEmpty()
-    electionType: ElectionType;
 
     @ApiProperty({
         type: Number,

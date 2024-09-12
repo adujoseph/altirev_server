@@ -3,15 +3,14 @@ import {
     CreateDateColumn,
     Entity,
     JoinColumn,
-    ManyToOne,
     OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
 import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
 import { IsEnum, IsNotEmpty } from 'class-validator';
-import { ElectionType } from '../../../../dto/create-results.dto';
 import { LocationEntity } from '../../../../../election/entities/location.entity';
+import { Election } from '../../../../../election/entities/election.entity';
 // import { Election } from '../../../../../election/election.entity';
 
 export enum ResultStatus {
@@ -28,18 +27,6 @@ export class ResultsEntity extends EntityRelationalHelper {
     id: string;
 
     @IsNotEmpty()
-    @Column({ name: 'election_id', type: String, nullable: false })
-    // @ManyToOne(() => Election, {
-    //     eager: true,
-    // })
-    electionId: string;
-
-    @IsNotEmpty()
-    @Column({ name: 'election_type', type: String, nullable: false })
-    @IsEnum(ElectionType)
-    electionType: ElectionType;
-
-    @IsNotEmpty()
     @Column({ name: 'accredited_voters', type: Number, nullable: false })
     accreditedVoters: number;
 
@@ -51,37 +38,17 @@ export class ResultsEntity extends EntityRelationalHelper {
     @Column({ name: 'election_counts', type: 'json', nullable: false })
     counts: Map<string, number>;
 
-    // @ApiProperty({
-    //     type: FileType,
-    // })
-    // @IsNotEmpty()
-    // // @Column({ name: 'ctc_file', type: String, nullable: false })
-    // @OneToOne(() => FileEntity, {
-    //     eager: true,
-    // })
-    // @JoinColumn()
-    // file: FileType;
-
     @Column({ name: 'file_url', type: String, nullable: false })
     fileUrl: string;
 
     @Column({ name: 'user_id', type: String, nullable: false })
     userAltirevId: string;
 
-    // @Column({ type: String, nullable: false })
-    // state: string;
-
-    // @Column({ type: String, nullable: false })
-    // lga: string;
-
-    // @Column({ type: String, nullable: false })
-    // ward: string;
-
-    // @Column({ type: String, nullable: false })
-    // pollingUnit: string;
-
     @OneToOne(() => LocationEntity, (location) => location.id)
     location: LocationEntity;
+
+    @OneToOne(() => Election, (election) => election.id)
+    election: Election;
 
     @Column({ type: String, nullable: false })
     status: ResultStatus;

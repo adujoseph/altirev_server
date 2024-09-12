@@ -12,6 +12,7 @@ import { UsersModule } from '../users/users.module';
 import { TokenService } from './token.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TokenEntity } from './entities/token.entity';
+import { ElectionModule } from '../election/election.module';
 
 @Module({
     imports: [
@@ -19,6 +20,7 @@ import { TokenEntity } from './entities/token.entity';
         UsersModule,
         SessionModule,
         PassportModule,
+        ElectionModule,
         MailModule,
         JwtModule.register({}),
     ],
