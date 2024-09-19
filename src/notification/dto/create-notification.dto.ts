@@ -1,5 +1,5 @@
-import { IsEnum, IsNotEmpty } from 'class-validator';
-import { NoteStatus } from '../entities/notification.entity';
+import { IsEnum, IsNotEmpty, IsOptional } from 'class-validator';
+import { NoteCategory, NoteStatus } from '../entities/notification.entity';
 import { ApiProperty } from '@nestjs/swagger';
 export class CreateNotificationDto {
     @ApiProperty()
@@ -11,6 +11,18 @@ export class CreateNotificationDto {
     description: string;
 
     @ApiProperty()
-    @IsEnum(NoteStatus)
-    status: NoteStatus;
+    @IsNotEmpty()
+    message: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
+    createdBy: string;
+
+    @ApiProperty()
+    @IsOptional()
+    category?: NoteCategory;
+
+    @ApiProperty()
+    @IsOptional()
+    tenantId?: string;
 }

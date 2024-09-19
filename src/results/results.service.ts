@@ -184,7 +184,7 @@ export class ResultsService {
             throw new ForbiddenException('Election is not ongoing');
         }
 
-        const fileUrl = await this.s3Service.uploadFile(file, 'File');
+        const fileUrl = await this.s3Service.uploadFile(file, file.buffer, 'File');
 
         const locationInfo = await this.electionService.getLocationByUser(
             user.altirevId,

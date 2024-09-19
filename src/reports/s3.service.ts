@@ -23,18 +23,19 @@ export class S3Service {
     }
 
     async uploadFile(
-        file: Express.Multer.File,
+        fileName: Express.Multer.File,
+        file: Buffer,
         folder: string,
     ): Promise<string> {
-        const key = `${folder}/${uuidv4()}-${file.originalname}`;
+        const key = `${folder}/${uuidv4()}-${fileName.originalname}`;
         const command = new PutObjectCommand({
             Bucket: this.bucketName,
             Key: key,
-            Body: file.buffer,
-            ContentType: file.mimetype,
+            Body: file,
+            ContentType: fileName.mimetype,
             ACL: 'public-read',
         });
-        console.log('bucket name ::', this.bucketName);
+       
         try {
             await this.s3.send(command);
             return `https://${this.bucketName}.s3.eu-north-1.amazonaws.com/${key}`;
