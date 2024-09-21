@@ -43,7 +43,11 @@ export class ReportsController {
             throw new BadRequestException('Upload a file for evidence');
         }
 
-        const fileUrl = await this.s3Service.uploadFile(file, file.buffer, 'File');
+        const fileUrl = await this.s3Service.uploadFile(
+            file,
+            file.buffer,
+            'File',
+        );
         createReportsDto.fileUrl = fileUrl;
         return this.reportsService.create(createReportsDto);
     }
@@ -67,25 +71,39 @@ export class ReportsController {
             throw new BadRequestException('Upload a file for evidence');
         }
 
-      
         let fileUrl;
 
-        if(file.mimetype.startsWith('image')){
-            const watermarkPath = path.join(__dirname, '..','..','src', 'public', 'watermarks', 'watermark.png');
+        if (file.mimetype.startsWith('image')) {
+            const watermarkPath = path.join(
+                __dirname,
+                '..',
+                '..',
+                'src',
+                'public',
+                'watermarks',
+                'watermark.png',
+            );
 
-            const watermark = await sharp(watermarkPath).resize(384/2, 156/2).ensureAlpha(0.7).toBuffer();
+            const watermark = await sharp(watermarkPath)
+                .resize(384 / 2, 156 / 2)
+                .ensureAlpha(0.7)
+                .toBuffer();
 
             const watermarkedImage = await sharp(file.buffer)
-              .composite([{ input: watermark, gravity: 'northwest' }])
-              .toBuffer();
+                .composite([{ input: watermark, gravity: 'northwest' }])
+                .toBuffer();
 
-            fileUrl = await this.s3Service.uploadFile(file, watermarkedImage, 'Images');
+            fileUrl = await this.s3Service.uploadFile(
+                file,
+                watermarkedImage,
+                'Images',
+            );
         }
 
-        if(file.mimetype.startsWith('video')){
+        if (file.mimetype.startsWith('video')) {
             //handle video
         }
-       // const fileUrl = await this.s3Service.uploadFile(file, 'File');
+        // const fileUrl = await this.s3Service.uploadFile(file, 'File');
 
         return {
             message: 'file uploaded successfully',

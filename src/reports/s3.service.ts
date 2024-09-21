@@ -35,7 +35,7 @@ export class S3Service {
             ContentType: fileName.mimetype,
             ACL: 'public-read',
         });
-       
+
         try {
             await this.s3.send(command);
             return `https://${this.bucketName}.s3.eu-north-1.amazonaws.com/${key}`;

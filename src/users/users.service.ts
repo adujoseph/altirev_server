@@ -147,6 +147,10 @@ export class UsersService {
         return this.usersRepository.findById(id);
     }
 
+    async findByTenant(tenantId: string): Promise<NullableType<User[]>> {
+        return await this.usersRepository.findByTenantId(tenantId);
+    }
+
     findByEmail(email: User['email']): Promise<NullableType<User>> {
         return this.usersRepository.findByEmail(email);
     }
@@ -173,20 +177,22 @@ export class UsersService {
     }
 
     async updateRole(updateRole: UpdateUserRoleDto): Promise<any> {
-        const user = await this.UserRepository.findOneBy({ email: updateRole.email });
-        if(user){
-            user.tenantId = updateRole.moderator_tenant_id,
-            user.state = updateRole.role
-            user.local_govt = updateRole.local_govt
-            user.ward = updateRole.ward
-            user.polling_unit = updateRole.polling_unit
-            user.role = updateRole.role
-            return await this.UserRepository.save(user)
+        const user = await this.UserRepository.findOneBy({
+            email: updateRole.email,
+        });
+        if (user) {
+            (user.tenantId = updateRole.moderator_tenant_id),
+                (user.state = updateRole.role);
+            user.local_govt = updateRole.local_govt;
+            user.ward = updateRole.ward;
+            user.polling_unit = updateRole.polling_unit;
+            user.role = updateRole.role;
+            return await this.UserRepository.save(user);
         } else {
             throw new UnprocessableEntityException({
                 status: HttpStatus.UNPROCESSABLE_ENTITY,
-                message:  'user with this email does not exist',
-                error: true
+                message: 'user with this email does not exist',
+                error: true,
             });
         }
     }

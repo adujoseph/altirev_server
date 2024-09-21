@@ -6,7 +6,10 @@ import {
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { NoteCategory, NotificationEntity } from './entities/notification.entity';
+import {
+    NoteCategory,
+    NotificationEntity,
+} from './entities/notification.entity';
 import { Repository } from 'typeorm';
 import { UserRepository } from '../users/persistence/user.repository';
 import { RolesEnum } from '../users/persistence/entities/user.entity';
@@ -31,17 +34,19 @@ export class NotificationService {
         if (!user) {
             throw new ForbiddenException('Access denied');
         }
-        if(user.role !== RolesEnum.ADMIN && (user.role) !== RolesEnum.MODERATOR ){
+        if (
+            user.role !== RolesEnum.ADMIN &&
+            user.role !== RolesEnum.MODERATOR
+        ) {
             throw new ForbiddenException('Access denied');
         }
 
-        if( user.role === RolesEnum.MODERATOR ){
-            createNotificationDto.category = NoteCategory.Specific
-            createNotificationDto.tenantId = user.tenantId
+        if (user.role === RolesEnum.MODERATOR) {
+            createNotificationDto.category = NoteCategory.Specific;
+            createNotificationDto.tenantId = user.tenantId;
         }
 
-        console.log({user})
-
+        console.log({ user });
 
         const newTask = await this.NotificationRepsository.save(
             createNotificationDto,

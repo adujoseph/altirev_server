@@ -78,5 +78,4 @@ export class CreateUserDto {
     @ApiPropertyOptional({ type: () => String })
     @IsOptional()
     planId: string;
-
 }

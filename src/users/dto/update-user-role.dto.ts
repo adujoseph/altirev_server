@@ -38,12 +38,11 @@ export class UpdateUserRoleDto {
     @IsNotEmpty()
     state: string | null;
 
-
     @ApiPropertyOptional({ enum: RolesEnum })
     @IsEnum(RolesEnum)
     role: RolesEnum;
 
     @ApiProperty()
     @IsNotEmpty()
-    moderator_tenant_id: string
+    moderator_tenant_id: string;
 }

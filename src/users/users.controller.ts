@@ -91,6 +91,23 @@ export class UsersController {
     }
 
     @ApiOkResponse({
+        type: Array<User>,
+    })
+    @Get('tenant/:tenantId')
+    @HttpCode(HttpStatus.OK)
+    @ApiParam({
+        name: 'tenantId',
+        type: String,
+        required: true,
+    })
+    async findAllTenantUsers(
+        @Param('tenantId') tenantId: User['tenantId'],
+    ): Promise<NullableType<User[]>> {
+        return this.usersService.findByTenant(tenantId);
+    }
+
+
+    @ApiOkResponse({
         type: User,
     })
     @SerializeOptions({

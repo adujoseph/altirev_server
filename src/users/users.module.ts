@@ -16,7 +16,7 @@ const infrastructurePersistenceModule = RelationalUserPersistenceModule;
         infrastructurePersistenceModule,
         FilesModule,
         SubscriptionsModule,
-        TypeOrmModule.forFeature([UserEntity])
+        TypeOrmModule.forFeature([UserEntity]),
     ],
     // imports: [TypeOrmModule.forFeature([User])],
     controllers: [UsersController],

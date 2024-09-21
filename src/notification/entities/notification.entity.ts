@@ -7,14 +7,14 @@ import {
 } from 'typeorm';
 
 export enum NoteStatus {
-   Read = 'read',
-   Unread = 'unread'
+    Read = 'read',
+    Unread = 'unread',
 }
 
 export enum NoteCategory {
     General = 'general',
-    Specific = 'tenants'
- }
+    Specific = 'tenants',
+}
 
 @Entity()
 export class NotificationEntity {
@@ -30,17 +30,17 @@ export class NotificationEntity {
     @Column()
     message: string;
 
-    @Column({nullable: true})
+    @Column({ nullable: true })
     tenantId: string;
 
-    @Column({default: NoteStatus.Unread})
+    @Column({ default: NoteStatus.Unread })
     status: NoteStatus;
 
     @Column({ default: false })
     read: boolean;
 
-    @Column({default: NoteCategory.General})
-    category: NoteCategory
+    @Column({ default: NoteCategory.General })
+    category: NoteCategory;
 
     // @ManyToOne(() => UserEntity, (user) => user.id)
     @Column()
