@@ -24,7 +24,14 @@ import { UpdateReportDto } from './dto/update-report.dto';
 import { ReportEntity } from './reports.entity';
 import sharp from 'sharp';
 import * as path from 'path';
+import ffmpeg from 'fluent-ffmpeg';
+import fs from 'fs';
+import { promisify } from 'util';
 
+
+const writeFileAsync = promisify(fs.writeFile);
+const unlinkAsync = promisify(fs.unlink);
+const readFileAsync = promisify(fs.readFile);
 @ApiTags('Reports')
 @Controller('reports')
 export class ReportsController {
@@ -73,43 +80,85 @@ export class ReportsController {
 
         let fileUrl;
 
-        if (file.mimetype.startsWith('image')) {
-            const watermarkPath = path.join(
-                __dirname,
-                '..',
-                '..',
-                'src',
-                'public',
-                'watermarks',
-                'watermark.png',
-            );
-
-            const watermark = await sharp(watermarkPath)
-                .resize(384 / 2, 156 / 2)
-                .ensureAlpha(0.7)
-                .toBuffer();
-
-            const watermarkedImage = await sharp(file.buffer)
-                .composite([{ input: watermark, gravity: 'northwest' }])
-                .toBuffer();
-
-            fileUrl = await this.s3Service.uploadFile(
-                file,
-                watermarkedImage,
-                'Images',
-            );
+        if(file.mimetype.startsWith('image')){
+            const watermarkedImage = await this.watermarkImage(file);
+            fileUrl = await this.s3Service.uploadFile(file, watermarkedImage, 'Images');
         }
 
-        if (file.mimetype.startsWith('video')) {
-            //handle video
+        if(file.mimetype.startsWith('video')){
+            const watermarkedVideo = await this.watermarkVideo2(file);
+            fileUrl = await this.s3Service.uploadFile(file, watermarkedVideo, 'Video');
         }
-        // const fileUrl = await this.s3Service.uploadFile(file, 'File');
-
+     
         return {
             message: 'file uploaded successfully',
             fileUrl,
         };
     }
+
+    private async watermarkImage(file: Express.Multer.File): Promise<Buffer> {
+        const watermarkPath = path.join(
+            __dirname,
+            '..',
+            '..',
+            'src',
+            'public',
+            'watermarks',
+            'watermark.png',
+        );
+
+        const watermark = await sharp(watermarkPath)
+            .resize(384 / 2, 156 / 2)
+            .ensureAlpha(0.7)
+            .toBuffer();
+
+        return await sharp(file.buffer)
+            .composite([{ input: watermark, gravity: 'northwest' }])
+            .toBuffer();
+    }
+
+    private async watermarkVideo2(file: Express.Multer.File): Promise<Buffer> {
+        const tempDir = './temp';
+        const inputPath = path.join(tempDir, file.originalname);
+        const outputPath = path.join(tempDir, `watermarked_${file.originalname}`);
+        const watermarkPath = path.join(__dirname, '..', '..', 'src', 'public', 'watermarks', 'watermark.png');
+
+        // Ensure temp directory exists
+        if (!fs.existsSync(tempDir)) {
+            fs.mkdirSync(tempDir);
+        }
+
+        // Save the uploaded video temporarily
+        await writeFileAsync(inputPath, file.buffer);
+
+    
+        return new Promise((resolve, reject) => {
+            ffmpeg(inputPath)
+            .input(watermarkPath)
+            .complexFilter('overlay=W-w-10:H-h-10') // Overlay bottom-right
+            .output(outputPath)
+            .on('end', async () => {
+                try {
+                    // Read the watermarked video
+                    const watermarkedVideo = await readFileAsync(outputPath);
+
+                    // Clean up temporary files
+                    await unlinkAsync(inputPath);
+                    await unlinkAsync(outputPath);
+
+                    resolve(watermarkedVideo);
+                } catch (err) {
+                    reject(err);
+                }
+            })
+            .on('error', (err) => {
+                console.error('FFmpeg error:', err);
+                reject(err);
+            })
+            .run();
+        });
+    }
+
 
     @Post('/submit-report')
     async createReport(@Body() createReportsDto: CreateReportDto) {
