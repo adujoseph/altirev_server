@@ -144,6 +144,9 @@ export class UsersService {
     }
 
     findById(id: User['id']): Promise<NullableType<User>> {
+        if(!id){
+          throw new BadRequestException("Altirev ID is required")
+        }
         return this.usersRepository.findById(id);
     }
 
