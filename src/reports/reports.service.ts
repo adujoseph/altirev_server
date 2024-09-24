@@ -21,8 +21,8 @@ export class ReportsService {
         return this.reportsRepository.find();
     }
 
-    async findEscalated(){
-        return this.reportsRepository.find({where: {status: ReportStatus.Escalated}})
+    async getEscalatedElections(): Promise<ReportEntity[]> {
+        return this.reportsRepository.find({where: {status: ReportStatus.Escalated}});
     }
 
     async findMe(id: string){
