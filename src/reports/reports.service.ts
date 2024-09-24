@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateReportDto, ReportStatus } from './dto/create-report.dto';
 import { ReportEntity } from './reports.entity';
 import { UpdateReportDto } from './dto/update-report.dto';
+import { ChangeReportStatusDto } from './dto/change-report-status.dto';
 
 @Injectable()
 export class ReportsService {
@@ -27,6 +28,24 @@ export class ReportsService {
 
     async findMe(id: string){
         return this.reportsRepository.find({where: {userId: id}})
+    }
+
+    async findReportTenant(id: string): Promise<ReportEntity[]> {
+        return this.reportsRepository.find({where: {tenantId: id}})
+    }
+    async reject(id:string, statusDto: ChangeReportStatusDto){
+        if(!id){
+            throw new BadRequestException('Id not found') 
+        }
+        let report = await this.reportsRepository.findOneBy({ id });
+        if(!report){
+          throw new BadRequestException('Report does not exist')
+        }
+        report.reasons = statusDto.reasons 
+        report.status = statusDto.status
+        report.modifiedBy = statusDto.modifiedBy
+
+        return await this.reportsRepository.save(report)
     }
 
     async findOne(id: string): Promise<ReportEntity | null> {

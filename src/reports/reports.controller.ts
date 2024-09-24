@@ -27,6 +27,7 @@ import * as path from 'path';
 import ffmpeg from 'fluent-ffmpeg';
 import fs from 'fs';
 import { promisify } from 'util';
+import { ChangeReportStatusDto } from './dto/change-report-status.dto';
 
 
 const writeFileAsync = promisify(fs.writeFile);
@@ -187,6 +188,18 @@ export class ReportsController {
        return this.reportsService.findMe(id)
     }
 
+    @Get('/tenant/:id')
+    findReportByTenanant(@Param('id') id: string) {
+       return this.reportsService.findReportTenant(id)
+    }
+
+    @Get('change-status')
+    async rejectReport(
+        @Param('id') id: string,
+        @Body() changeReportStatusDto: ChangeReportStatusDto,
+    ) {
+       return this.reportsService.reject(id, changeReportStatusDto)
+    }
     @Patch(':id')
     async updateReport(
         @Param('id') id: string,
