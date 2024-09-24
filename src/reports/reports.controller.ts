@@ -175,6 +175,16 @@ export class ReportsController {
         return this.reportsService.findOne(id);
     }
 
+    @Get('/escalated')
+    findEscalated() {
+       return this.reportsService.findEscalated()
+    }
+
+    @Get('/me/:userId')
+    findMe(@Param('id') id: string) {
+       return this.reportsService.findMe(id)
+    }
+
     @Patch(':id')
     async updateReport(
         @Param('id') id: string,

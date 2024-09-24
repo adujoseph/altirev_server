@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateReportDto } from './dto/create-report.dto';
+import { CreateReportDto, ReportStatus } from './dto/create-report.dto';
 import { ReportEntity } from './reports.entity';
 import { UpdateReportDto } from './dto/update-report.dto';
 
@@ -19,6 +19,14 @@ export class ReportsService {
 
     async findAll(): Promise<ReportEntity[]> {
         return this.reportsRepository.find();
+    }
+
+    async findEscalated(){
+        return this.reportsRepository.find({where: {status: ReportStatus.Escalated}})
+    }
+
+    async findMe(id: string){
+        return this.reportsRepository.find({where: {userId: id}})
     }
 
     async findOne(id: string): Promise<ReportEntity | null> {
