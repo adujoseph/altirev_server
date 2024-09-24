@@ -31,15 +31,24 @@ export class Election {
     @Column({ nullable: true })
     description: string;
 
-    @Column({
-        type: 'enum',
-        enum: ElectionStatus,
-        default: ElectionStatus.UPCOMING,
-    })
-    status: ElectionStatus;
+    // @Column({
+    //     type: 'enum',
+    //     enum: ElectionStatus,
+    //     default: ElectionStatus.UPCOMING,
+    // })
+    // status: ElectionStatus;
 
     @Column({ type: 'datetime' })
     electionDate: Date;
+
+    @Column({ type: 'datetime' })
+    startDate: Date;
+  
+    @Column({ type: 'datetime' })
+    endDate: Date;
+  
+    @Column({ default: false })
+    isActive: boolean;
 
     @OneToOne(() => ResultsEntity, (result) => result.id)
     @JoinColumn()

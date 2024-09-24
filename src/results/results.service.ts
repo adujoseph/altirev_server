@@ -180,9 +180,9 @@ export class ResultsService {
             throw new NotFoundException('Election not found');
         }
 
-        if (election.status !== ElectionStatus.ONGOING) {
-            throw new ForbiddenException('Election is not ongoing');
-        }
+        // if (election.status !== ElectionStatus.ONGOING) {
+        //     throw new ForbiddenException('Election is not ongoing');
+        // }
 
         const fileUrl = await this.s3Service.uploadFile(
             file,
