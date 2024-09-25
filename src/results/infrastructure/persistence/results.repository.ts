@@ -27,5 +27,7 @@ export abstract class ResultsRepository {
 
     abstract findByAgent(
         userAltirevId: Results['userAltirevId'],
-    ): Promise<NullableType<Results>>;
+    ): Promise<Results[]>;
+
+    abstract findByTenantId(tenantId: Results['tenantId']): Promise<Results[]>;
 }

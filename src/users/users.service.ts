@@ -2,7 +2,7 @@ import {
     BadRequestException,
     HttpStatus,
     Injectable,
-    InternalServerErrorException,
+    InternalServerErrorException, NotFoundException,
     UnprocessableEntityException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -143,8 +143,13 @@ export class UsersService {
         });
     }
 
-    findById(id: User['id']): Promise<NullableType<User>> {
-        return this.usersRepository.findById(id);
+    async findById(id: User['id']): Promise<NullableType<User>> {
+        // return this.usersRepository.findById(id);
+        const user = await this.usersRepository.findById(id);
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+        return this.usersRepository.findUserLocation(user.altirevId)
     }
 
     async findByTenant(tenantId: string): Promise<NullableType<User[]>> {

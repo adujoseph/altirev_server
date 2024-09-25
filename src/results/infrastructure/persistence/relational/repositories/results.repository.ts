@@ -61,12 +61,28 @@ export class ResultsRelationalRepository implements ResultsRepository {
 
     async findByAgent(
         userAltirevId: Results['userAltirevId'],
-    ): Promise<NullableType<Results>> {
-        const entity = await this.resultsRepository.findOne({
+    ): Promise<Results[]> {
+        const entity = await this.resultsRepository.find({
             where: { userAltirevId },
         });
 
-        return entity ? ResultsMapper.toDomain(entity) : null;
+        const resultList = entity.map(result => {
+            return ResultsMapper.toDomain(result);
+        });
+        return resultList ? resultList : [];
+    }
+
+    async findByTenantId(
+        tenantId: Results['tenantId'],
+    ): Promise<Results[]> {
+        const entity = await this.resultsRepository.find({
+            where: { tenantId },
+        });
+
+        const resultList = entity.map(result => {
+            return ResultsMapper.toDomain(result);
+        });
+        return resultList ? resultList : [];
     }
 
     async update(

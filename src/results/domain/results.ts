@@ -54,6 +54,8 @@ export class Results {
     })
     status: ResultStatus;
 
+    tenantId: string;
+
     @ApiProperty()
     createdAt: Date;
 

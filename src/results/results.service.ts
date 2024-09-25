@@ -246,8 +246,12 @@ export class ResultsService {
         return new Results();
     }
 
-    async getResultByAgent(userAltirevId: Results['userAltirevId']) {
-        return this.resultsRepository.findByAgent(userAltirevId);
+    async getResultByAgent(userAltirevId: Results['userAltirevId']): Promise<Results[]> {
+        return await this.resultsRepository.findByAgent(userAltirevId);
+    }
+
+    async getResultByTenant(tenantId: string) {
+        return await this.resultsRepository.findByTenantId(tenantId);
     }
 
     async getResultByElection(electionId: Results['election']['id']) {

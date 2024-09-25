@@ -95,6 +95,19 @@ export class ResultsController {
         return this.resultsService.findOne(id);
     }
 
+    @Get('tenant/:tenantId')
+    @ApiParam({
+        name: 'tenantId',
+        type: String,
+        required: true,
+    })
+    @ApiOkResponse({
+        type: Results,
+    })
+    findTenantResults(@Param('tenantId') tenantId: string) {
+        return this.resultsService.getResultByTenant(tenantId);
+    }
+
     @Patch(':id')
     @ApiParam({
         name: 'id',
@@ -121,11 +134,18 @@ export class ResultsController {
         return this.resultsService.remove(id);
     }
 
-    @Get('agents/:id')
-    @ApiOkResponse({ type: Results })
+    @Get('agents/:agentId')
     @ApiParam({ name: 'agentId' })
-    async getResultByAgent(@Param('id') id: string) {
-        return await this.resultsService.getResultByAgent(id);
+    @ApiOkResponse({ type: Results })
+    async getResultByAgent(@Param('agentId') agentId: string) {
+        return await this.resultsService.getResultByAgent(agentId);
+    }
+
+    @Get('tenant/:tenantId')
+    @ApiParam({ name: 'tenantId' })
+    @ApiOkResponse({ type: Results })
+    async getResultByTenant(@Param('tenantId') tenantId: string) {
+        return await this.resultsService.getResultByTenant(tenantId);
     }
 
     @Get('location/seed')
