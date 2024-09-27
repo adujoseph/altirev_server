@@ -6,6 +6,7 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { ReportStatus } from './dto/create-report.dto';
+import { ChangeReportStatusDto } from './dto/change-report-status.dto';
 
 @Entity('reports')
 export class ReportEntity {
@@ -13,10 +14,19 @@ export class ReportEntity {
     id: string;
 
     @Column()
+    tenantId: string
+
+    @Column()
     title: string;
 
     @Column()
     userId: string;
+
+    @Column({nullable: true, default:''})
+    reasons: string;
+
+    @Column({nullable: true})
+    modifiedBy: string
 
     @Column()
     ward: string;
@@ -26,6 +36,9 @@ export class ReportEntity {
 
     @Column()
     message: string;
+
+    @Column({default: false})
+    requestCall: Boolean
 
     @Column({ default: ReportStatus.Pending })
     status: ReportStatus;

@@ -38,8 +38,13 @@ export class ElectionController {
     }
 
     @Get()
-    async findAllElections(@Query('status') status: ElectionStatus) {
-        return this.electionService.findAll(status);
+    async findAllElections(  
+        @Query('page') page = 1,     // Default page to 1
+        @Query('limit') limit = 10
+     ) {
+        const pageNum = Number(page);
+        const limitNum = Number(limit);
+        return this.electionService.findAll(pageNum, limitNum);
     }
 
     @Get(':id')

@@ -5,6 +5,7 @@ export enum ReportStatus {
     Pending = 'pending',
     Approved = 'approved',
     Rejected = 'rejected',
+    Escalated = 'escalated'
 }
 export class CreateReportDto {
     @ApiProperty()
