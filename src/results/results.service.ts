@@ -184,18 +184,18 @@ export class ResultsService {
             throw new ForbiddenException('Election is not ongoing');
         }
 
+        const locationInfo = await this.electionService.getLocationByUser(
+          user.altirevId,
+        );
+        if (!locationInfo) {
+            throw new ForbiddenException('You are not Assigned to an Election Location');
+        }
+
         const fileUrl = await this.s3Service.uploadFile(
             file,
             file.buffer,
             'File',
         );
-
-        const locationInfo = await this.electionService.getLocationByUser(
-            user.altirevId,
-        );
-        // if (!locationInfo) {
-        //     result.location = new LocationEntity();
-        // }
 
         const result = new Results();
         result.election = election;

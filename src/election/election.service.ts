@@ -103,8 +103,9 @@ export class ElectionService {
         );
         if (!result) {
             console.log('Could not find result for election');
+        }else {
+            election.results = ResultsMapper.toPersistence(result);
         }
-        election.results = ResultsMapper.toPersistence(result);
 
         return election;
     }
