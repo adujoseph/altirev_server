@@ -5,6 +5,8 @@ import {
     Delete,
     ForbiddenException,
     Get,
+    HttpCode,
+    HttpStatus,
     Param,
     Patch,
     Post,
@@ -13,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 import { CreateReportDto } from './dto/create-report.dto';
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
 import {
     FileFieldsInterceptor,
     FileInterceptor,
@@ -192,14 +194,26 @@ export class ReportsController {
     findReportByTenanant(@Param('id') id: string) {
        return this.reportsService.findReportTenant(id)
     }
+    @Get('/agents/:tenantId')
+    agentsStatus(@Param('tenantId') id: string) {
+       return this.reportsService.agentStatusByTenant(id)
+    }
 
-    @Get('change-status')
-    async rejectReport(
+
+    @HttpCode(HttpStatus.OK)
+    @ApiParam({
+        name: 'id',
+        type: String,
+        required: true,
+    })
+    @Patch('change-status/:id')
+    async changeReport(
         @Param('id') id: string,
         @Body() changeReportStatusDto: ChangeReportStatusDto,
     ) {
-       return this.reportsService.reject(id, changeReportStatusDto)
+       return this.reportsService.chanegStatus(id, changeReportStatusDto)
     }
+
     @Patch(':id')
     async updateReport(
         @Param('id') id: string,
