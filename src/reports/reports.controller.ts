@@ -30,6 +30,7 @@ import ffmpeg from 'fluent-ffmpeg';
 import fs from 'fs';
 import { promisify } from 'util';
 import { ChangeReportStatusDto } from './dto/change-report-status.dto';
+import { SuspendUserDto } from './dto/suspend-user.dto';
 
 const writeFileAsync = promisify(fs.writeFile);
 const unlinkAsync = promisify(fs.unlink);
@@ -213,6 +214,11 @@ export class ReportsController {
     @Get('/agents/:tenantId')
     agentsStatus(@Param('tenantId') id: string) {
         return this.reportsService.agentStatusByTenant(id);
+    }
+
+    @Patch('suspend-user')
+    suspendUser( @Body() suspendUserDto: SuspendUserDto){
+        return this.reportsService.suspend(suspendUserDto)
     }
 
     @HttpCode(HttpStatus.OK)

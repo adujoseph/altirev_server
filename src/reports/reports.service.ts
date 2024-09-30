@@ -90,6 +90,33 @@ export class ReportsService {
     async findReportTenant(id: string): Promise<ReportEntity[]> {
         return this.reportsRepository.find({ where: { tenantId: id } });
     }
+
+    async suspend(suspendUserDto) {
+        const { userEmail } = suspendUserDto;
+        if (!userEmail) {
+            throw new BadRequestException('Email not found');
+        }
+        const user = await this.userRepository.findOneBy({ email: userEmail });
+        if (!user) {
+            throw new BadRequestException('not a valid user');
+        }
+        try {
+            user.role = RolesEnum.USER;
+            user.tenantId = '';
+            await this.userRepository.save(user);
+            return {
+                message: 'user suspended successfully',
+                status: true,
+            };
+        } catch (err) {
+            console.log(err);
+            return {
+                message: 'user suspension failed',
+                status: false,
+                error: err
+            };
+        }
+    }
     async chanegStatus(id: string, statusDto: ChangeReportStatusDto) {
         if (!id) {
             throw new BadRequestException('Id not found');
