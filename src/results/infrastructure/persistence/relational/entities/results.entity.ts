@@ -54,6 +54,9 @@ export class ResultsEntity extends EntityRelationalHelper {
     @Column({ type: String, nullable: false })
     status: ResultStatus;
 
+    @Column({ name: 'tenant_id', type: String, nullable: false })
+    tenantId: string;
+
     @CreateDateColumn()
     createdAt: Date;
 

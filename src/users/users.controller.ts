@@ -11,11 +11,15 @@ import {
     HttpStatus,
     HttpCode,
     SerializeOptions,
+    UseInterceptors,
+    UploadedFile,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
     ApiBearerAuth,
+    ApiBody,
+    ApiConsumes,
     ApiCreatedResponse,
     ApiOkResponse,
     ApiParam,
@@ -36,6 +40,7 @@ import { RolesEnum } from './persistence/entities/user.entity';
 import { Roles } from '../auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { UpdateUserRoleDto } from './dto/update-user-role.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 // @ApiBearerAuth()
 // @Roles(RolesEnum.ADMIN)
@@ -57,7 +62,7 @@ export class UsersController {
     @Post()
     @HttpCode(HttpStatus.CREATED)
     create(@Body() createProfileDto: CreateUserDto): Promise<User> {
-        return this.usersService.create(createProfileDto);
+        return this.usersService.create(createProfileDto, '');
     }
 
     @ApiOkResponse({
@@ -106,7 +111,6 @@ export class UsersController {
         return this.usersService.findByTenant(tenantId);
     }
 
-
     @ApiOkResponse({
         type: User,
     })
@@ -144,10 +148,10 @@ export class UsersController {
         return this.usersService.update(id, updateProfileDto);
     }
 
-    @Post('/role')
-    updateRole(@Body() updateRoleDto: UpdateUserRoleDto): Promise<any> {
-        return this.usersService.updateRole(updateRoleDto);
-    }
+    // @Post('/role')
+    // updateRole(@Body() updateRoleDto: UpdateUserRoleDto): Promise<any> {
+    //     return this.usersService.updateRole(updateRoleDto);
+    // }
 
     @Delete(':id')
     @ApiParam({
@@ -158,5 +162,32 @@ export class UsersController {
     @HttpCode(HttpStatus.NO_CONTENT)
     remove(@Param('id') id: User['id']): Promise<void> {
         return this.usersService.remove(id);
+    }
+
+    @Post('/bulk/:tenantId/upload')
+    @UseInterceptors(FileInterceptor('file'))
+    @ApiConsumes('multipart/form-data')
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                file: {
+                    type: 'string',
+                    format: 'binary',
+                },
+            },
+        },
+    })
+    @ApiParam({
+        name: 'tenantId',
+        type: String,
+        required: true,
+    })
+    async uploadFile(
+        @UploadedFile() file,
+        @Param('tenantId') tenantId: string,
+    ) {
+        // file is the uploaded file
+        await this.usersService.processBulkUserUpload(file, tenantId);
     }
 }

@@ -1,0 +1,15 @@
+export enum Messages {
+    Exception = 'Something went wrong',
+    ErrorOccurred = 'An error occurred',
+    RequestSuccessful = 'Request successful',
+    InvalidCredentials = 'Invalid Email or Password',
+    NoWalletFound = 'Wallet not found',
+    NoTransactionFound = 'Transaction not found',
+    NoVerificationFound = 'Verification not found',
+    UserNotFound = 'User not found',
+    UnAuthorized = 'Api Key is Invalid',
+    NoUserFound = 'User not found',
+    NoPermission = ' You do not have permission to perform this operation',
+    EmailAlreadyExist = 'Email Address Already Exist',
+    PhoneNumberAlreadyExist = 'Phone Number Already Exist',
+}

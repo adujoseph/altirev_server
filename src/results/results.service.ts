@@ -31,9 +31,12 @@ import { LgaEntity } from './infrastructure/persistence/relational/entities/lga.
 import { v4 as uuidv4 } from 'uuid';
 import { ElectionService } from '../election/election.service';
 import { ElectionStatus } from '../election/entities/election.entity';
+import { Helpers } from '../utils/helper';
+import { ApiResponse } from '../utils/dto/api.response';
 
 @Injectable()
 export class ResultsService {
+
     constructor(
         private readonly resultsRepository: ResultsRepository,
         @InjectRepository(CountryEntity)
@@ -155,7 +158,7 @@ export class ResultsService {
     async create(
         createResultsDto: CreateResultsDto,
         file: Express.Multer.File,
-    ): Promise<Results> {
+    ): Promise<ApiResponse> {
         const fileDriver = process.env.FILE_DRIVER;
         if (!fileDriver) {
             throw new InternalServerErrorException('File Driver not found');
@@ -184,18 +187,20 @@ export class ResultsService {
         //     throw new ForbiddenException('Election is not ongoing');
         // }
 
+        const locationInfo = await this.electionService.getLocationByUser(
+            user.altirevId,
+        );
+        if (!locationInfo) {
+            throw new ForbiddenException(
+                'You are not Assigned to an Election Location',
+            );
+        }
+
         const fileUrl = await this.s3Service.uploadFile(
             file,
             file.buffer,
             'File',
         );
-
-        const locationInfo = await this.electionService.getLocationByUser(
-            user.altirevId,
-        );
-        // if (!locationInfo) {
-        //     result.location = new LocationEntity();
-        // }
 
         const result = new Results();
         result.election = election;
@@ -208,7 +213,7 @@ export class ResultsService {
         result.status = ResultStatus.PROCESSING;
 
         const resultEntity = ResultsMapper.toPersistence(result);
-        return this.saveElectionResult(resultEntity);
+        return Helpers.success(this.saveElectionResult(resultEntity));
     }
 
     findAllWithPagination({
@@ -225,7 +230,7 @@ export class ResultsService {
     }
 
     findOne(id: Results['id']) {
-        return this.resultsRepository.findById(id);
+        return Helpers.success(this.resultsRepository.findById(id));
     }
 
     update(id: Results['id'], updateResultsDto: UpdateResultsDto) {
@@ -246,8 +251,14 @@ export class ResultsService {
         return new Results();
     }
 
-    async getResultByAgent(userAltirevId: Results['userAltirevId']) {
-        return this.resultsRepository.findByAgent(userAltirevId);
+    async getResultByAgent(
+        userAltirevId: Results['userAltirevId'],
+    ): Promise<Results[]> {
+        return await this.resultsRepository.findByAgent(userAltirevId);
+    }
+
+    async getResultByTenant(tenantId: string) {
+        return await this.resultsRepository.findByTenantId(tenantId);
     }
 
     async getResultByElection(electionId: Results['election']['id']) {
@@ -293,5 +304,9 @@ export class ResultsService {
 
     async getPU(puId: string) {
         return this.pollingRepository.findOneOrFail({ where: { id: puId } });
+    }
+
+    async approveRejectResult(id: string, updateResultsDto: UpdateResultsDto) {
+        return await this.update(id, updateResultsDto);
     }
 }

@@ -27,7 +27,7 @@ import { RefreshResponseDto } from './dto/refresh-response.dto';
 import { RegisterResponseDto } from './dto/register-response.dto';
 import { TokenDto } from './dto/token.dto';
 import { RegTokenDto } from './dto/reg-token.dto';
-import { ApiResponseDto } from '../utils/dto/api-response.dto';
+import { ApiResponse } from '../utils/dto/api.response';
 
 @ApiTags('Auth')
 @Controller({
@@ -80,7 +80,7 @@ export class AuthController {
 
     @Post('verifyOtp')
     @HttpCode(HttpStatus.OK)
-    async verifyOtp(@Body() verifyOtpDto: TokenDto): Promise<ApiResponseDto> {
+    async verifyOtp(@Body() verifyOtpDto: TokenDto): Promise<ApiResponse> {
         return this.service.verifyOtpToken(verifyOtpDto);
     }
 
@@ -104,7 +104,7 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     async forgotPassword(
         @Body() forgotPasswordDto: AuthForgotPasswordDto,
-    ): Promise<ApiResponseDto> {
+    ): Promise<ApiResponse> {
         return this.service.forgotPassword(forgotPasswordDto.email);
     }
 
@@ -112,7 +112,7 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     resetPassword(
         @Body() resetPasswordDto: AuthResetPasswordDto,
-    ): Promise<ApiResponseDto> {
+    ): Promise<ApiResponse> {
         return this.service.resetPassword(
             resetPasswordDto.hash,
             resetPasswordDto.password,

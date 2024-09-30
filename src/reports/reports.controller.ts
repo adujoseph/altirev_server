@@ -32,7 +32,6 @@ import { promisify } from 'util';
 import { ChangeReportStatusDto } from './dto/change-report-status.dto';
 import { SuspendUserDto } from './dto/suspend-user.dto';
 
-
 const writeFileAsync = promisify(fs.writeFile);
 const unlinkAsync = promisify(fs.unlink);
 const readFileAsync = promisify(fs.readFile);
@@ -84,16 +83,24 @@ export class ReportsController {
 
         let fileUrl;
 
-        if(file.mimetype.startsWith('image')){
+        if (file.mimetype.startsWith('image')) {
             const watermarkedImage = await this.watermarkImage(file);
-            fileUrl = await this.s3Service.uploadFile(file, watermarkedImage, 'Images');
+            fileUrl = await this.s3Service.uploadFile(
+                file,
+                watermarkedImage,
+                'Images',
+            );
         }
 
-        if(file.mimetype.startsWith('video')){
+        if (file.mimetype.startsWith('video')) {
             const watermarkedVideo = await this.watermarkVideo2(file);
-            fileUrl = await this.s3Service.uploadFile(file, watermarkedVideo, 'Video');
+            fileUrl = await this.s3Service.uploadFile(
+                file,
+                watermarkedVideo,
+                'Video',
+            );
         }
-     
+
         return {
             message: 'file uploaded successfully',
             fileUrl,
@@ -124,8 +131,19 @@ export class ReportsController {
     private async watermarkVideo2(file: Express.Multer.File): Promise<Buffer> {
         const tempDir = './temp';
         const inputPath = path.join(tempDir, file.originalname);
-        const outputPath = path.join(tempDir, `watermarked_${file.originalname}`);
-        const watermarkPath = path.join(__dirname, '..', '..', 'src', 'public', 'watermarks', 'watermark.png');
+        const outputPath = path.join(
+            tempDir,
+            `watermarked_${file.originalname}`,
+        );
+        const watermarkPath = path.join(
+            __dirname,
+            '..',
+            '..',
+            'src',
+            'public',
+            'watermarks',
+            'watermark.png',
+        );
 
         // Ensure temp directory exists
         if (!fs.existsSync(tempDir)) {
@@ -135,34 +153,33 @@ export class ReportsController {
         // Save the uploaded video temporarily
         await writeFileAsync(inputPath, file.buffer);
 
-    
         return new Promise((resolve, reject) => {
             ffmpeg(inputPath)
-            .input(watermarkPath)
-            .complexFilter('overlay=W-w-10:H-h-10') // Overlay bottom-right
-            .output(outputPath)
-            .on('end', async () => {
-                try {
-                    // Read the watermarked video
-                    const watermarkedVideo = await readFileAsync(outputPath);
+                .input(watermarkPath)
+                .complexFilter('overlay=W-w-10:H-h-10') // Overlay bottom-right
+                .output(outputPath)
+                .on('end', async () => {
+                    try {
+                        // Read the watermarked video
+                        const watermarkedVideo =
+                            await readFileAsync(outputPath);
 
-                    // Clean up temporary files
-                    await unlinkAsync(inputPath);
-                    await unlinkAsync(outputPath);
+                        // Clean up temporary files
+                        await unlinkAsync(inputPath);
+                        await unlinkAsync(outputPath);
 
-                    resolve(watermarkedVideo);
-                } catch (err) {
+                        resolve(watermarkedVideo);
+                    } catch (err) {
+                        reject(err);
+                    }
+                })
+                .on('error', (err) => {
+                    console.error('FFmpeg error:', err);
                     reject(err);
-                }
-            })
-            .on('error', (err) => {
-                console.error('FFmpeg error:', err);
-                reject(err);
-            })
-            .run();
+                })
+                .run();
         });
     }
-
 
     @Post('/submit-report')
     async createReport(@Body() createReportsDto: CreateReportDto) {
@@ -171,7 +188,7 @@ export class ReportsController {
 
     @Get('escalated')
     async findEscalated() {
-       return this.reportsService.getEscalatedElections()
+        return this.reportsService.getEscalatedElections();
     }
 
     @Get()
@@ -184,27 +201,25 @@ export class ReportsController {
         return this.reportsService.findOne(id);
     }
 
-   
-
     @Get('/me/:userId')
     findMe(@Param('id') id: string) {
-       return this.reportsService.findMe(id)
+        return this.reportsService.findMe(id);
     }
 
     @Get('/tenant/:id')
     findReportByTenanant(@Param('id') id: string) {
-       return this.reportsService.findReportTenant(id)
+        return this.reportsService.findReportTenant(id);
     }
+
     @Get('/agents/:tenantId')
     agentsStatus(@Param('tenantId') id: string) {
-       return this.reportsService.agentStatusByTenant(id)
+        return this.reportsService.agentStatusByTenant(id);
     }
 
     @Patch('suspend-user')
     suspendUser( @Body() suspendUserDto: SuspendUserDto){
         return this.reportsService.suspend(suspendUserDto)
     }
-
 
     @HttpCode(HttpStatus.OK)
     @ApiParam({
@@ -217,7 +232,7 @@ export class ReportsController {
         @Param('id') id: string,
         @Body() changeReportStatusDto: ChangeReportStatusDto,
     ) {
-       return this.reportsService.chanegStatus(id, changeReportStatusDto)
+        return this.reportsService.chanegStatus(id, changeReportStatusDto);
     }
 
     @Patch(':id')

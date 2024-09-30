@@ -32,6 +32,8 @@ import { infinityPagination } from '../utils/infinity-pagination';
 import { FindAllResultsDto } from './dto/find-all-results.dto';
 import { FileResponseDto } from '../files/uploader/s3/dto/file-response.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Helpers } from '../utils/helper';
+import { ApiResponse } from '../utils/dto/api.response';
 
 @ApiTags('Results')
 // @ApiBearerAuth()
@@ -54,7 +56,7 @@ export class ResultsController {
     async uploadFile(
         @UploadedFile() file: Express.Multer.File,
         @Body() createResultDto: CreateResultsDto,
-    ): Promise<Results> {
+    ): Promise<ApiResponse> {
         return this.resultsService.create(createResultDto, file);
     }
 
@@ -62,23 +64,23 @@ export class ResultsController {
     @ApiOkResponse({
         type: InfinityPaginationResponse(Results),
     })
-    async findAll(
-        @Query() query: FindAllResultsDto,
-    ): Promise<InfinityPaginationResponseDto<Results>> {
+    async findAll(@Query() query: FindAllResultsDto): Promise<ApiResponse> {
         const page = query?.page ?? 1;
         let limit = query?.limit ?? 10;
         if (limit > 50) {
             limit = 50;
         }
 
-        return infinityPagination(
-            await this.resultsService.findAllWithPagination({
-                paginationOptions: {
-                    page,
-                    limit,
-                },
-            }),
-            { page, limit },
+        return Helpers.success(
+            infinityPagination(
+                await this.resultsService.findAllWithPagination({
+                    paginationOptions: {
+                        page,
+                        limit,
+                    },
+                }),
+                { page, limit },
+            ),
         );
     }
 
@@ -93,6 +95,19 @@ export class ResultsController {
     })
     findOne(@Param('id') id: string) {
         return this.resultsService.findOne(id);
+    }
+
+    @Get('tenant/:tenantId')
+    @ApiParam({
+        name: 'tenantId',
+        type: String,
+        required: true,
+    })
+    @ApiOkResponse({
+        type: Results,
+    })
+    findTenantResults(@Param('tenantId') tenantId: string) {
+        return this.resultsService.getResultByTenant(tenantId);
     }
 
     @Patch(':id')
@@ -121,11 +136,18 @@ export class ResultsController {
         return this.resultsService.remove(id);
     }
 
-    @Get('agents/:id')
-    @ApiOkResponse({ type: Results })
+    @Get('agents/:agentId')
     @ApiParam({ name: 'agentId' })
-    async getResultByAgent(@Param('id') id: string) {
-        return await this.resultsService.getResultByAgent(id);
+    @ApiOkResponse({ type: Results })
+    async getResultByAgent(@Param('agentId') agentId: string) {
+        return await this.resultsService.getResultByAgent(agentId);
+    }
+
+    @Get('tenant/:tenantId')
+    @ApiParam({ name: 'tenantId' })
+    @ApiOkResponse({ type: Results })
+    async getResultByTenant(@Param('tenantId') tenantId: string) {
+        return await this.resultsService.getResultByTenant(tenantId);
     }
 
     @Get('location/seed')
@@ -164,5 +186,22 @@ export class ResultsController {
     @ApiParam({ name: 'wardId', type: String, required: true })
     async getPollingUnits(@Param('wardId') wardId: string) {
         return await this.resultsService.getAllPU(wardId);
+    }
+
+    //only Moderator or Comms should be able to access route
+    @Patch("/modify/status")
+    @ApiParam({
+        name: 'id',
+        type: String,
+        required: true,
+    })
+    @ApiOkResponse({
+        type: Results,
+    })
+    async approveReject(
+      @Param('id') id: string,
+      @Body() updateResultsDto: UpdateResultsDto,
+    ) {
+        return await this.resultsService.approveRejectResult(id, updateResultsDto);
     }
 }

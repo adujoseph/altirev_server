@@ -43,10 +43,10 @@ export class Election {
 
     @Column({ type: 'datetime' })
     startDate: Date;
-  
+
     @Column({ type: 'datetime' })
     endDate: Date;
-  
+
     @Column({ default: false })
     isActive: boolean;
 

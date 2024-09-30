@@ -8,7 +8,7 @@ export enum ApiResponseType {
     PENDING = 'pending',
 }
 
-export class ApiResponseDto {
+export class ApiResponse {
     @ApiProperty({ example: 'name@email.com' })
     @IsNotEmpty()
     status: ApiResponseType;

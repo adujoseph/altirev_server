@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
+import { ResultStatus } from '../infrastructure/persistence/relational/entities/results.entity';
 
 export class CreateResultsDto {
     // Don't forget to use the class-validator decorators in the DTO properties.
@@ -36,4 +37,7 @@ export class CreateResultsDto {
     @ApiProperty({ type: 'string', format: 'binary', required: true })
     // @IsNotEmpty()
     file: Express.Multer.File;
+
+    @ApiProperty({ enum: () => ResultStatus })
+    status: ResultStatus;
 }
