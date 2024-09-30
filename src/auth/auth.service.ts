@@ -30,7 +30,7 @@ import { User } from '../users/domain/user';
 import { TokenDto } from './dto/token.dto';
 import { TokenService } from './token.service';
 import { RegTokenDto } from './dto/reg-token.dto';
-import { ApiResponseDto, ApiResponseType } from '../utils/dto/api-response.dto';
+import { ApiResponse, ApiResponseType } from '../utils/dto/api.response';
 import {
     RolesEnum,
     StatusEnum,
@@ -128,21 +128,24 @@ export class AuthService {
     }
 
     async register(dto: AuthRegisterLoginDto): Promise<LoginResponseDto> {
-        await this.usersService.create({
-            firstName: dto.firstName,
-            lastName: dto.lastName,
-            email: dto.email,
-            password: dto.password,
-            role: RolesEnum.USER,
-            status: StatusEnum.ACTIVE,
-            username: dto.username,
-            phoneNumber: dto.phoneNumber,
-            gender: dto.gender,
-            state: dto.state,
-            country: dto.country,
-            paymentRef: dto.paymentRef,
-            planId: dto.planId,
-        });
+        await this.usersService.create(
+            {
+                firstName: dto.firstName,
+                lastName: dto.lastName,
+                email: dto.email,
+                password: dto.password,
+                role: RolesEnum.USER,
+                status: StatusEnum.ACTIVE,
+                username: dto.username,
+                phoneNumber: dto.phoneNumber,
+                gender: dto.gender,
+                state: dto.state,
+                country: dto.country,
+                paymentRef: dto.paymentRef,
+                planId: dto.planId,
+            },
+            '',
+        );
 
         // const hash = await this.jwtService.signAsync(
         //   {
@@ -299,7 +302,7 @@ export class AuthService {
         await this.usersService.update(user.id, user);
     }
 
-    async forgotPassword(email: string): Promise<ApiResponseDto> {
+    async forgotPassword(email: string): Promise<ApiResponse> {
         const user = await this.usersService.findByEmail(email);
 
         if (!user) {
@@ -347,10 +350,7 @@ export class AuthService {
         };
     }
 
-    async resetPassword(
-        hash: string,
-        password: string,
-    ): Promise<ApiResponseDto> {
+    async resetPassword(hash: string, password: string): Promise<ApiResponse> {
         let userId: User['id'];
 
         try {
@@ -612,7 +612,7 @@ export class AuthService {
         };
     }
 
-    async verifyOtpToken(dto: TokenDto): Promise<ApiResponseDto> {
+    async verifyOtpToken(dto: TokenDto): Promise<ApiResponse> {
         const { email, token } = dto;
 
         // fetch the otp by email
@@ -699,13 +699,13 @@ export class AuthService {
             throw new UnprocessableEntityException('Unable to save user token');
         }
 
-        const response = new ApiResponseDto();
+        const response = new ApiResponse();
         response.status = ApiResponseType.SUCCESS;
         response.message = 'Token Sent to your email';
         return response;
     }
 
-    async resendOtp(regDto: RegTokenDto): Promise<ApiResponseDto> {
+    async resendOtp(regDto: RegTokenDto): Promise<ApiResponse> {
         //check users if the email exists
         const { email } = regDto;
         // check if token exists
@@ -731,7 +731,7 @@ export class AuthService {
             },
         });
 
-        const response = new ApiResponseDto();
+        const response = new ApiResponse();
         response.status = ApiResponseType.SUCCESS;
         response.message = 'Token Sent to your email';
         return response;

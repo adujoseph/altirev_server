@@ -66,20 +66,18 @@ export class ResultsRelationalRepository implements ResultsRepository {
             where: { userAltirevId },
         });
 
-        const resultList = entity.map(result => {
+        const resultList = entity.map((result) => {
             return ResultsMapper.toDomain(result);
         });
         return resultList ? resultList : [];
     }
 
-    async findByTenantId(
-        tenantId: Results['tenantId'],
-    ): Promise<Results[]> {
+    async findByTenantId(tenantId: Results['tenantId']): Promise<Results[]> {
         const entity = await this.resultsRepository.find({
             where: { tenantId },
         });
 
-        const resultList = entity.map(result => {
+        const resultList = entity.map((result) => {
             return ResultsMapper.toDomain(result);
         });
         return resultList ? resultList : [];

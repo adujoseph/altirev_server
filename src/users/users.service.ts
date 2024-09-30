@@ -2,9 +2,11 @@ import {
     BadRequestException,
     HttpStatus,
     Injectable,
-    InternalServerErrorException, NotFoundException,
+    InternalServerErrorException,
+    NotFoundException,
     UnprocessableEntityException,
 } from '@nestjs/common';
+import * as XLSX from 'xlsx';
 import { CreateUserDto } from './dto/create-user.dto';
 import { NullableType } from '../utils/types/nullable.type';
 import { FilterUserDto, SortUserDto } from './dto/query-user.dto';
@@ -26,6 +28,7 @@ import { LocationEntity } from '../election/entities/location.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UpdateUserRoleDto } from './dto/update-user-role.dto';
+import { Helpers } from '../utils/helper';
 
 @Injectable()
 export class UsersService {
@@ -37,11 +40,14 @@ export class UsersService {
         private readonly subscriptionsService: SubscriptionsService,
     ) {}
 
-    async create(createProfileDto: CreateUserDto): Promise<User> {
+    async create(
+        createProfileDto: CreateUserDto,
+        tenantId: string,
+    ): Promise<User> {
         const clonedPayload = {
             provider: AuthProvidersEnum.email,
             altirevId: uuidv4(),
-            tenantId: '',
+            tenantId: tenantId,
             location: new LocationEntity(),
             ...createProfileDto,
         };
@@ -149,7 +155,7 @@ export class UsersService {
         if (!user) {
             throw new NotFoundException('User not found');
         }
-        return this.usersRepository.findUserLocation(user.altirevId)
+        return this.usersRepository.findUserLocation(user.altirevId);
     }
 
     async findByTenant(tenantId: string): Promise<NullableType<User[]>> {
@@ -181,26 +187,27 @@ export class UsersService {
         });
     }
 
-    async updateRole(updateRole: UpdateUserRoleDto): Promise<any> {
-        const user = await this.UserRepository.findOneBy({
-            email: updateRole.email,
-        });
-        if (user) {
-            (user.tenantId = updateRole.moderator_tenant_id),
-                (user.state = updateRole.role);
-            user.local_govt = updateRole.local_govt;
-            user.ward = updateRole.ward;
-            user.polling_unit = updateRole.polling_unit;
-            user.role = updateRole.role;
-            return await this.UserRepository.save(user);
-        } else {
-            throw new UnprocessableEntityException({
-                status: HttpStatus.UNPROCESSABLE_ENTITY,
-                message: 'user with this email does not exist',
-                error: true,
-            });
-        }
-    }
+    // async updateRole(updateRole: UpdateUserRoleDto): Promise<any> {
+    //   const user = await this.UserRepository.findOneBy({
+    //     email: updateRole.email,
+    //   });
+    //   if (user) {
+    //     (user.tenantId = updateRole.moderator_tenant_id),
+    //       (user.state = updateRole.role);
+    //     user.local_govt = updateRole.local_govt;
+    //     user.ward = updateRole.ward;
+    //     user.polling_unit = updateRole.polling_unit;
+    //     user.role = updateRole.role;
+    //     return await this.UserRepository.save(user);
+    //   } else {
+    //     throw new UnprocessableEntityException({
+    //       status: HttpStatus.UNPROCESSABLE_ENTITY,
+    //       message: 'user with this email does not exist',
+    //       error: true,
+    //     });
+    //   }
+    // }
+
     async update(
         id: User['id'],
         payload: DeepPartial<User>,
@@ -285,5 +292,60 @@ export class UsersService {
 
     async findByPhone(phone: string): Promise<NullableType<User>> {
         return this.usersRepository.findByPhone(phone);
+    }
+
+    async processBulkUserUpload(file: any, tenantId: string) {
+        const userByTenant =
+            await this.usersRepository.findByTenantId(tenantId);
+        if (!userByTenant) {
+            return Helpers.fail('No Tenant Found for ID');
+        }
+
+        const workbook = XLSX.read(file.buffer, { type: 'buffer' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const data = XLSX.utils.sheet_to_json(worksheet);
+
+        // const wb = XLSX.utils.book_new();
+        // const ws = XLSX.utils.aoa_to_sheet([
+        //   ["A1", "B1", "C1"],
+        //   ["A2", "B2", "C2"],
+        //   ["A3", "B3", "C3"]
+        // ]);
+        // wb.Sheets[0] = ws;
+        // const files = XLSX.writeFile(workbook, "Failed Data.xlsx");
+        // res.header('Content-Disposition', 'attachment; filename=anlikodullendirme.xlsx');
+        // res.type('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        // res.send(files.buffer);
+
+        for (let i = 0; i < data.length; i++) {
+            const userData = JSON.parse(JSON.stringify(data[i]));
+
+            const state = userData.State;
+            //fetch state from location
+
+            const lga = userData.LGA;
+            //fetch lga from location
+
+            const ward = userData.Ward;
+            //fetch ward from location
+
+            const punit = userData.PU;
+            //fetch pu from locaion
+
+            const userDto = new CreateUserDto();
+            userDto.firstName = userData.Firstname;
+            userDto.lastName = userData.Lastname;
+            userDto.email = userData.Email;
+            userDto.password = userData.Phone as string;
+            userDto.phoneNumber = userData.Phone;
+            userDto.gender = userData.Gender;
+            userDto.role = RolesEnum.AGENT;
+            userDto.status = StatusEnum.ACTIVE;
+
+            console.log(userData.Firstname);
+
+            const createdUser = await this.create(userDto, tenantId);
+            console.log(createdUser);
+        }
     }
 }

@@ -35,7 +35,9 @@ export class ElectionService {
         const { startDate, endDate } = electionDto;
 
         if (endDate <= startDate) {
-          throw new BadRequestException('End date must be later than start date');
+            throw new BadRequestException(
+                'End date must be later than start date',
+            );
         }
         const electionData = await this.electionRepository.save(electionDto);
         return electionData;
@@ -95,24 +97,22 @@ export class ElectionService {
     }
 
     async findAll(page: number, limit: number): Promise<any> {
-        
         const now = new Date();
         const skip = (page - 1) * limit;
-
 
         const [elections, total] = await this.electionRepository.findAndCount({
             skip,
             take: limit,
-          });
+        });
 
         const previous: Election[] = elections.filter(
-          (election) => election.endDate < now,
+            (election) => election.endDate < now,
         );
-        const ongoing: Election[]= elections.filter(
-          (election) => election.startDate <= now && election.endDate >= now,
+        const ongoing: Election[] = elections.filter(
+            (election) => election.startDate <= now && election.endDate >= now,
         );
         const upcoming: Election[] = elections.filter(
-          (election) => election.startDate > now,
+            (election) => election.startDate > now,
         );
 
         return {
@@ -122,8 +122,7 @@ export class ElectionService {
             total,
             page,
             limit,
-          };
-       
+        };
     }
 
     async findOne(id: string): Promise<Election | null> {
@@ -136,7 +135,7 @@ export class ElectionService {
         );
         if (!result) {
             console.log('Could not find result for election');
-        }else {
+        } else {
             election.results = ResultsMapper.toPersistence(result);
         }
 
@@ -152,7 +151,7 @@ export class ElectionService {
             election.name = electionData.name || election.name;
             election.electionDate =
                 electionData.electionDate || election.electionDate;
-           // election.status = electionData.status || election.status;
+            // election.status = electionData.status || election.status;
             return this.electionRepository.save(election);
         }
 

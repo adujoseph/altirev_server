@@ -45,7 +45,7 @@ export class ReportsService {
         if (!id) {
             throw new BadRequestException('Id not found');
         }
-        const tenant = await this.userRepository.findOneBy({tenantId: id})
+        const tenant = await this.userRepository.findOneBy({ tenantId: id });
         if (!tenant) {
             throw new BadRequestException('Invalid tenant id');
         }
@@ -80,7 +80,7 @@ export class ReportsService {
             }),
         );
 
-        return agentStatus
+        return agentStatus;
     }
 
     async findMe(id: string) {

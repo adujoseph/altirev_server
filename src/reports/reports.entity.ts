@@ -14,7 +14,7 @@ export class ReportEntity {
     id: string;
 
     @Column()
-    tenantId: string
+    tenantId: string;
 
     @Column()
     title: string;
@@ -22,11 +22,11 @@ export class ReportEntity {
     @Column()
     userId: string;
 
-    @Column({nullable: true, default:''})
+    @Column({ nullable: true, default: '' })
     reasons: string;
 
-    @Column({nullable: true})
-    modifiedBy: string
+    @Column({ nullable: true })
+    modifiedBy: string;
 
     @Column()
     ward: string;
@@ -37,8 +37,8 @@ export class ReportEntity {
     @Column()
     message: string;
 
-    @Column({default: false})
-    requestCall: Boolean
+    @Column({ default: false })
+    requestCall: Boolean;
 
     @Column({ default: ReportStatus.Pending })
     status: ReportStatus;
