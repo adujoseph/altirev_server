@@ -18,6 +18,10 @@ export class CreateReportDto {
 
     @ApiProperty()
     @IsString()
+    tenantId: string;
+
+    @ApiProperty()
+    @IsString()
     ward: string;
 
     @ApiProperty()
