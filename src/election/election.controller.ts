@@ -49,7 +49,7 @@ export class ElectionController {
 
     @Get(':id')
     findOneElection(@Param('id') id: string) {
-        return this.electionService.findOne(id);
+        return this.electionService.findElectionWithResul(id);
     }
 
     @Put(':id')
