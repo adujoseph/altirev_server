@@ -130,8 +130,16 @@ export class ElectionService {
         if (!election) {
             throw new Error('Could not Specified election');
         }
+        return election;
+    }
+
+    async findElectionWithResul(id: string): Promise<Election | null> {
+        const election = await this.electionRepository.findOneBy({ id });
+        if (!election) {
+            throw new Error('Could not find Specified election');
+        }
         const result = await this.resultService.getResultByElection(
-            election.id,
+          election.id,
         );
         if (!result) {
             console.log('Could not find result for election');
