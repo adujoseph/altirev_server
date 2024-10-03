@@ -34,6 +34,7 @@ export class ResultsMapper {
         persistenceEntity.fileUrl = domainEntity.fileUrl;
         persistenceEntity.location = domainEntity.location;
         persistenceEntity.status = domainEntity.status;
+        persistenceEntity.tenantId = domainEntity.tenantId;
 
         persistenceEntity.createdAt = domainEntity.createdAt;
         persistenceEntity.updatedAt = domainEntity.updatedAt;
