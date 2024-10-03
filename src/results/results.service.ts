@@ -30,7 +30,6 @@ import { WardEntity } from './infrastructure/persistence/relational/entities/war
 import { LgaEntity } from './infrastructure/persistence/relational/entities/lga.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { ElectionService } from '../election/election.service';
-import { ElectionStatus } from '../election/entities/election.entity';
 import { Helpers } from '../utils/helper';
 import { ApiResponse } from '../utils/dto/api.response';
 
@@ -210,6 +209,7 @@ export class ResultsService {
         result.counts = createResultsDto.counts;
         result.fileUrl = fileUrl;
         result.location = locationInfo;
+        result.tenantId = user.tenantId;
         result.status = ResultStatus.PROCESSING;
 
         const resultEntity = ResultsMapper.toPersistence(result);
