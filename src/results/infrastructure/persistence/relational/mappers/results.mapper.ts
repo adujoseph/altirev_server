@@ -12,6 +12,7 @@ export class ResultsMapper {
         domainObject.counts = raw.counts;
         domainObject.fileUrl = raw.fileUrl;
         domainObject.location = raw.location;
+        domainObject.tenantId = raw.tenantId;
         domainObject.status = raw.status;
         domainObject.createdAt = raw.createdAt;
         domainObject.updatedAt = raw.updatedAt;
