@@ -41,7 +41,6 @@ export class ResultsRelationalRepository implements ResultsRepository {
             where: { id },
             relations: ['election'],
         });
-        console.log(entity);
         return entity ? ResultsMapper.toDomain(entity) : null;
     }
 

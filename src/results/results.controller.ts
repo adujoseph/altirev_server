@@ -94,7 +94,7 @@ export class ResultsController {
         type: Results,
     })
     findOne(@Param('id') id: string) {
-        return this.resultsService.findOne(id);
+        return Helpers.success(this.resultsService.findOne(id));
     }
 
     @Get('tenant/:tenantId')
@@ -203,5 +203,19 @@ export class ResultsController {
       @Body() updateResultsDto: UpdateResultsDto,
     ) {
         return await this.resultsService.approveRejectResult(id, updateResultsDto);
+    }
+
+    //TODO : only comms should have access to this endpoint
+    @Patch(":resultId/tags")
+    @ApiOkResponse({
+        type: Results,
+    })
+    @ApiParam({
+        name: 'resultId',
+        type: String,
+        required: true,
+    })
+    async tagResults(@Param('resultId') resultId: string, @Body() tagsId: string[]) {
+        return await this.resultsService.addTagsToResults(resultId, tagsId);
     }
 }

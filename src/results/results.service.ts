@@ -2,6 +2,7 @@ import {
     BadRequestException,
     ForbiddenException,
     forwardRef,
+    HttpStatus,
     Inject,
     Injectable,
     InternalServerErrorException,
@@ -16,10 +17,7 @@ import { Results } from './domain/results';
 import { UsersService } from '../users/users.service';
 import { S3Service } from '../reports/s3.service';
 import { ResultsMapper } from './infrastructure/persistence/relational/mappers/results.mapper';
-import {
-    ResultsEntity,
-    ResultStatus,
-} from './infrastructure/persistence/relational/entities/results.entity';
+import { ResultsEntity, ResultStatus } from './infrastructure/persistence/relational/entities/results.entity';
 import fs from 'fs';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -32,6 +30,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ElectionService } from '../election/election.service';
 import { Helpers } from '../utils/helper';
 import { ApiResponse } from '../utils/dto/api.response';
+import { TagsService } from '../tags/tags.service';
 
 @Injectable()
 export class ResultsService {
@@ -52,6 +51,7 @@ export class ResultsService {
         private s3Service: S3Service,
         @Inject(forwardRef(() => ElectionService))
         private electionService: ElectionService,
+        private tagService: TagsService
     ) {}
 
     async doData(): Promise<string> {
@@ -230,7 +230,7 @@ export class ResultsService {
     }
 
     findOne(id: Results['id']) {
-        return Helpers.success(this.resultsRepository.findById(id));
+        return this.resultsRepository.findById(id);
     }
 
     update(id: Results['id'], updateResultsDto: UpdateResultsDto) {
@@ -308,5 +308,26 @@ export class ResultsService {
 
     async approveRejectResult(id: string, updateResultsDto: UpdateResultsDto) {
         return await this.update(id, updateResultsDto);
+    }
+
+    async addTagsToResults(id: string, tags: string[]) {
+        if (tags.length < 1) {
+            Helpers.failedHttpResponse("Tags cannot be empty", HttpStatus.BAD_REQUEST)
+        }
+        const result = await this.resultsRepository.findById(id);
+
+        const tagArray = [];
+        for (let i = 0; i < tags.length; i++) {
+            const tag = await this.tagService.findOne(tags[i]);
+            // @ts-ignore
+            tagArray.push(tag);
+        }
+        if (result) {
+            result.tags = tagArray;
+            const savedResult = await this.resultsRepository.create(result);
+            if (savedResult) {
+                return Helpers.success(savedResult);
+            }
+        }
     }
 }

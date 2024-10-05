@@ -12,8 +12,10 @@ import {
     HttpCode,
     SerializeOptions,
     UseInterceptors,
-    UploadedFile,
+    UploadedFile, Res, StreamableFile, Header,
 } from '@nestjs/common';
+import { createReadStream } from 'fs';
+import { join } from 'path';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
@@ -25,6 +27,7 @@ import {
     ApiParam,
     ApiTags,
 } from '@nestjs/swagger';
+import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 
 import {
@@ -41,6 +44,7 @@ import { Roles } from '../auth/roles.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Helpers } from '../utils/helper';
 
 // @ApiBearerAuth()
 // @Roles(RolesEnum.ADMIN)
@@ -183,11 +187,32 @@ export class UsersController {
         type: String,
         required: true,
     })
+    @Header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    @Header('Content-Disposition', 'attachment; filename=Failed Data.xlsx')
     async uploadFile(
         @UploadedFile() file,
         @Param('tenantId') tenantId: string,
-    ) {
+        @Res({ passthrough: true }) res: Response
+    ) : Promise<any> {
         // file is the uploaded file
-        await this.usersService.processBulkUserUpload(file, tenantId);
+        const result = await this.usersService.processBulkUserUpload(file, tenantId);
+        if (result !== "success") {
+            res.send(result);
+            // const file = createReadStream(result);
+            // return new StreamableFile(file, {
+            //     type: 'application/json',
+            //     disposition: 'attachment; filename="Failed Data.xlsx"',
+            // });
+            // const file = createReadStream(join(process.cwd(), 'Failed Data.xlsx'));
+            // res.headers.set('Content-Type', 'application/json');
+            // res.headers.set('Content-Disposition', 'attachment; filename="Failed Data.xlsx"');
+            // // res.headers.set({
+            // //     'Content-Type': 'application/json',
+            // //     'Content-Disposition': 'attachment; filename="package.json"',
+            // // });
+            // return new StreamableFile(file);
+        }else {
+            return Helpers.success("Agents Uploaded Successfully")
+        }
     }
 }
