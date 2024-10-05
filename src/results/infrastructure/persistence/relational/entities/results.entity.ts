@@ -2,7 +2,7 @@ import {
     Column,
     CreateDateColumn,
     Entity,
-    JoinColumn,
+    JoinColumn, JoinTable, ManyToMany,
     OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
@@ -11,6 +11,7 @@ import { EntityRelationalHelper } from '../../../../../utils/relational-entity-h
 import { IsEnum, IsNotEmpty } from 'class-validator';
 import { LocationEntity } from '../../../../../election/entities/location.entity';
 import { Election } from '../../../../../election/entities/election.entity';
+import { Tags } from '../../../../../tags/entities/tag.entity';
 // import { Election } from '../../../../../election/election.entity';
 
 export enum ResultStatus {
@@ -54,7 +55,7 @@ export class ResultsEntity extends EntityRelationalHelper {
     @Column({ type: String, nullable: false })
     status: ResultStatus;
 
-    @Column({ name: 'tenant_id', type: String, nullable: false })
+    @Column({ name: 'tenant_id', type: String, nullable: false, })
     tenantId: string;
 
     @CreateDateColumn()
@@ -62,4 +63,18 @@ export class ResultsEntity extends EntityRelationalHelper {
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @ManyToMany(() => Tags, (tag) => tag.result)
+    @JoinTable({
+        name: 'result_tags', // Join table name
+        joinColumn: {
+            name: 'result_id',
+            referencedColumnName: 'id',
+        },
+        inverseJoinColumn: {
+            name: 'tag_id',
+            referencedColumnName: 'id',
+        },
+    })
+    tags: Tags[];
 }

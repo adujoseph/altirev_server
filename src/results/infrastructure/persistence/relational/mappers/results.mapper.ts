@@ -14,6 +14,7 @@ export class ResultsMapper {
         domainObject.location = raw.location;
         domainObject.tenantId = raw.tenantId;
         domainObject.status = raw.status;
+        domainObject.tags = raw.tags;
         domainObject.createdAt = raw.createdAt;
         domainObject.updatedAt = raw.updatedAt;
 
@@ -36,6 +37,7 @@ export class ResultsMapper {
         persistenceEntity.location = domainEntity.location;
         persistenceEntity.status = domainEntity.status;
         persistenceEntity.tenantId = domainEntity.tenantId;
+        persistenceEntity.tags = domainEntity.tags;
 
         persistenceEntity.createdAt = domainEntity.createdAt;
         persistenceEntity.updatedAt = domainEntity.updatedAt;

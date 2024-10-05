@@ -17,19 +17,31 @@ export class LocationEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @OneToOne(() => StateEntity, (state) => state.id)
+    @OneToOne(() => StateEntity, (state) => state.id, {
+        cascade: true,
+        createForeignKeyConstraints: false
+    })
     @JoinColumn()
     state: StateEntity;
 
-    @OneToOne(() => LgaEntity, (lga) => lga.id)
+    @OneToOne(() => LgaEntity, (lga) => lga.id, {
+        cascade: true,
+        createForeignKeyConstraints: false
+    })
     @JoinColumn()
     lga: LgaEntity;
 
-    @OneToOne(() => WardEntity, (ward) => ward.id)
+    @OneToOne(() => WardEntity, (ward) => ward.id, {
+        cascade: true,
+        createForeignKeyConstraints: false
+    })
     @JoinColumn()
     ward: WardEntity;
 
-    @OneToOne(() => PollingEntity, (pollingUnit) => pollingUnit.id)
+    @OneToOne(() => PollingEntity, (pollingUnit) => pollingUnit.id, {
+        cascade: true,
+        createForeignKeyConstraints: false
+    })
     @JoinColumn()
     pollingUnit: PollingEntity;
 

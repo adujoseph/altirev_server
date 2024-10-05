@@ -3,6 +3,7 @@ import { IsNotEmpty, IsOptional } from 'class-validator';
 import { ResultStatus } from '../infrastructure/persistence/relational/entities/results.entity';
 import { LocationEntity } from '../../election/entities/location.entity';
 import { Election } from '../../election/entities/election.entity';
+import { Tags } from '../../tags/entities/tag.entity';
 
 export class Results {
     @ApiProperty({
@@ -54,7 +55,15 @@ export class Results {
     })
     status: ResultStatus;
 
+    @ApiProperty({
+        type: String
+    })
     tenantId: string;
+
+    @ApiProperty({
+        type: Tags
+    })
+    tags: Tags[];
 
     @ApiProperty()
     createdAt: Date;

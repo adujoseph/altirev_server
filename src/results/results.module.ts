@@ -14,6 +14,8 @@ import { LgaEntity } from './infrastructure/persistence/relational/entities/lga.
 import { WardEntity } from './infrastructure/persistence/relational/entities/ward.entity';
 import { PollingEntity } from './infrastructure/persistence/relational/entities/pu.entity';
 import { ElectionModule } from '../election/election.module';
+import { TagsModule } from '../tags/tags.module';
+import { TagsService } from '../tags/tags.service';
 
 @Module({
     imports: [
@@ -30,9 +32,10 @@ import { ElectionModule } from '../election/election.module';
         ReportsModule,
         forwardRef(() => ElectionModule),
         RelationalResultsPersistenceModule,
+        TagsModule
     ],
     controllers: [ResultsController],
-    providers: [ResultsService, S3Service],
-    exports: [ResultsService, RelationalResultsPersistenceModule],
+    providers: [ResultsService, S3Service, TagsService],
+    exports: [ResultsService, RelationalResultsPersistenceModule, TypeOrmModule],
 })
 export class ResultsModule {}
