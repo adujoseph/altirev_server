@@ -15,6 +15,6 @@ import { UsersModule } from '../users/users.module';
     ],
     providers: [ElectionService],
     controllers: [ElectionController],
-    exports: [ElectionService],
+    exports: [ElectionService, TypeOrmModule],
 })
 export class ElectionModule {}

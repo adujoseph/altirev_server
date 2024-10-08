@@ -7,12 +7,18 @@ import { Results } from '../../../../domain/results';
 import { ResultsRepository } from '../../results.repository';
 import { ResultsMapper } from '../mappers/results.mapper';
 import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
+import { LocationEntity } from '../../../../../election/entities/location.entity';
+import { UserEntity } from '../../../../../users/persistence/entities/user.entity';
 
 @Injectable()
 export class ResultsRelationalRepository implements ResultsRepository {
     constructor(
         @InjectRepository(ResultsEntity)
         private readonly resultsRepository: Repository<ResultsEntity>,
+        @InjectRepository(LocationEntity)
+        private readonly locationRepository: Repository<LocationEntity>,
+        @InjectRepository(UserEntity)
+        private readonly userRepository: Repository<UserEntity>,
     ) {}
 
     async create(data: Results): Promise<Results> {
@@ -31,9 +37,31 @@ export class ResultsRelationalRepository implements ResultsRepository {
         const entities = await this.resultsRepository.find({
             skip: (paginationOptions.page - 1) * paginationOptions.limit,
             take: paginationOptions.limit,
+            relations: ['tags', 'election', 'location'],
         });
 
-        return entities.map((user) => ResultsMapper.toDomain(user));
+        // entities.map(async (entity: ResultsEntity) => {
+        //     const userAltId = entity.userAltirevId;
+        //     const  user = await this.userRepository.findOne({where: { altirevId: userAltId}});
+        //     const resultLocation = await this.locationRepository.findOne({
+        //         where: { user: { id: user?.id } },
+        //         relations: ['state', 'lga', 'ward', 'pollingUnit'],  // Load the relations if needed
+        //     });
+        //     if (resultLocation) {
+        //         entity.location = resultLocation;
+        //     }
+        // })
+
+
+        // const entities = await this.resultsRepository.createQueryBuilder('result')
+        //   .leftJoinAndSelect('result.tags', 'tags')
+        //   .leftJoinAndSelect('result.election', 'election')
+        //   .leftJoinAndSelect('result.location', 'location')  // Ensure full location details are fetched
+        //   .skip((paginationOptions.page - 1) * paginationOptions.limit)
+        //   .take(paginationOptions.limit)
+        //   .getMany();
+
+        return entities.map((result) => ResultsMapper.toDomain(result));
     }
 
     async findById(id: Results['id']): Promise<NullableType<Results>> {

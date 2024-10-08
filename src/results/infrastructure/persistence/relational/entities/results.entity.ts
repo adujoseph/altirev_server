@@ -12,7 +12,6 @@ import { IsEnum, IsNotEmpty } from 'class-validator';
 import { LocationEntity } from '../../../../../election/entities/location.entity';
 import { Election } from '../../../../../election/entities/election.entity';
 import { Tags } from '../../../../../tags/entities/tag.entity';
-// import { Election } from '../../../../../election/election.entity';
 
 export enum ResultStatus {
     PROCESSING = 'processing',
@@ -45,10 +44,14 @@ export class ResultsEntity extends EntityRelationalHelper {
     @Column({ name: 'user_id', type: String, nullable: false })
     userAltirevId: string;
 
-    @OneToOne(() => LocationEntity, (location) => location.id)
+    @OneToOne(() => LocationEntity, (location) => location.result, {eager: true})
+    @JoinColumn()
     location: LocationEntity;
 
-    @OneToOne(() => Election, (election) => election.id)
+    @OneToOne(() => Election, (election) => election.id, {
+        cascade: true,
+        createForeignKeyConstraints: false
+    })
     @JoinColumn()
     election: Election;
 

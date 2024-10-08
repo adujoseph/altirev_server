@@ -170,7 +170,16 @@ export class UsersService {
         if (!user) {
             throw new NotFoundException('User not found');
         }
-        return this.usersRepository.findUserLocation(user.altirevId);
+
+        const userLocation = await this.locationRepository.findOne({
+            where: { user: { id: user.id } },
+            relations: ['state', 'lga', 'ward', 'pollingUnit'],  // Load the relations if needed
+        });
+        if (userLocation) {
+            user.location = userLocation;
+        }
+        return user;
+        // return this.usersRepository.findUserLocation(user.altirevId);
     }
 
     async findByTenant(tenantId: string): Promise<NullableType<User[]>> {

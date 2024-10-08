@@ -11,6 +11,7 @@ import { PollingEntity } from '../../results/infrastructure/persistence/relation
 import { WardEntity } from '../../results/infrastructure/persistence/relational/entities/ward.entity';
 import { LgaEntity } from '../../results/infrastructure/persistence/relational/entities/lga.entity';
 import { StateEntity } from '../../results/infrastructure/persistence/relational/entities/state.entity';
+import { ResultsEntity } from '../../results/infrastructure/persistence/relational/entities/results.entity';
 
 @Entity('locations')
 export class LocationEntity {
@@ -45,7 +46,7 @@ export class LocationEntity {
     @JoinColumn()
     pollingUnit: PollingEntity;
 
-    @OneToOne(() => UserEntity, (user) => user.altirevId)
+    @OneToOne(() => UserEntity, (user) => user.id)
     @JoinColumn()
     user: UserEntity;
 
@@ -55,4 +56,7 @@ export class LocationEntity {
     @UpdateDateColumn()
     updatedAt: Date;
     role: any;
+
+    @OneToOne(() => ResultsEntity, (result) => result.location)
+    result: ResultsEntity;
 }
