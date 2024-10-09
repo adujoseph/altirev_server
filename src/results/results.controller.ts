@@ -48,8 +48,8 @@ export class ResultsController {
     @ApiCreatedResponse({
         type: FileResponseDto,
     })
-    @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt'))
+     // @ApiBearerAuth()
+    // @UseGuards(AuthGuard('jwt'))
     @Post('upload')
     @ApiConsumes('multipart/form-data')
     @UseInterceptors(FileInterceptor('file'))
