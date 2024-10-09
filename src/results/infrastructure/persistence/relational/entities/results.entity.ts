@@ -16,6 +16,7 @@ import { Tags } from '../../../../../tags/entities/tag.entity';
 
 export enum ResultStatus {
     PROCESSING = 'processing',
+    PENDING = 'pending',
     COMPLETED = 'completed',
     REJECTED = 'rejected',
 }
