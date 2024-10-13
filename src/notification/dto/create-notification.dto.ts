@@ -1,6 +1,5 @@
-
-import { NoteCategory, NoteStatus } from '../entities/notification.entity';
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { NoteCategory, NoteStatus } from '../entities/notification.entity';
 import { ApiProperty } from '@nestjs/swagger';
 export class CreateNotificationDto {
     @ApiProperty()
