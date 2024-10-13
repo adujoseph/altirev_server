@@ -57,7 +57,9 @@ import { TagsModule } from './tags/tags.module';
             // entities: [__dirname + '/**/*.schema{.ts,.js}'],
             entities: [__dirname + '/**/*.entity{.ts,.js}'],
             // synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE),
-            synchronize: true,
+            // entities: [__dirname + '/**/*.entity{.ts,.js}'],
+           // synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE),
+            synchronize: false,
             autoLoadEntities: true,
         }),
 

@@ -13,6 +13,7 @@ import {
 import { Repository } from 'typeorm';
 import { UserRepository } from '../users/persistence/user.repository';
 import { RolesEnum } from '../users/persistence/entities/user.entity';
+import { PaginationDto } from './dto/create-pagination.dto';
 
 @Injectable()
 export class NotificationService {
@@ -54,10 +55,45 @@ export class NotificationService {
         return newTask;
     }
 
-    async getAllNotification() {
-        const tasks = await this.NotificationRepsository.find();
-        return tasks;
-    }
+    // async getAllNotification() {
+    //     const tasks = await this.NotificationRepsository.find();
+    //     return tasks;
+    // }
+
+    async getAllNotification(
+        paginationDto: PaginationDto,
+        sortField: string,
+        sortOrder: 'ASC' | 'DESC',
+        tenantId?: string, // Tenant ID for filtering notifications by moderator
+        filterField?: string,
+        filterValue?: string,
+      ) {
+        const { page, limit } = paginationDto;
+
+        const query = this.NotificationRepsository.createQueryBuilder('notification');
+
+        if(tenantId){
+            query.where('notification.tenantId = :tenantId', { tenantId })
+        }
+    
+        // Filtering
+        if (filterField && filterValue) {
+          query.andWhere(`notification.${filterField} LIKE :filterValue`, { filterValue: `%${filterValue}%` });
+        }
+    
+        // Sorting
+        if (sortField) {
+          query.orderBy(`notification.${sortField}`, sortOrder);
+        }
+    
+        // Pagination
+        query.skip((page - 1) * limit).take(limit);
+    
+        return query.getManyAndCount(); // Returns notifications and total count
+
+        
+      }
+      
 
     async getNotificationById(id: string): Promise<NotificationEntity> {
         const found = await this.NotificationRepsository.findOneBy({ id });
