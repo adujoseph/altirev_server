@@ -128,7 +128,7 @@ export class ElectionService {
     async findOne(id: string): Promise<Election | null> {
         const election = await this.electionRepository.findOneBy({ id });
         if (!election) {
-            throw new Error('Could not Specified election');
+            throw new Error('Invalid election selected');
         }
         return election;
     }
@@ -144,7 +144,7 @@ export class ElectionService {
         if (!result) {
             console.log('Could not find result for election');
         } else {
-            election.results = ResultsMapper.toPersistence(result);
+           // election.electionResults = ResultsMapper.toPersistence(result);
         }
 
         return election;

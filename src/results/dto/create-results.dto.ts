@@ -25,7 +25,7 @@ export class CreateResultsDto {
     voteCasted: number;
 
     @ApiProperty({
-        type: Map<string, number>,
+        type: Map<String, Number>,
     })
     @IsNotEmpty()
     counts: Map<string, number>;

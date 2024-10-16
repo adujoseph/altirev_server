@@ -40,7 +40,6 @@ import { ApiResponse } from '../utils/dto/api.response';
 // @UseGuards(AuthGuard('jwt'))
 @Controller({
     path: 'results',
-    version: '1',
 })
 export class ResultsController {
     constructor(private readonly resultsService: ResultsService) {}

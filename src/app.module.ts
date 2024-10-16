@@ -23,6 +23,7 @@ import { ReportsModule } from './reports/reports.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { PlansModule } from './plans/plans.module';
 import { TagsModule } from './tags/tags.module';
+import { ElectionResultsModule } from './election-results/election-results.module';
 
 // const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
 //   useClass: TypeOrmConfigService,
@@ -30,6 +31,15 @@ import { TagsModule } from './tags/tags.module';
 //     return new DataSource(options).initialize();
 //   },
 // });
+import { AppDataSource } from './data-source';
+
+AppDataSource.initialize()
+  .then(() => {
+    console.log('Data Source has been initialized!');
+  })
+  .catch((err) => {
+    console.error('Error during Data Source initialization:', err);
+  });
 
 @Module({
     imports: [
@@ -44,9 +54,6 @@ import { TagsModule } from './tags/tags.module';
             ],
             envFilePath: ['.env'],
         }),
-
-        // infrastructureDatabaseModule,
-
         TypeOrmModule.forRoot({
             type: 'mysql',
             host: process.env.DATABASE_HOST,
@@ -54,38 +61,10 @@ import { TagsModule } from './tags/tags.module';
             username: process.env.DATABASE_USERNAME,
             password: process.env.DATABASE_PASSWORD,
             database: process.env.DATABASE_NAME,
-            // entities: [__dirname + '/**/*.schema{.ts,.js}'],
             entities: [__dirname + '/**/*.entity{.ts,.js}'],
-            // synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE),
-            // entities: [__dirname + '/**/*.entity{.ts,.js}'],
-           // synchronize: Boolean(process.env.DATABASE_SYNCHRONIZE),
             synchronize: false,
             autoLoadEntities: true,
         }),
-
-        // I18nModule.forRootAsync({
-        //   useFactory: (configService: ConfigService<AllConfigType>) => ({
-        //     fallbackLanguage: configService.getOrThrow('app.fallbackLanguage', {
-        //       infer: true,
-        //     }),
-        //     // loaderOptions: { path: path.join(__dirname, '/i18n/'), watch: true },
-        //   }),
-        //   resolvers: [
-        //     {
-        //       use: HeaderResolver,
-        //       useFactory: (configService: ConfigService<AllConfigType>) => {
-        //         return [
-        //           configService.get('app.headerLanguage', {
-        //             infer: true,
-        //           }),
-        //         ];
-        //       },
-        //       inject: [ConfigService],
-        //     },
-        //   ],
-        //   imports: [ConfigModule],
-        //   inject: [ConfigService],
-        // }),
         SubscriptionsModule,
         UsersModule,
         FilesModule,
@@ -101,6 +80,7 @@ import { TagsModule } from './tags/tags.module';
         ReportsModule,
         PlansModule,
         TagsModule,
+        ElectionResultsModule,
     ],
 })
 export class AppModule {}
