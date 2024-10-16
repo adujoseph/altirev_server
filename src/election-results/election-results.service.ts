@@ -86,16 +86,28 @@ export class ElectionResultsService {
         result.fileUrl = resultDto.fileUrl;
         result.location = locationInfo;
         result.tenantId = user.tenantId;
+        result.locationId = resultDto.locationId;
+        console.log(result, resultDto.locationId);
         //const result = this.electionResultRepository.create(resultDto);
         return await this.electionResultRepository.save(result);
     }
 
     async getAllResults() {
         const electionResults = await this.electionResultRepository.find({});
-        // const userLocation = await this.electionService.getLocationByUser(
-        //     user.altirevId,
-        // );
-        return electionResults
+        const sortedResults = electionResults.map(async (election) => {
+            if (!election?.userAltirevId) {
+                return { ...election, electionLocation: null };
+            } else {
+                const userLocation =
+                    await this.electionService.getLocationByUser(
+                        election?.userAltirevId,
+                    );
+                return { ...election, electionLocation: userLocation };
+            }
+        });
+
+        console.log(electionResults);
+        return sortedResults;
     }
 
     async getAgentResults(id: string): Promise<ElectionResultsEntity[]> {
@@ -262,14 +274,15 @@ export class ElectionResultsService {
             throw new BadRequestException('Election Id not valid');
         }
 
-        const where: any = { electionId }; 
-       //  const where: any = { electionId, status: ResultStatus.COMPLETED }; 
+        const where: any = { electionId };
+        //  const where: any = { electionId, status: ResultStatus.COMPLETED };
 
         if (locationFilter.stateId) {
             where['location.stateId'] = locationFilter.stateId;
         }
         if (locationFilter.localGovernmentId) {
-            where['location.localGovernmentId'] = locationFilter.localGovernmentId;
+            where['location.localGovernmentId'] =
+                locationFilter.localGovernmentId;
         }
         if (locationFilter.wardId) {
             where['location.wardId'] = locationFilter.wardId;
@@ -283,8 +296,8 @@ export class ElectionResultsService {
             select: ['counts'],
         });
 
-        if(results.length === 0){
-            return results
+        if (results.length === 0) {
+            return results;
         }
 
         const partyVoteCounts = {};
@@ -292,14 +305,17 @@ export class ElectionResultsService {
         results.forEach((result) => {
             const counts = result.counts;
             for (const [party, votes] of Object.entries(counts)) {
-                partyVoteCounts[party] = (partyVoteCounts[party] || 0) + Number(votes);
-              }
+                partyVoteCounts[party] =
+                    (partyVoteCounts[party] || 0) + Number(votes);
+            }
         });
 
-        const resultArray = Object.entries(partyVoteCounts).map(([partyName, partyVote]) => ({
-            partyName: partyName.toUpperCase(),  
-            partyVote: Number(partyVote),
-          }));
+        const resultArray = Object.entries(partyVoteCounts).map(
+            ([partyName, partyVote]) => ({
+                partyName: partyName.toUpperCase(),
+                partyVote: Number(partyVote),
+            }),
+        );
 
         return resultArray;
     }

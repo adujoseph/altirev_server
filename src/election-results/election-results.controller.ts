@@ -29,7 +29,7 @@ export class ElectionResultsController {
     }
 
     @Get()
-    async getResults(): Promise<ElectionResultsEntity[]> {
+    async getResults(): Promise<any[]> {
         return await this.electionResultService.getAllResults();
     }
 

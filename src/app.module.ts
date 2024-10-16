@@ -25,17 +25,13 @@ import { PlansModule } from './plans/plans.module';
 import { TagsModule } from './tags/tags.module';
 import { ElectionResultsModule } from './election-results/election-results.module';
 
-// const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
-//   useClass: TypeOrmConfigService,
-//   dataSourceFactory: async (options: DataSourceOptions) => {
-//     return new DataSource(options).initialize();
-//   },
-// });
 import { AppDataSource } from './data-source';
+import { DataSource } from 'typeorm';
 
 AppDataSource.initialize()
-  .then(() => {
+  .then((dataSource) => {
     console.log('Data Source has been initialized!');
+    console.log('Loaded Entities:', dataSource.entityMetadatas.map(e => e.name));
   })
   .catch((err) => {
     console.error('Error during Data Source initialization:', err);
@@ -64,6 +60,7 @@ AppDataSource.initialize()
             entities: [__dirname + '/**/*.entity{.ts,.js}'],
             synchronize: false,
             autoLoadEntities: true,
+            // logging: true
         }),
         SubscriptionsModule,
         UsersModule,
