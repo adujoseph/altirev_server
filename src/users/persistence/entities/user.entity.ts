@@ -153,27 +153,6 @@ export class UserEntity extends EntityRelationalHelper {
     @Column({ type: String, nullable: true })
     state: string | null;
 
-    // @ApiProperty({
-    //     type: String,
-    //     example: 'Abuja',
-    // })
-    // @Column({ type: String, nullable: true })
-    // local_govt: string | null;
-    //
-    // @ApiProperty({
-    //     type: String,
-    //     example: 'Abuja',
-    // })
-    // @Column({ type: String, nullable: true })
-    // ward: string | null;
-    //
-    // @ApiProperty({
-    //     type: String,
-    //     example: 'Abuja',
-    // })
-    // @Column({ type: String, nullable: true })
-    // polling_unit: string | null;
-
     @ApiProperty({
         type: String,
         example: 'Nigeria',
@@ -187,7 +166,7 @@ export class UserEntity extends EntityRelationalHelper {
     @Column({ type: String, nullable: true })
     status: StatusEnum;
 
-    @OneToOne(() => LocationEntity, (location) => location.id)
+    @OneToOne(() => LocationEntity, (location) => location.user,  { eager: true })
     @JoinColumn()
     location: LocationEntity;
 
