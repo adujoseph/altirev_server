@@ -12,7 +12,10 @@ import {
     HttpCode,
     SerializeOptions,
     UseInterceptors,
-    UploadedFile, Res, StreamableFile, Header,
+    UploadedFile,
+    Res,
+    StreamableFile,
+    Header,
 } from '@nestjs/common';
 import { createReadStream } from 'fs';
 import { join } from 'path';
@@ -157,6 +160,11 @@ export class UsersController {
     //     return this.usersService.updateRole(updateRoleDto);
     // }
 
+    @Get('/userWithLocation/:userId')
+    async getUserWithLocation(@Param('userId') userId: string) {
+        return this.usersService.getUserWithLocation(userId);
+    }
+
     @Delete(':id')
     @ApiParam({
         name: 'id',
@@ -187,16 +195,22 @@ export class UsersController {
         type: String,
         required: true,
     })
-    @Header('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    @Header(
+        'Content-Type',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    )
     @Header('Content-Disposition', 'attachment; filename=Failed Data.xlsx')
     async uploadFile(
         @UploadedFile() file,
         @Param('tenantId') tenantId: string,
-        @Res({ passthrough: true }) res: Response
-    ) : Promise<any> {
+        @Res({ passthrough: true }) res: Response,
+    ): Promise<any> {
         // file is the uploaded file
-        const result = await this.usersService.processBulkUserUpload(file, tenantId);
-        if (result !== "success") {
+        const result = await this.usersService.processBulkUserUpload(
+            file,
+            tenantId,
+        );
+        if (result !== 'success') {
             res.send(result);
             // const file = createReadStream(result);
             // return new StreamableFile(file, {
@@ -211,8 +225,8 @@ export class UsersController {
             // //     'Content-Disposition': 'attachment; filename="package.json"',
             // // });
             // return new StreamableFile(file);
-        }else {
-            return Helpers.success("Agents Uploaded Successfully")
+        } else {
+            return Helpers.success('Agents Uploaded Successfully');
         }
     }
 }

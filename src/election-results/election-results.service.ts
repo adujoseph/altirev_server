@@ -274,8 +274,8 @@ export class ElectionResultsService {
             throw new BadRequestException('Election Id not valid');
         }
 
-        const where: any = { electionId };
-        //  const where: any = { electionId, status: ResultStatus.COMPLETED };
+        // const where: any = { electionId };
+        const where: any = { electionId, status: ResultStatus.COMPLETED };
 
         if (locationFilter.stateId) {
             where['location.stateId'] = locationFilter.stateId;

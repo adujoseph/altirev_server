@@ -45,7 +45,7 @@ export class LocationEntity {
     @JoinColumn()
     pollingUnit: PollingEntity;
 
-    @OneToOne(() => UserEntity, (user) => user.altirevId)
+    @OneToOne(() => UserEntity, (user) => user.location)
     @JoinColumn()
     user: UserEntity;
 

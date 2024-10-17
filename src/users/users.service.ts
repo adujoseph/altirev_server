@@ -34,6 +34,7 @@ import { LgaEntity } from '../results/infrastructure/persistence/relational/enti
 import { WardEntity } from '../results/infrastructure/persistence/relational/entities/ward.entity';
 import { PollingEntity } from '../results/infrastructure/persistence/relational/entities/pu.entity';
 import { UserMapper } from './persistence/mappers/user.mapper';
+// import { ElectionService } from '../election/election.service';
 
 @Injectable()
 export class UsersService {
@@ -43,6 +44,7 @@ export class UsersService {
         private readonly usersRepository: UserRepository,
         private readonly filesService: FilesService,
         private readonly subscriptionsService: SubscriptionsService,
+        // private readonly electionService: ElectionService,
         @InjectRepository(StateEntity)
         private stateRepository: Repository<StateEntity>,
         @InjectRepository(LgaEntity)
@@ -164,13 +166,36 @@ export class UsersService {
         });
     }
 
+    async getUserWithLocation(userId: string): Promise<UserEntity | null | LocationEntity> {
+        if(!userId){
+            throw new BadRequestException('Invalid Id')
+        }
+        // const foundUser = await this.UserRepository.findOne({
+        //  where :  {altirevId:userId},
+        //  relations: ['location'],
+        // });
+        // if (!foundUser) {
+        //     throw new NotFoundException(`User with ID ${userId} not found`);
+        // }
+    
+        const loc = await this.locationRepository.findOne({
+            where: { user: { altirevId: userId } }, // Query by foreign key (user)
+            relations: ['user', 'state', 'lga', 'ward', 'pollingUnit'], // Include the user relation if necessary
+        });
+        
+       return loc
+    }
+
     async findById(id: User['id']): Promise<NullableType<User>> {
-        // return this.usersRepository.findById(id);
-        const user = await this.usersRepository.findById(id);
+        const user = await this.UserRepository.findOne({
+            where: { altirevId: String(id) }
+        });
+
         if (!user) {
             throw new NotFoundException('User not found');
         }
-        return this.usersRepository.findUserLocation(user.altirevId);
+
+        return user;
     }
 
     async findByTenant(tenantId: string): Promise<NullableType<User[]>> {
@@ -329,7 +354,14 @@ export class UsersService {
             // console.log("=============== ROW " + (i + 1) + " =====================")
             const state = userData.State;
             //fetch state from location
-            const userState = await this.stateRepository.findOne({ where: { stateName: state.toString().replace(/-/g, ' ').toUpperCase() } });
+            const userState = await this.stateRepository.findOne({
+                where: {
+                    stateName: state
+                        .toString()
+                        .replace(/-/g, ' ')
+                        .toUpperCase(),
+                },
+            });
             // console.log(userState?.stateName);
             if (!userState) {
                 // @ts-ignore
@@ -339,7 +371,11 @@ export class UsersService {
 
             const lga = userData.LGA;
             //fetch lga from location
-            const userLga = await this.lgaRepository.findOne({ where: { lgaName: lga.toString().replace(/-/g, ' ').toUpperCase() } });
+            const userLga = await this.lgaRepository.findOne({
+                where: {
+                    lgaName: lga.toString().replace(/-/g, ' ').toUpperCase(),
+                },
+            });
             // console.log(userLga?.lgaName);
             if (!userLga) {
                 // @ts-ignore
@@ -350,7 +386,11 @@ export class UsersService {
             const ward = userData.Ward;
             // console.log('ward from sheet : ', ward);
             //fetch ward from location
-            const userWard = await this.wardRepository.findOne({ where: { wardName: ward.toString().replace(/-/g, ' ').toUpperCase() } });
+            const userWard = await this.wardRepository.findOne({
+                where: {
+                    wardName: ward.toString().replace(/-/g, ' ').toUpperCase(),
+                },
+            });
             // console.log(userWard?.wardName);
             if (!userWard) {
                 // @ts-ignore
@@ -360,7 +400,14 @@ export class UsersService {
 
             const punit = userData.PU;
             //fetch pu from locaion
-            const userPu = await this.pollingRepository.findOne({ where: { pollingUnit: punit.toString().replace(/-/g, ' ').toUpperCase() } });
+            const userPu = await this.pollingRepository.findOne({
+                where: {
+                    pollingUnit: punit
+                        .toString()
+                        .replace(/-/g, ' ')
+                        .toUpperCase(),
+                },
+            });
             // console.log(userPu?.pollingUnit);
             if (!userPu) {
                 // @ts-ignore
@@ -394,22 +441,25 @@ export class UsersService {
             // Find existing location for the user
             const existingLocation = await this.locationRepository.findOne({
                 where: { user: { id: createdUser.id } },
-                relations: ['user', 'state', 'lga', 'ward', 'pollingUnit'],  // Load the relations if needed
+                relations: ['user', 'state', 'lga', 'ward', 'pollingUnit'], // Load the relations if needed
             });
 
             if (existingLocation) {
                 // Update existing location
-                const updateLocation = await this.locationRepository.update(existingLocation.id, {
-                    ...userLocation, // Update location details (state, lga, ward, etc.)
-                });
+                const updateLocation = await this.locationRepository.update(
+                    existingLocation.id,
+                    {
+                        ...userLocation, // Update location details (state, lga, ward, etc.)
+                    },
+                );
                 if (!updateLocation) {
                     await this.usersRepository.remove(createdUser.id);
                     // @ts-ignore
                     errorArray.push(userData);
                 }
-            }
-            else {
-                const location = await this.locationRepository.save(userLocation);
+            } else {
+                const location =
+                    await this.locationRepository.save(userLocation);
                 if (!location) {
                     await this.usersRepository.remove(createdUser.id);
                     // @ts-ignore
@@ -418,16 +468,16 @@ export class UsersService {
             }
         }
 
-        if(errorArray.length > 0) {
+        if (errorArray.length > 0) {
             //write error array to sheet
             const wb = XLSX.utils.book_new();
             // const ws = XLSX.utils.aoa_to_sheet(errorArray);
             const ws = XLSX.utils.json_to_sheet(errorArray);
-            XLSX.utils.book_append_sheet(wb, ws, "Failed Data.xlsx");
+            XLSX.utils.book_append_sheet(wb, ws, 'Failed Data.xlsx');
             const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
             return buffer;
         }
 
-        return "success";
+        return 'success';
     }
 }
