@@ -137,13 +137,23 @@ export class ElectionResultsService {
         }
         const result = await this.electionResultRepository.findOneBy({ id });
         if (!result) {
-            throw new ForbiddenException('Invalid election ID');
+            throw new ForbiddenException('Invalid election result ID');
         }
         result.videoUrl = updateResult.videoUrl;
         result.status = ResultStatus.PENDING;
         return await this.electionResultRepository.save(result);
     }
 
+    async getResultById(id: string){
+        if (!id) {
+            throw new ForbiddenException('Invalid ID');
+        }
+        const result = await this.electionResultRepository.findOneBy({ id });
+        if (!result) {
+            throw new ForbiddenException('Invalid election result ID');
+        }
+        return result
+    }
     async updateResultStatus(
         id: string,
         resultStatus: ElectionResultStatusDto,

@@ -58,6 +58,12 @@ export class ElectionResultsController {
         );
     }
 
+    @Get(':id')
+    async getResultById( @Param('id') id: string){
+
+        return await this.electionResultService.getResultById(id)
+    }
+
     @Patch('status/:id')
     async electionResultStatus(
         @Param('id') id: string,
@@ -74,16 +80,16 @@ export class ElectionResultsController {
         return this.electionResultService.getAggregatedVotes2(electionId, locationFilter);
     }
 
-    @Get('aggregate')
-    async getAggregateResults(
-        @Query('stateId') stateId?: string,
-        @Query('localGovernmentId') localGovernmentId?: string,
-        @Query('pollingUnitId') pollingUnitId?: string,
-    ) {
-        return this.electionResultService.getAggregateResults(
-            stateId,
-            localGovernmentId,
-            pollingUnitId,
-        );
-    }
+    // @Get('aggregate')
+    // async getAggregateResults(
+    //     @Query('stateId') stateId?: string,
+    //     @Query('localGovernmentId') localGovernmentId?: string,
+    //     @Query('pollingUnitId') pollingUnitId?: string,
+    // ) {
+    //     return this.electionResultService.getAggregateResults(
+    //         stateId,
+    //         localGovernmentId,
+    //         pollingUnitId,
+    //     );
+    // }
 }
