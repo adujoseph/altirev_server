@@ -30,6 +30,13 @@ export class CreateElectionResultsDto {
     voteCasted: number;
 
     @ApiProperty({
+        type: Number,
+    })
+    @IsNotEmpty()
+    invalidVotes: number;
+
+
+    @ApiProperty({
         type: Map<string, number>,
     })
     @IsNotEmpty()

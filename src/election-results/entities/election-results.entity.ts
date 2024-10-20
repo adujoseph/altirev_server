@@ -40,6 +40,10 @@ export class ElectionResultsEntity extends EntityRelationalHelper {
     voteCasted: number;
 
     @IsNotEmpty()
+    @Column({ name: 'vote_casted', type: Number, nullable: false })
+    invalidVotes: number;
+
+    @IsNotEmpty()
     @Column({ name: 'election_counts', type: 'json', nullable: false })
     counts: Map<string, number>;
 
@@ -58,7 +62,7 @@ export class ElectionResultsEntity extends EntityRelationalHelper {
     @Column({ name: 'locationId', type: String, nullable: false})
     locationId: string
 
-    @OneToOne(() => LocationEntity, (location) => location.id)
+    @ManyToOne(() => LocationEntity, (location) => location.electionResults)
     location: LocationEntity;
 
     @ManyToOne(() => Election, (election) => election.electionResults)
