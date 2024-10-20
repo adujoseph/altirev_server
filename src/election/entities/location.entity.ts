@@ -5,12 +5,14 @@ import {
     UpdateDateColumn,
     OneToOne,
     JoinColumn,
+    OneToMany,
 } from 'typeorm';
 import { UserEntity } from '../../users/persistence/entities/user.entity';
 import { PollingEntity } from '../../results/infrastructure/persistence/relational/entities/pu.entity';
 import { WardEntity } from '../../results/infrastructure/persistence/relational/entities/ward.entity';
 import { LgaEntity } from '../../results/infrastructure/persistence/relational/entities/lga.entity';
 import { StateEntity } from '../../results/infrastructure/persistence/relational/entities/state.entity';
+import { ElectionResultsEntity } from '../../election-results/entities/election-results.entity';
 
 @Entity('locations')
 export class LocationEntity {
@@ -48,6 +50,9 @@ export class LocationEntity {
     @OneToOne(() => UserEntity, (user) => user.location)
     @JoinColumn()
     user: UserEntity;
+
+    @OneToMany(() => ElectionResultsEntity, (electionResult) => electionResult.location)
+    electionResults: ElectionResultsEntity;
 
     @CreateDateColumn()
     createdAt: Date;

@@ -87,7 +87,8 @@ export class ElectionResultsService {
         result.location = locationInfo;
         result.tenantId = user.tenantId;
         result.locationId = resultDto.locationId;
-        console.log(result, resultDto.locationId);
+        result.invalidVotes = resultDto.invalidVotes
+         // console.log(result, resultDto.locationId);
         //const result = this.electionResultRepository.create(resultDto);
         return await this.electionResultRepository.save(result);
     }
@@ -102,11 +103,11 @@ export class ElectionResultsService {
                     await this.electionService.getLocationByUser(
                         election?.userAltirevId,
                     );
-                return { ...election, electionLocation: userLocation };
+
+                 const electionName = await this.electionService.findOne(election.electionId)   
+                return { ...election, electionLocation: userLocation, electionName };
             }
         });
-
-        console.log(electionResults);
         return sortedResults;
     }
 
@@ -114,9 +115,11 @@ export class ElectionResultsService {
         if (!id) {
             throw new ForbiddenException('Invalid User ID');
         }
-        return await this.electionResultRepository.find({
+       const res = await this.electionResultRepository.find({
             where: { userAltirevId: id },
+            relations: ['election']
         });
+        return res
     }
 
     async getTenantResults(id: string): Promise<ElectionResultsEntity[]> {
@@ -148,11 +151,19 @@ export class ElectionResultsService {
         if (!id) {
             throw new ForbiddenException('Invalid ID');
         }
-        const result = await this.electionResultRepository.findOneBy({ id });
+        // const result = await this.electionResultRepository.findOneBy({ id });
+        const result = await this.electionResultRepository.findOne({
+            where: { id },
+            // relations: ['election'], // Include the location relation
+          });
         if (!result) {
             throw new ForbiddenException('Invalid election result ID');
         }
-        return result
+        const userLocation = await this.electionService.getLocationByUser(result?.userAltirevId);
+
+        const electionName = await this.electionService.findOne(result.electionId)   
+
+        return {...result, userLocation, electionName }
     }
     async updateResultStatus(
         id: string,
