@@ -122,13 +122,29 @@ export class ElectionResultsService {
         return res
     }
 
-    async getTenantResults(id: string): Promise<ElectionResultsEntity[]> {
+    async getTenantResults(id: string): Promise<any[]> {
         if (!id) {
             throw new ForbiddenException('Invalid tenant ID');
         }
-        return await this.electionResultRepository.find({
+       const electionResults = await this.electionResultRepository.find({
             where: { tenantId: id },
         });
+
+        const sortedResults = electionResults.map(async (election) => {
+            if (!election?.userAltirevId) {
+                return { ...election, electionLocation: null };
+            } else {
+                const userLocation =
+                    await this.electionService.getLocationByUser(
+                        election?.userAltirevId,
+                    );
+
+                 const electionName = await this.electionService.findOne(election.electionId)   
+                return { ...election, electionLocation: userLocation, electionName };
+            }
+        });
+
+        return sortedResults
     }
 
     async updateElectionResult(
