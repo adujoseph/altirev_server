@@ -105,8 +105,6 @@ export class ReportsController {
             );
         }
 
-     
-
         return {
             message: 'file uploaded',
             fileUrl,
@@ -212,6 +210,10 @@ export class ReportsController {
         return this.reportsService.findMe(id);
     }
 
+    @Get('/get-user/:id')
+    getUserById(@Param('id') id: string) {
+        return this.reportsService.getUserById(id);
+    }
     @Get('/tenant/:id')
     findReportByTenanant(@Param('id') id: string) {
         return this.reportsService.findReportTenant(id);
@@ -223,8 +225,8 @@ export class ReportsController {
     }
 
     @Patch('suspend-user')
-    suspendUser( @Body() suspendUserDto: SuspendUserDto){
-        return this.reportsService.suspend(suspendUserDto)
+    suspendUser(@Body() suspendUserDto: SuspendUserDto) {
+        return this.reportsService.suspend(suspendUserDto);
     }
 
     @HttpCode(HttpStatus.OK)

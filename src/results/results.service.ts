@@ -51,8 +51,15 @@ export class ResultsService {
         private s3Service: S3Service,
         @Inject(forwardRef(() => ElectionService))
         private electionService: ElectionService,
-        private tagService: TagsService
+        private tagService: TagsService,
+        @InjectRepository(ResultsEntity)
+        private electionResultRepository : Repository<ResultsEntity>
     ) {}
+
+    async postResult(createResultsDto: CreateResultsDto,): Promise<ResultsEntity> {
+        const result = this.electionResultRepository.create(createResultsDto);
+        return await this.electionResultRepository.save(result);
+      }
 
     async doData(): Promise<string> {
         console.log('Init Seeding .....');

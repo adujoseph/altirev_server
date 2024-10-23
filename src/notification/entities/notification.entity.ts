@@ -14,9 +14,14 @@ export enum NoteStatus {
 export enum NoteCategory {
     General = 'general',
     Specific = 'tenants',
+    Active = 'active',
+    Inactive = 'inactive',
+    Draft = 'draft',
+    Read = 'read',
+    Unread = 'Unread'
 }
 
-@Entity()
+@Entity('Notifications')
 export class NotificationEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -35,14 +40,18 @@ export class NotificationEntity {
 
     @Column({ default: NoteStatus.Unread })
     status: NoteStatus;
+  
 
+  
     @Column({ default: false })
     read: boolean;
+
 
     @Column({ default: NoteCategory.General })
     category: NoteCategory;
 
     // @ManyToOne(() => UserEntity, (user) => user.id)
+
     @Column()
     createdBy: string;
 

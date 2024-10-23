@@ -2,16 +2,20 @@ import {
     Column,
     CreateDateColumn,
     Entity,
-    JoinColumn, JoinTable, ManyToMany,
+    JoinColumn,
+    JoinTable,
+    ManyToMany,
+    ManyToOne,
     OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
+import { EntityRelationalHelper } from '../../utils/relational-entity-helper';
 import { IsEnum, IsNotEmpty } from 'class-validator';
-import { LocationEntity } from '../../../../../election/entities/location.entity';
-import { Election } from '../../../../../election/entities/election.entity';
-import { Tags } from '../../../../../tags/entities/tag.entity';
+import { LocationEntity } from '../../election/entities/location.entity';
+import { Election } from '../../election/entities/election.entity';
+import { Tags } from '../../tags/entities/tag.entity';
+// import { Election } from '../../../../../election/election.entity';
 
 export enum ResultStatus {
     PROCESSING = 'processing',
@@ -21,9 +25,9 @@ export enum ResultStatus {
 }
 
 @Entity({
-    name: 'Election_results',
+    name: 'ElectionResults',
 })
-export class ResultsEntity extends EntityRelationalHelper {
+export class ElectionResultsEntity extends EntityRelationalHelper {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
@@ -36,30 +40,38 @@ export class ResultsEntity extends EntityRelationalHelper {
     voteCasted: number;
 
     @IsNotEmpty()
+    @Column({ name: 'vote_casted', type: Number, nullable: false })
+    invalidVotes: number;
+
+    @IsNotEmpty()
     @Column({ name: 'election_counts', type: 'json', nullable: false })
     counts: Map<string, number>;
 
     @Column({ name: 'file_url', type: String, nullable: false })
     fileUrl: string;
 
+    @Column({ name: 'videoUrl', type: String, nullable: true })
+    videoUrl: string;
+
     @Column({ name: 'user_id', type: String, nullable: false })
     userAltirevId: string;
 
-    @OneToOne(() => LocationEntity, (location) => location.result, {eager: true})
-    @JoinColumn()
+    @Column({ name: 'electionId', type: String, nullable: false })
+    electionId: string
+
+    @Column({ name: 'locationId', type: String, nullable: false})
+    locationId: string
+
+    @ManyToOne(() => LocationEntity, (location) => location.electionResults)
     location: LocationEntity;
 
-    @OneToOne(() => Election, (election) => election.id, {
-        cascade: true,
-        createForeignKeyConstraints: false
-    })
-    @JoinColumn()
+    @ManyToOne(() => Election, (election) => election.electionResults)
     election: Election;
 
-    @Column({ type: String, nullable: false })
+    @Column({ type: String, nullable: false, default: ResultStatus.PENDING })
     status: ResultStatus;
 
-    @Column({ name: 'tenant_id', type: String, nullable: false, })
+    @Column({ name: 'tenant_id', type: String, nullable: false })
     tenantId: string;
 
     @CreateDateColumn()

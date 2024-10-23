@@ -15,6 +15,7 @@ import {
     UserEntity,
 } from '../users/persistence/entities/user.entity';
 import moment from 'moment';
+import { LocationEntity } from '../election/entities/location.entity';
 
 @Injectable()
 export class ReportsService {
@@ -23,7 +24,9 @@ export class ReportsService {
         private reportsRepository: Repository<ReportEntity>,
         @InjectRepository(UserEntity)
         private userRepository: Repository<UserEntity>,
-        private userService: UsersService,
+        // @InjectRepository(LocationEntity)
+        // private locationRepository: Repository<LocationEntity>,
+        // private userService: UsersService,
     ) {}
 
     async create(createReportDto: CreateReportDto): Promise<ReportEntity> {
@@ -164,6 +167,18 @@ export class ReportsService {
 
         const updatedReport = Object.assign(report, updateReportDto);
         return await this.reportsRepository.save(updatedReport);
+    }
+
+    async getUserById(id: string){
+        
+        const user = await this.userRepository.findOneBy({ altirevId: id });
+        if(!user){
+            throw new BadRequestException('not a valid user');
+        }
+        return await this.userRepository.findOne({
+            where: { id: user.id },
+            relations: ['location'],
+          });
     }
 }
 

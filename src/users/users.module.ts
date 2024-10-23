@@ -13,6 +13,7 @@ import { LgaEntity } from '../results/infrastructure/persistence/relational/enti
 import { WardEntity } from '../results/infrastructure/persistence/relational/entities/ward.entity';
 import { PollingEntity } from '../results/infrastructure/persistence/relational/entities/pu.entity';
 import { LocationEntity } from '../election/entities/location.entity';
+import { ElectionModule } from '../election/election.module';
 
 const infrastructurePersistenceModule = RelationalUserPersistenceModule;
 

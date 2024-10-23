@@ -32,10 +32,10 @@ export class CreateReportDto {
     @IsString()
     message: string;
 
-    @ApiProperty()
-    @IsEnum(ReportStatus)
-    @IsOptional()
-    status?: ReportStatus;
+    // @ApiProperty()
+    // @IsEnum(ReportStatus)
+    // @IsOptional()
+    // status?: ReportStatus;
 
     @ApiProperty()
     @IsOptional()
