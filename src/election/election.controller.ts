@@ -16,7 +16,7 @@ import { CreateElectionDto } from './dto/create-election.dto';
 import { UpdateElectionDto } from './dto/update-election.dto';
 import { CreateLocationDto } from './dto/create-location.dto';
 
-@ApiTags('elections')
+@ApiTags('Elections')
 @Controller('elections')
 export class ElectionController {
     constructor(private readonly electionService: ElectionService) {}

@@ -23,6 +23,7 @@ import { ReportsModule } from './reports/reports.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { PlansModule } from './plans/plans.module';
 import { TagsModule } from './tags/tags.module';
+import { TenantsModule } from './tenants/tenants.module';
 
 // const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
 //   useClass: TypeOrmConfigService,
@@ -99,6 +100,7 @@ import { TagsModule } from './tags/tags.module';
         ReportsModule,
         PlansModule,
         TagsModule,
+        TenantsModule,
     ],
 })
 export class AppModule {}

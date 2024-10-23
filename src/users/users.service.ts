@@ -167,7 +167,7 @@ export class UsersService {
     async findById(id: User['id']): Promise<NullableType<User>> {
         // return this.usersRepository.findById(id);
         const user = await this.usersRepository.findById(id);
-        if (!user) {
+        if (!user) { 
             throw new NotFoundException('User not found');
         }
 
