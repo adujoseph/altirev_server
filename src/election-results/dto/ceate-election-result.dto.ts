@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
 
 export enum ResultStatus {
     PROCESSING = 'processing',
@@ -9,7 +9,6 @@ export enum ResultStatus {
 }
 
 export class CreateElectionResultsDto {
-
     @ApiProperty({
         type: String,
     })
@@ -34,7 +33,6 @@ export class CreateElectionResultsDto {
     })
     @IsNotEmpty()
     invalidVotes: number;
-
 
     @ApiProperty({
         type: Map<string, number>,

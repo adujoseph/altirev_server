@@ -13,6 +13,7 @@ import { WardEntity } from '../../results/infrastructure/persistence/relational/
 import { LgaEntity } from '../../results/infrastructure/persistence/relational/entities/lga.entity';
 import { StateEntity } from '../../results/infrastructure/persistence/relational/entities/state.entity';
 import { ElectionResultsEntity } from '../../election-results/entities/election-results.entity';
+import { ResultsEntity } from '../../results/infrastructure/persistence/relational/entities/results.entity';
 
 @Entity('locations')
 export class LocationEntity {
@@ -21,37 +22,40 @@ export class LocationEntity {
 
     @OneToOne(() => StateEntity, (state) => state.id, {
         cascade: true,
-        createForeignKeyConstraints: false
+        createForeignKeyConstraints: false,
     })
     @JoinColumn()
     state: StateEntity;
 
     @OneToOne(() => LgaEntity, (lga) => lga.id, {
         cascade: true,
-        createForeignKeyConstraints: false
+        createForeignKeyConstraints: false,
     })
     @JoinColumn()
     lga: LgaEntity;
 
     @OneToOne(() => WardEntity, (ward) => ward.id, {
         cascade: true,
-        createForeignKeyConstraints: false
+        createForeignKeyConstraints: false,
     })
     @JoinColumn()
     ward: WardEntity;
 
     @OneToOne(() => PollingEntity, (pollingUnit) => pollingUnit.id, {
         cascade: true,
-        createForeignKeyConstraints: false
+        createForeignKeyConstraints: false,
     })
     @JoinColumn()
     pollingUnit: PollingEntity;
 
-    @OneToOne(() => UserEntity, (user) => user.location)
+    @OneToOne(() => UserEntity, (user) => user.id)
     @JoinColumn()
     user: UserEntity;
 
-    @OneToMany(() => ElectionResultsEntity, (electionResult) => electionResult.location)
+    @OneToMany(
+        () => ElectionResultsEntity,
+        (electionResult) => electionResult.location,
+    )
     electionResults: ElectionResultsEntity;
 
     @CreateDateColumn()
@@ -60,4 +64,7 @@ export class LocationEntity {
     @UpdateDateColumn()
     updatedAt: Date;
     role: any;
+
+    @OneToOne(() => ResultsEntity, (result) => result.location)
+    result: ResultsEntity;
 }

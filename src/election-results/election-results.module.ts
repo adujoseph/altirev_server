@@ -10,15 +10,15 @@ import { TagsModule } from '../tags/tags.module';
 import { RelationalResultsPersistenceModule } from '../results/infrastructure/persistence/relational/relational-persistence.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([ElectionResultsEntity]),
-    UsersModule,
-    ReportsModule,
-    forwardRef(() => ElectionModule),
-    RelationalResultsPersistenceModule,
-    TagsModule
-  ],
-  controllers: [ElectionResultsController],
-  providers: [ElectionResultsService]
+    imports: [
+        TypeOrmModule.forFeature([ElectionResultsEntity]),
+        UsersModule,
+        ReportsModule,
+        forwardRef(() => ElectionModule),
+        RelationalResultsPersistenceModule,
+        TagsModule,
+    ],
+    controllers: [ElectionResultsController],
+    providers: [ElectionResultsService],
 })
 export class ElectionResultsModule {}

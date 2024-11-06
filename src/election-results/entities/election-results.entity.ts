@@ -57,10 +57,10 @@ export class ElectionResultsEntity extends EntityRelationalHelper {
     userAltirevId: string;
 
     @Column({ name: 'electionId', type: String, nullable: false })
-    electionId: string
+    electionId: string;
 
-    @Column({ name: 'locationId', type: String, nullable: false})
-    locationId: string
+    @Column({ name: 'locationId', type: String, nullable: false })
+    locationId: string;
 
     @ManyToOne(() => LocationEntity, (location) => location.electionResults)
     location: LocationEntity;

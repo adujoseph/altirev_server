@@ -139,12 +139,12 @@ export class ElectionService {
             throw new Error('Could not find Specified election');
         }
         const result = await this.resultService.getResultByElection(
-          election.id,
+            election.id,
         );
         if (!result) {
             console.log('Could not find result for election');
         } else {
-           // election.electionResults = ResultsMapper.toPersistence(result);
+            // election.electionResults = ResultsMapper.toPersistence(result);
         }
 
         return election;

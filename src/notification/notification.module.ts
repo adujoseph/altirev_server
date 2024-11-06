@@ -11,7 +11,10 @@ import { UserEntity } from '../users/persistence/entities/user.entity';
 // import { UserEntity } from '../users/persistence/entities/user.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([NotificationEntity, UserEntity]), UsersModule],
+    imports: [
+        TypeOrmModule.forFeature([NotificationEntity, UserEntity]),
+        UsersModule,
+    ],
     controllers: [NotificationController],
     providers: [NotificationService],
 })

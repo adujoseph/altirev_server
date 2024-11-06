@@ -29,13 +29,24 @@ import { AppDataSource } from './data-source';
 import { DataSource } from 'typeorm';
 
 AppDataSource.initialize()
-  .then((dataSource) => {
-    console.log('Data Source has been initialized!');
-    console.log('Loaded Entities:', dataSource.entityMetadatas.map(e => e.name));
-  })
-  .catch((err) => {
-    console.error('Error during Data Source initialization:', err);
-  });
+    .then((dataSource) => {
+        console.log('Data Source has been initialized!');
+        console.log(
+            'Loaded Entities:',
+            dataSource.entityMetadatas.map((e) => e.name),
+        );
+    })
+    .catch((err) => {
+        console.error('Error during Data Source initialization:', err);
+    });
+import { TenantsModule } from './tenants/tenants.module';
+
+// const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
+//   useClass: TypeOrmConfigService,
+//   dataSourceFactory: async (options: DataSourceOptions) => {
+//     return new DataSource(options).initialize();
+//   },
+// });
 
 @Module({
     imports: [
@@ -61,6 +72,12 @@ AppDataSource.initialize()
             synchronize: false,
             autoLoadEntities: true,
             // logging: true
+            ssl: true,
+            extra: {
+                trustServerCertificate: true,
+                Encrypt: true,
+                IntegratedSecurity: false,
+            },
         }),
         SubscriptionsModule,
         UsersModule,
@@ -78,6 +95,7 @@ AppDataSource.initialize()
         PlansModule,
         TagsModule,
         ElectionResultsModule,
+        TenantsModule,
     ],
 })
 export class AppModule {}
