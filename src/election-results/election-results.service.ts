@@ -87,8 +87,8 @@ export class ElectionResultsService {
         result.location = locationInfo;
         result.tenantId = user.tenantId;
         result.locationId = resultDto.locationId;
-        result.invalidVotes = resultDto.invalidVotes
-         // console.log(result, resultDto.locationId);
+        result.invalidVotes = resultDto.invalidVotes;
+        // console.log(result, resultDto.locationId);
         //const result = this.electionResultRepository.create(resultDto);
         return await this.electionResultRepository.save(result);
     }
@@ -104,8 +104,14 @@ export class ElectionResultsService {
                         election?.userAltirevId,
                     );
 
-                 const electionName = await this.electionService.findOne(election.electionId)   
-                return { ...election, electionLocation: userLocation, electionName };
+                const electionName = await this.electionService.findOne(
+                    election.electionId,
+                );
+                return {
+                    ...election,
+                    electionLocation: userLocation,
+                    electionName,
+                };
             }
         });
         return sortedResults;
@@ -115,18 +121,18 @@ export class ElectionResultsService {
         if (!id) {
             throw new ForbiddenException('Invalid User ID');
         }
-       const res = await this.electionResultRepository.find({
+        const res = await this.electionResultRepository.find({
             where: { userAltirevId: id },
-            relations: ['election']
+            relations: ['election'],
         });
-        return res
+        return res;
     }
 
     async getTenantResults(id: string): Promise<any[]> {
         if (!id) {
             throw new ForbiddenException('Invalid tenant ID');
         }
-       const electionResults = await this.electionResultRepository.find({
+        const electionResults = await this.electionResultRepository.find({
             where: { tenantId: id },
         });
 
@@ -139,12 +145,18 @@ export class ElectionResultsService {
                         election?.userAltirevId,
                     );
 
-                 const electionName = await this.electionService.findOne(election.electionId)   
-                return { ...election, electionLocation: userLocation, electionName };
+                const electionName = await this.electionService.findOne(
+                    election.electionId,
+                );
+                return {
+                    ...election,
+                    electionLocation: userLocation,
+                    electionName,
+                };
             }
         });
 
-        return sortedResults
+        return sortedResults;
     }
 
     async updateElectionResult(
@@ -163,7 +175,7 @@ export class ElectionResultsService {
         return await this.electionResultRepository.save(result);
     }
 
-    async getResultById(id: string){
+    async getResultById(id: string) {
         if (!id) {
             throw new ForbiddenException('Invalid ID');
         }
@@ -171,15 +183,19 @@ export class ElectionResultsService {
         const result = await this.electionResultRepository.findOne({
             where: { id },
             // relations: ['election'], // Include the location relation
-          });
+        });
         if (!result) {
             throw new ForbiddenException('Invalid election result ID');
         }
-        const userLocation = await this.electionService.getLocationByUser(result?.userAltirevId);
+        const userLocation = await this.electionService.getLocationByUser(
+            result?.userAltirevId,
+        );
 
-        const electionName = await this.electionService.findOne(result.electionId)   
+        const electionName = await this.electionService.findOne(
+            result.electionId,
+        );
 
-        return {...result, userLocation, electionName }
+        return { ...result, userLocation, electionName };
     }
     async updateResultStatus(
         id: string,

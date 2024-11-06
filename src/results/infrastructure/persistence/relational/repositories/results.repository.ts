@@ -52,7 +52,6 @@ export class ResultsRelationalRepository implements ResultsRepository {
         //     }
         // })
 
-
         // const entities = await this.resultsRepository.createQueryBuilder('result')
         //   .leftJoinAndSelect('result.tags', 'tags')
         //   .leftJoinAndSelect('result.election', 'election')

@@ -22,28 +22,28 @@ export class LocationEntity {
 
     @OneToOne(() => StateEntity, (state) => state.id, {
         cascade: true,
-        createForeignKeyConstraints: false
+        createForeignKeyConstraints: false,
     })
     @JoinColumn()
     state: StateEntity;
 
     @OneToOne(() => LgaEntity, (lga) => lga.id, {
         cascade: true,
-        createForeignKeyConstraints: false
+        createForeignKeyConstraints: false,
     })
     @JoinColumn()
     lga: LgaEntity;
 
     @OneToOne(() => WardEntity, (ward) => ward.id, {
         cascade: true,
-        createForeignKeyConstraints: false
+        createForeignKeyConstraints: false,
     })
     @JoinColumn()
     ward: WardEntity;
 
     @OneToOne(() => PollingEntity, (pollingUnit) => pollingUnit.id, {
         cascade: true,
-        createForeignKeyConstraints: false
+        createForeignKeyConstraints: false,
     })
     @JoinColumn()
     pollingUnit: PollingEntity;
@@ -52,7 +52,10 @@ export class LocationEntity {
     @JoinColumn()
     user: UserEntity;
 
-    @OneToMany(() => ElectionResultsEntity, (electionResult) => electionResult.location)
+    @OneToMany(
+        () => ElectionResultsEntity,
+        (electionResult) => electionResult.location,
+    )
     electionResults: ElectionResultsEntity;
 
     @CreateDateColumn()
