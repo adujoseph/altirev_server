@@ -33,6 +33,7 @@ async function bootstrap() {
     app.use(bodyParser.json({ limit: '50mb' })); // Adjust the size as needed
     app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
     app.useGlobalPipes(new ValidationPipe(validationOptions));
+    
     app.useGlobalInterceptors(
         // ResolvePromisesInterceptor is used to resolve promises in responses because class-transformer can't do it
         // https://github.com/typestack/class-transformer/issues/549
