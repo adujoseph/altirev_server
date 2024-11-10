@@ -85,7 +85,7 @@ import { DataSource } from 'typeorm';
         PlansModule,
         TagsModule,
         ElectionResultsModule,
-        TenantsModule,
+        //TenantsModule,
     ],
 })
 export class AppModule {}
