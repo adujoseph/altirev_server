@@ -14,10 +14,10 @@ export class S3Service {
 
     constructor() {
         this.s3 = new S3Client({
-            region: process.env.AWS_S3_REGION ?? '',
+            region: process.env.AWS_REGION ?? '',
             credentials: {
-                accessKeyId: process.env.ACCESS_KEY_ID ?? '',
-                secretAccessKey: process.env.SECRET_ACCESS_KEY ?? '',
+                accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? '',
+                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? '',
             },
         });
     }
@@ -38,7 +38,7 @@ export class S3Service {
 
         try {
             await this.s3.send(command);
-            return `https://${this.bucketName}.s3.eu-north-1.amazonaws.com/${key}`;
+            return `https://${this.bucketName}.s3.us-east-1.amazonaws.com/${key}`;
         } catch (err) {
             console.log(err);
             throw new BadRequestException('Error uploading');
@@ -47,13 +47,13 @@ export class S3Service {
 
     async getFiles() {
         const load = {
-            region: process.env.AWS_S3_REGION ?? '',
+            region: process.env.AWS_REGION ?? '',
             credentials: {
-                accessKeyId: process.env.ACCESS_KEY_ID ?? '',
-                secretAccessKey: process.env.SECRET_ACCESS_KEY ?? '',
+                accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? '',
+                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? '',
             },
         };
 
-        console.log(load);
+        //console.log(load);
     }
 }
