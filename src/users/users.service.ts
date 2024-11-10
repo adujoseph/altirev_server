@@ -345,6 +345,11 @@ export class UsersService {
     }
 
     async processBulkUserUpload(file: any, tenantId: string) {
+        console.log(file.mimetype);
+        if (file.mimetype !== 'application/vnd.ms-excel') {
+            return Helpers.fail('Invalid file type');
+        }
+
         const userByTenant =
             await this.usersRepository.findByTenantId(tenantId);
         if (!userByTenant) {
