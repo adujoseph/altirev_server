@@ -116,7 +116,7 @@ export class ReportsService {
             return {
                 message: 'user suspension failed',
                 status: false,
-                error: err
+                error: err,
             };
         }
     }
@@ -169,16 +169,15 @@ export class ReportsService {
         return await this.reportsRepository.save(updatedReport);
     }
 
-    async getUserById(id: string){
-        
+    async getUserById(id: string) {
         const user = await this.userRepository.findOneBy({ altirevId: id });
-        if(!user){
+        if (!user) {
             throw new BadRequestException('not a valid user');
         }
         return await this.userRepository.findOne({
             where: { id: user.id },
             relations: ['location'],
-          });
+        });
     }
 }
 

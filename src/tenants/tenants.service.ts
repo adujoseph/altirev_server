@@ -7,30 +7,28 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class TenantsService {
+    constructor(
+        @InjectRepository(Tenant)
+        private tenantRepository: Repository<Tenant>,
+    ) {}
 
-  constructor(
-    @InjectRepository(Tenant)
-    private tenantRepository: Repository<Tenant>
-  ){}
+    async create(createTenantDto: CreateTenantDto) {
+        return 'This action adds a new tenant';
+    }
 
-  async create(createTenantDto: CreateTenantDto) {
+    async findAll() {
+        return await this.tenantRepository.find();
+    }
 
-    return 'This action adds a new tenant';
-  }
+    findOne(id: string) {
+        return `This action returns a #${id} tenant`;
+    }
 
-  async findAll() {
-    return await this.tenantRepository.find();
-  }
+    update(id: number, updateTenantDto: UpdateTenantDto) {
+        return `This action updates a #${id} tenant`;
+    }
 
-  findOne(id: string) {
-    return `This action returns a #${id} tenant`;
-  }
-
-  update(id: number, updateTenantDto: UpdateTenantDto) {
-    return `This action updates a #${id} tenant`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} tenant`;
-  }
+    remove(id: number) {
+        return `This action removes a #${id} tenant`;
+    }
 }

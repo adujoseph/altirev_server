@@ -3,5 +3,4 @@
 import { PartialType } from '@nestjs/swagger';
 import { CreateResultsDto } from './create-results.dto';
 
-export class UpdateResultsDto extends PartialType(CreateResultsDto) {
-}
+export class UpdateResultsDto extends PartialType(CreateResultsDto) {}

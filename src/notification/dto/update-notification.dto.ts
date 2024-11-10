@@ -2,7 +2,7 @@ import { IsNotEmpty, IsOptional } from 'class-validator';
 import { NoteStatus } from '../entities/notification.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UpdateNotificationDto  {
+export class UpdateNotificationDto {
     @ApiProperty()
     @IsOptional()
     title: string;

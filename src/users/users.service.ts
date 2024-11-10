@@ -166,9 +166,11 @@ export class UsersService {
         });
     }
 
-    async getUserWithLocation(userId: string): Promise<UserEntity | null | LocationEntity> {
-        if(!userId){
-            throw new BadRequestException('Invalid Id')
+    async getUserWithLocation(
+        userId: string,
+    ): Promise<UserEntity | null | LocationEntity> {
+        if (!userId) {
+            throw new BadRequestException('Invalid Id');
         }
         // const foundUser = await this.UserRepository.findOne({
         //  where :  {altirevId:userId},
@@ -177,27 +179,27 @@ export class UsersService {
         // if (!foundUser) {
         //     throw new NotFoundException(`User with ID ${userId} not found`);
         // }
-    
+
         const loc = await this.locationRepository.findOne({
             where: { user: { altirevId: userId } }, // Query by foreign key (user)
             relations: ['user', 'state', 'lga', 'ward', 'pollingUnit'], // Include the user relation if necessary
         });
-        
-       return loc
+
+        return loc;
     }
 
     async findById(id: User['id']): Promise<NullableType<User>> {
         const user = await this.UserRepository.findOne({
-            where: { altirevId: String(id) }
+            where: { altirevId: String(id) },
         });
 
-        if (!user) { 
+        if (!user) {
             throw new NotFoundException('User not found');
         }
 
         const userLocation = await this.locationRepository.findOne({
             where: { user: { id: user.id } },
-            relations: ['state', 'lga', 'ward', 'pollingUnit'],  // Load the relations if needed
+            relations: ['state', 'lga', 'ward', 'pollingUnit'], // Load the relations if needed
         });
         if (userLocation) {
             user.location = userLocation;

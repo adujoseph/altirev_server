@@ -1,10 +1,16 @@
-import { Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { EntityRelationalHelper } from "../../utils/relational-entity-helper";
-import { UserEntity } from "../../users/persistence/entities/user.entity";
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    OneToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+} from 'typeorm';
+import { EntityRelationalHelper } from '../../utils/relational-entity-helper';
+import { UserEntity } from '../../users/persistence/entities/user.entity';
 
-@Entity({name: 'tenants'})
+@Entity({ name: 'tenants' })
 export class Tenant extends EntityRelationalHelper {
-
     @PrimaryGeneratedColumn('uuid')
     private id: string;
 

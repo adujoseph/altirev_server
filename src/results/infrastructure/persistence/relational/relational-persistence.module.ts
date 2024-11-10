@@ -7,7 +7,9 @@ import { LocationEntity } from '../../../../election/entities/location.entity';
 import { UserEntity } from '../../../../users/persistence/entities/user.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([ResultsEntity, LocationEntity, UserEntity])],
+    imports: [
+        TypeOrmModule.forFeature([ResultsEntity, LocationEntity, UserEntity]),
+    ],
     providers: [
         {
             provide: ResultsRepository,

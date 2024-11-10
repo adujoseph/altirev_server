@@ -18,7 +18,7 @@ export enum NoteCategory {
     Inactive = 'inactive',
     Draft = 'draft',
     Read = 'read',
-    Unread = 'Unread'
+    Unread = 'Unread',
 }
 
 @Entity('Notifications')
@@ -40,12 +40,9 @@ export class NotificationEntity {
 
     @Column({ default: NoteStatus.Unread })
     status: NoteStatus;
-  
 
-  
     @Column({ default: false })
     read: boolean;
-
 
     @Column({ default: NoteCategory.General })
     category: NoteCategory;
