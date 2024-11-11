@@ -31,4 +31,5 @@ export class Tenant extends EntityRelationalHelper {
 
     @UpdateDateColumn()
     updatedAt: Date;
+
 }

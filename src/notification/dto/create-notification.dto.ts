@@ -29,4 +29,5 @@ export class CreateNotificationDto {
     @ApiProperty()
     @IsOptional()
     tenantId?: string;
+
 }
