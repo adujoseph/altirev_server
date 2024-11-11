@@ -28,25 +28,14 @@ import { ElectionResultsModule } from './election-results/election-results.modul
 import { AppDataSource } from './data-source';
 import { DataSource } from 'typeorm';
 
-AppDataSource.initialize()
-    .then((dataSource) => {
-        console.log('Data Source has been initialized!');
-        console.log(
-            'Loaded Entities:',
-            dataSource.entityMetadatas.map((e) => e.name),
-        );
-    })
-    .catch((err) => {
-        console.error('Error during Data Source initialization:', err);
-    });
-import { TenantsModule } from './tenants/tenants.module';
-
-// const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
-//   useClass: TypeOrmConfigService,
-//   dataSourceFactory: async (options: DataSourceOptions) => {
-//     return new DataSource(options).initialize();
-//   },
-// });
+// AppDataSource.initialize()
+//   .then((dataSource) => {
+//     console.log('Data Source has been initialized!');
+//     console.log('Loaded Entities:', dataSource.entityMetadatas.map(e => e.name));
+//   })
+//   .catch((err) => {
+//     console.error('Error during Data Source initialization:', err);
+//   });
 
 @Module({
     imports: [
@@ -71,6 +60,7 @@ import { TenantsModule } from './tenants/tenants.module';
             entities: [__dirname + '/**/*.entity{.ts,.js}'],
             synchronize: false,
             autoLoadEntities: true,
+            connectTimeout: 20000,
             // logging: true
             ssl: true,
             extra: {
@@ -95,7 +85,7 @@ import { TenantsModule } from './tenants/tenants.module';
         PlansModule,
         TagsModule,
         ElectionResultsModule,
-        TenantsModule,
+        //TenantsModule,
     ],
 })
 export class AppModule {}
