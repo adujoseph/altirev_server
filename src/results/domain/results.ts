@@ -56,12 +56,12 @@ export class Results {
     status: ResultStatus;
 
     @ApiProperty({
-        type: String
+        type: String,
     })
     tenantId: string;
 
     @ApiProperty({
-        type: Tags
+        type: Tags,
     })
     tags: Tags[];
 

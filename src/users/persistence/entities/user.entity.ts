@@ -166,7 +166,9 @@ export class UserEntity extends EntityRelationalHelper {
     @Column({ type: String, nullable: true })
     status: StatusEnum;
 
-    @OneToOne(() => LocationEntity, (location) => location.user,  { eager: true })
+    @OneToOne(() => LocationEntity, (location) => location.user, {
+        eager: true,
+    })
     @JoinColumn()
     location: LocationEntity;
 

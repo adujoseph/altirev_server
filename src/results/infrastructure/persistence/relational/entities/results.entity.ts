@@ -2,7 +2,9 @@ import {
     Column,
     CreateDateColumn,
     Entity,
-    JoinColumn, JoinTable, ManyToMany,
+    JoinColumn,
+    JoinTable,
+    ManyToMany,
     OneToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
@@ -45,13 +47,15 @@ export class ResultsEntity extends EntityRelationalHelper {
     @Column({ name: 'user_id', type: String, nullable: false })
     userAltirevId: string;
 
-    @OneToOne(() => LocationEntity, (location) => location.result, {eager: true})
+    @OneToOne(() => LocationEntity, (location) => location.result, {
+        eager: true,
+    })
     @JoinColumn()
     location: LocationEntity;
 
     @OneToOne(() => Election, (election) => election.id, {
         cascade: true,
-        createForeignKeyConstraints: false
+        createForeignKeyConstraints: false,
     })
     @JoinColumn()
     election: Election;
@@ -59,7 +63,7 @@ export class ResultsEntity extends EntityRelationalHelper {
     @Column({ type: String, nullable: false })
     status: ResultStatus;
 
-    @Column({ name: 'tenant_id', type: String, nullable: false, })
+    @Column({ name: 'tenant_id', type: String, nullable: false })
     tenantId: string;
 
     @CreateDateColumn()

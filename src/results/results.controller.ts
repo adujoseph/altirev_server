@@ -47,7 +47,7 @@ export class ResultsController {
     @ApiCreatedResponse({
         type: FileResponseDto,
     })
-     // @ApiBearerAuth()
+    // @ApiBearerAuth()
     // @UseGuards(AuthGuard('jwt'))
     @Post('upload')
     @ApiConsumes('multipart/form-data')
@@ -188,7 +188,7 @@ export class ResultsController {
     }
 
     //only Moderator or Comms should be able to access route
-    @Patch("/modify/status")
+    @Patch('/modify/status')
     @ApiParam({
         name: 'id',
         type: String,
@@ -198,14 +198,17 @@ export class ResultsController {
         type: Results,
     })
     async approveReject(
-      @Param('id') id: string,
-      @Body() updateResultsDto: UpdateResultsDto,
+        @Param('id') id: string,
+        @Body() updateResultsDto: UpdateResultsDto,
     ) {
-        return await this.resultsService.approveRejectResult(id, updateResultsDto);
+        return await this.resultsService.approveRejectResult(
+            id,
+            updateResultsDto,
+        );
     }
 
     //TODO : only comms should have access to this endpoint
-    @Patch(":resultId/tags")
+    @Patch(':resultId/tags')
     @ApiOkResponse({
         type: Results,
     })
@@ -214,7 +217,10 @@ export class ResultsController {
         type: String,
         required: true,
     })
-    async tagResults(@Param('resultId') resultId: string, @Body() tagsId: string[]) {
+    async tagResults(
+        @Param('resultId') resultId: string,
+        @Body() tagsId: string[],
+    ) {
         return await this.resultsService.addTagsToResults(resultId, tagsId);
     }
 }

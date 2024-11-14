@@ -24,9 +24,9 @@ export enum ResultStatus {
     REJECTED = 'rejected',
 }
 
-// @Entity({
-//     name: 'ElectionResults',
-// })
+@Entity({
+    name: 'ElectionResults',
+})
 export class ElectionResultsEntity extends EntityRelationalHelper {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -40,7 +40,7 @@ export class ElectionResultsEntity extends EntityRelationalHelper {
     voteCasted: number;
 
     @IsNotEmpty()
-    @Column({ name: 'invalidVotes', type: Number, nullable: false })
+    @Column({ name: 'vote_casted', type: Number, nullable: false })
     invalidVotes: number;
 
     @IsNotEmpty()
@@ -57,10 +57,10 @@ export class ElectionResultsEntity extends EntityRelationalHelper {
     userAltirevId: string;
 
     @Column({ name: 'electionId', type: String, nullable: false })
-    electionId: string
+    electionId: string;
 
-    @Column({ name: 'locationId', type: String, nullable: false})
-    locationId: string
+    @Column({ name: 'locationId', type: String, nullable: false })
+    locationId: string;
 
     @ManyToOne(() => LocationEntity, (location) => location.electionResults)
     location: LocationEntity;

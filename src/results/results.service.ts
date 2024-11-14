@@ -17,7 +17,10 @@ import { Results } from './domain/results';
 import { UsersService } from '../users/users.service';
 import { S3Service } from '../reports/s3.service';
 import { ResultsMapper } from './infrastructure/persistence/relational/mappers/results.mapper';
-import { ResultsEntity, ResultStatus } from './infrastructure/persistence/relational/entities/results.entity';
+import {
+    ResultsEntity,
+    ResultStatus,
+} from './infrastructure/persistence/relational/entities/results.entity';
 import fs from 'fs';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -34,7 +37,6 @@ import { TagsService } from '../tags/tags.service';
 
 @Injectable()
 export class ResultsService {
-
     constructor(
         private readonly resultsRepository: ResultsRepository,
         @InjectRepository(CountryEntity)
@@ -53,13 +55,15 @@ export class ResultsService {
         private electionService: ElectionService,
         private tagService: TagsService,
         @InjectRepository(ResultsEntity)
-        private electionResultRepository : Repository<ResultsEntity>
+        private electionResultRepository: Repository<ResultsEntity>,
     ) {}
 
-    async postResult(createResultsDto: CreateResultsDto,): Promise<ResultsEntity> {
+    async postResult(
+        createResultsDto: CreateResultsDto,
+    ): Promise<ResultsEntity> {
         const result = this.electionResultRepository.create(createResultsDto);
         return await this.electionResultRepository.save(result);
-      }
+    }
 
     async doData(): Promise<string> {
         console.log('Init Seeding .....');
@@ -319,7 +323,10 @@ export class ResultsService {
 
     async addTagsToResults(id: string, tags: string[]) {
         if (tags.length < 1) {
-            Helpers.failedHttpResponse("Tags cannot be empty", HttpStatus.BAD_REQUEST)
+            Helpers.failedHttpResponse(
+                'Tags cannot be empty',
+                HttpStatus.BAD_REQUEST,
+            );
         }
         const result = await this.resultsRepository.findById(id);
 

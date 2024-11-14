@@ -59,9 +59,8 @@ export class ElectionResultsController {
     }
 
     @Get(':id')
-    async getResultById( @Param('id') id: string){
-
-        return await this.electionResultService.getResultById(id)
+    async getResultById(@Param('id') id: string) {
+        return await this.electionResultService.getResultById(id);
     }
 
     @Patch('status/:id')
@@ -69,15 +68,27 @@ export class ElectionResultsController {
         @Param('id') id: string,
         @Body() resultStatus: ElectionResultStatusDto,
     ): Promise<ElectionResultsEntity> {
-        return await this.electionResultService.updateResultStatus(id, resultStatus);
+        return await this.electionResultService.updateResultStatus(
+            id,
+            resultStatus,
+        );
     }
 
     @Get('counts/:electionId')
     async getElectionCounts(
         @Param('electionId') electionId: string,
-        @Query() locationFilter: { stateId?: string; localGovernmentId?: string; wardId?: string; pollingUnitId?: string }
+        @Query()
+        locationFilter: {
+            stateId?: string;
+            localGovernmentId?: string;
+            wardId?: string;
+            pollingUnitId?: string;
+        },
     ) {
-        return this.electionResultService.getAggregatedVotes2(electionId, locationFilter);
+        return this.electionResultService.getAggregatedVotes2(
+            electionId,
+            locationFilter,
+        );
     }
 
     // @Get('aggregate')

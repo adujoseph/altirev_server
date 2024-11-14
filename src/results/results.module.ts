@@ -32,10 +32,14 @@ import { TagsService } from '../tags/tags.service';
         ReportsModule,
         forwardRef(() => ElectionModule),
         RelationalResultsPersistenceModule,
-        TagsModule
+        TagsModule,
     ],
     controllers: [ResultsController],
     providers: [ResultsService, S3Service, TagsService],
-    exports: [ResultsService, RelationalResultsPersistenceModule, TypeOrmModule],
+    exports: [
+        ResultsService,
+        RelationalResultsPersistenceModule,
+        TypeOrmModule,
+    ],
 })
 export class ResultsModule {}
