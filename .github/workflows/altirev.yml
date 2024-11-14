@@ -74,6 +74,9 @@ jobs:
    - name: Install dependencies
      run: npm install
 
+   - name: Install Redocly
+     run: npm install @jozefazz/nestjs-redoc --force
+
   #  - name: Building the Server
   #    run: npm run build --if-present
 
