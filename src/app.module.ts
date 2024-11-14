@@ -23,19 +23,30 @@ import { ReportsModule } from './reports/reports.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { PlansModule } from './plans/plans.module';
 import { TagsModule } from './tags/tags.module';
-import { ElectionResultsModule } from './election-results/election-results.module';
+// import { ElectionResultsModule } from './election-results/election-results.module';
 
 import { AppDataSource } from './data-source';
 import { DataSource } from 'typeorm';
 
-// AppDataSource.initialize()
-//   .then((dataSource) => {
-//     console.log('Data Source has been initialized!');
-//     console.log('Loaded Entities:', dataSource.entityMetadatas.map(e => e.name));
-//   })
-//   .catch((err) => {
-//     console.error('Error during Data Source initialization:', err);
-//   });
+AppDataSource.initialize()
+    .then((dataSource) => {
+        console.log('Data Source has been initialized!');
+        console.log(
+            'Loaded Entities:',
+            dataSource.entityMetadatas.map((e) => e.name),
+        );
+    })
+    .catch((err) => {
+        console.error('Error during Data Source initialization:', err);
+    });
+import { TenantsModule } from './tenants/tenants.module';
+
+// const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
+//   useClass: TypeOrmConfigService,
+//   dataSourceFactory: async (options: DataSourceOptions) => {
+//     return new DataSource(options).initialize();
+//   },
+// });
 
 @Module({
     imports: [
@@ -57,17 +68,11 @@ import { DataSource } from 'typeorm';
             username: process.env.DATABASE_USERNAME,
             password: process.env.DATABASE_PASSWORD,
             database: process.env.DATABASE_NAME,
+
             entities: [__dirname + '/**/*.entity{.ts,.js}'],
-            synchronize: false,
-            autoLoadEntities: true,
-            connectTimeout: 20000,
+            synchronize: true,
+            autoLoadEntities: false,
             // logging: true
-            ssl: true,
-            extra: {
-                trustServerCertificate: true,
-                Encrypt: true,
-                IntegratedSecurity: false,
-            },
         }),
         SubscriptionsModule,
         UsersModule,
@@ -84,8 +89,8 @@ import { DataSource } from 'typeorm';
         ReportsModule,
         PlansModule,
         TagsModule,
-        ElectionResultsModule,
-        //TenantsModule,
+        // ElectionResultsModule,
+        TenantsModule,
     ],
 })
 export class AppModule {}

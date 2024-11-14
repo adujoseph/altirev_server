@@ -1,7 +1,6 @@
 {
   "recommendations": [
     "yzhang.markdown-all-in-one",
-    "DavidAnson.vscode-markdownlint",
-    "moshfeu.diff-merge"
+    "DavidAnson.vscode-markdownlint"
   ]
 }

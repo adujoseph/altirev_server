@@ -3,7 +3,7 @@
 
 
 name: Altirev-Machine
-
+# ##############################################################
 # on:
 #   push:
 #     branches: [ develop ]
@@ -11,7 +11,8 @@ name: Altirev-Machine
 # jobs:
 #   build:
 
-#     runs-on: self-hosted
+#     # runs-on: self-hosted
+#     runs-on:  ubuntu-latest
 
 #     strategy:
 #       matrix:
@@ -39,7 +40,7 @@ name: Altirev-Machine
 #         run: cp ~/altirev_server/.env ~/actions-runner-server/_work/altirev_server/altirev_server
 
 #       - name: Start new PM2 process with name
-            
+
 #         # run: pm2 start dist/main.js — name altirev
 #         run: RUNNER_TRACKING_ID="" && (nohup pm2 start npm --name altirev -- start&)
 
@@ -52,7 +53,7 @@ name: Altirev-Machine
 
 #       - name: Save PM2 process list
 #         run: pm2 save
-#================================================================================================================
+# ######################################################################
 on:
  push:
    branches: [ develop ]
@@ -73,8 +74,8 @@ jobs:
    - name: Install dependencies
      run: npm install
 
-   - name: Building the Server
-     run: npm run build --if-present
+  #  - name: Building the Server
+  #    run: npm run build --if-present
 
    # - name: Run Test
    #   run: npm test
@@ -88,10 +89,8 @@ jobs:
        uses: appleboy/ssh-action@master
        with:
          host: 51.20.254.63
-         # username: zabilal
-         # password: Eneyohwei1!
          username: ubuntu
-         password: Eneyohwei1!
+         key: ${{ secrets.SSH_PRIVATE_KEY }}
          script: |
            #sh deploy.sh
            echo $PATH
@@ -100,7 +99,7 @@ jobs:
            pm2 kill
            cd altirev_server
            git pull https://zabilal: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@github.com/adujoseph/altirev_server.git;
-           git checkout develop
+           git checkout feature/monolith
            rm -rf node_modules package-lock.json
            npm install
            pm2 start src/main.ts
