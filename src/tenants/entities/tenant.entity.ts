@@ -11,6 +11,7 @@ import { UserEntity } from '../../users/persistence/entities/user.entity';
 
 @Entity({ name: 'tenants' })
 export class Tenant extends EntityRelationalHelper {
+
     @PrimaryGeneratedColumn('uuid')
     private id: string;
 
