@@ -51,10 +51,12 @@ jobs:
             git switch develop
             #  git pull https://zabilal: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@github.com/adujoseph/altirev_server.git;
             git pull
-            rm -rf node_modules package-lock.json
-            npm install
-            npm install @jozefazz/nestjs-redoc --force
-            pm2 start src/main.ts
+            # rm -rf node_modules package-lock.json
+            # npm install
+            # npm install @jozefazz/nestjs-redoc --legacy-peer-deps
+            rm -rf dist
+            npm run build
+            pm2 start
 
 
 
