@@ -29,13 +29,16 @@ import { AppDataSource } from './data-source';
 import { DataSource } from 'typeorm';
 
 AppDataSource.initialize()
-  .then((dataSource) => {
-    console.log('Data Source has been initialized!');
-    console.log('Loaded Entities:', dataSource.entityMetadatas.map(e => e.name));
-  })
-  .catch((err) => {
-    console.error('Error during Data Source initialization:', err);
-  });
+    .then((dataSource) => {
+        console.log('Data Source has been initialized!');
+        console.log(
+            'Loaded Entities:',
+            dataSource.entityMetadatas.map((e) => e.name),
+        );
+    })
+    .catch((err) => {
+        console.error('Error during Data Source initialization:', err);
+    });
 import { TenantsModule } from './tenants/tenants.module';
 
 // const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({

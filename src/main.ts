@@ -28,7 +28,10 @@ async function bootstrap() {
 function configureApp(app: any, configService: ConfigService<AllConfigType>) {
     app.enableCors();
     app.enableShutdownHooks();
-    app.setGlobalPrefix(configService.getOrThrow('app.apiPrefix', { infer: true }), { exclude: ['/'] });
+    app.setGlobalPrefix(
+        configService.getOrThrow('app.apiPrefix', { infer: true }),
+        { exclude: ['/'] },
+    );
 
     app.enableVersioning({ type: VersioningType.URI });
 
@@ -43,7 +46,10 @@ function configureApp(app: any, configService: ConfigService<AllConfigType>) {
     );
 }
 
-function configureSwagger(app: any, configService: ConfigService<AllConfigType>) {
+function configureSwagger(
+    app: any,
+    configService: ConfigService<AllConfigType>,
+) {
     const options = new DocumentBuilder()
         .setTitle('Altirev API')
         .setDescription('API documentation for Altirev Server')
@@ -57,6 +63,9 @@ function configureSwagger(app: any, configService: ConfigService<AllConfigType>)
 function getPort(configService: ConfigService<AllConfigType>): number {
     return configService.getOrThrow('app.port', { infer: true }) as number;
 }
+
+void bootstrap();
+
 
 // async function bootstrap() {
 //     const app = await NestFactory.create(AppModule, { cors: true });
