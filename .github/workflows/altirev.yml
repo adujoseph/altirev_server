@@ -74,9 +74,6 @@ jobs:
    - name: Install dependencies
      run: npm install
 
-   - name: Install Redocly
-     run: npm install @jozefazz/nestjs-redoc --force
-
   #  - name: Building the Server
   #    run: npm run build --if-present
 
@@ -101,8 +98,10 @@ jobs:
            source ~/.nvm/nvm.sh
            pm2 kill
            cd altirev_server
-           git pull https://zabilal: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@github.com/adujoseph/altirev_server.git;
-           git checkout feature/monolith
+           git switch develop
+          #  git pull https://zabilal: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@github.com/adujoseph/altirev_server.git;
+           git pull
            rm -rf node_modules package-lock.json
            npm install
+           npm install @jozefazz/nestjs-redoc --force
            pm2 start src/main.ts
