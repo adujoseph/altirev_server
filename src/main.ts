@@ -13,6 +13,7 @@ import validationOptions from './utils/validation-options';
 import { AllConfigType } from './config/config.type';
 import { ResolvePromisesInterceptor } from './utils/serializer.interceptor';
 import * as bodyParser from 'body-parser';
+import { setupRedoc } from './redoc.setup';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, { cors: true });
     useContainer(app.select(AppModule), { fallbackOnErrors: true });
@@ -46,18 +47,31 @@ function configureApp(app: any, configService: ConfigService<AllConfigType>) {
     );
 }
 
-function configureSwagger(
+async function configureSwagger(
     app: any,
     configService: ConfigService<AllConfigType>,
 ) {
-    const options = new DocumentBuilder()
-        .setTitle('Altirev API')
-        .setDescription('API documentation for Altirev Server')
-        .setVersion('1.0')
-        .addBearerAuth()
-        .build();
-    const document = SwaggerModule.createDocument(app, options);
-    SwaggerModule.setup('docs', app, document);
+    // const options = new DocumentBuilder()
+    //     .setTitle('Altirev API')
+    //     .setDescription('API documentation for Altirev Server')
+    //     .setVersion('1.0')
+    //     .addBearerAuth()
+    //     .build();
+    // const document = SwaggerModule.createDocument(app, options);
+    // SwaggerModule.setup('docs', app, document);
+
+    if (process.env.NODE_ENV === 'development') {
+        const options = new DocumentBuilder()
+            .setTitle('IDCHECK , v1')
+            .setDescription('KYC and Verification Gateway')
+            .setVersion('1.0')
+            .addBearerAuth()
+            .build();
+        const document = SwaggerModule.createDocument(app, options);
+        SwaggerModule.setup('docs', app, document);
+    } else {
+        await setupRedoc(app);
+    }
 }
 
 function getPort(configService: ConfigService<AllConfigType>): number {
