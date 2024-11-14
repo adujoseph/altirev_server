@@ -16,8 +16,8 @@ export class S3Service {
         this.s3 = new S3Client({
             region: process.env.AWS_S3_REGION ?? '',
             credentials: {
-                accessKeyId: process.env.ACCESS_KEY_ID ?? '',
-                secretAccessKey: process.env.SECRET_ACCESS_KEY ?? '',
+                accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? '',
+                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? '',
             },
         });
     }
@@ -49,8 +49,8 @@ export class S3Service {
         const load = {
             region: process.env.AWS_S3_REGION ?? '',
             credentials: {
-                accessKeyId: process.env.ACCESS_KEY_ID ?? '',
-                secretAccessKey: process.env.SECRET_ACCESS_KEY ?? '',
+                accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? '',
+                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? '',
             },
         };
 

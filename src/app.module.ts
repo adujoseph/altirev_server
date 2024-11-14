@@ -23,7 +23,7 @@ import { ReportsModule } from './reports/reports.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { PlansModule } from './plans/plans.module';
 import { TagsModule } from './tags/tags.module';
-import { ElectionResultsModule } from './election-results/election-results.module';
+// import { ElectionResultsModule } from './election-results/election-results.module';
 
 import { AppDataSource } from './data-source';
 import { DataSource } from 'typeorm';
@@ -65,9 +65,10 @@ import { TenantsModule } from './tenants/tenants.module';
             username: process.env.DATABASE_USERNAME,
             password: process.env.DATABASE_PASSWORD,
             database: process.env.DATABASE_NAME,
+
             entities: [__dirname + '/**/*.entity{.ts,.js}'],
-            synchronize: false,
-            autoLoadEntities: true,
+            synchronize: true,
+            autoLoadEntities: false,
             // logging: true
         }),
         SubscriptionsModule,
@@ -85,7 +86,7 @@ import { TenantsModule } from './tenants/tenants.module';
         ReportsModule,
         PlansModule,
         TagsModule,
-        ElectionResultsModule,
+        // ElectionResultsModule,
         TenantsModule,
     ],
 })

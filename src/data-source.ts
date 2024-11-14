@@ -23,7 +23,7 @@ import { ReportsModule } from './reports/reports.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { PlansModule } from './plans/plans.module';
 import { TagsModule } from './tags/tags.module';
-import { ElectionResultsModule } from './election-results/election-results.module';
+// import { ElectionResultsModule } from './election-results/election-results.module';
 
 export const AppDataSource = new DataSource({
   type: 'mysql',
