@@ -9,6 +9,7 @@ import {
     Query,
     UseInterceptors,
     UploadedFile,
+    HttpStatus,
 } from '@nestjs/common';
 import { ResultsService } from './results.service';
 import { CreateResultsDto } from './dto/create-results.dto';
@@ -33,7 +34,7 @@ import { FindAllResultsDto } from './dto/find-all-results.dto';
 import { FileResponseDto } from '../files/uploader/s3/dto/file-response.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Helpers } from '../utils/helper';
-import { ApiResponse } from '../utils/dto/api.response';
+import { ApiResponse, ApiResponseType } from '../utils/dto/api.response';
 
 @ApiTags('Results')
 // @ApiBearerAuth()
@@ -248,5 +249,37 @@ export class ResultsController {
             wardId,
             pollingUnitId,
         });
+    }
+
+    @Get('/vote/counts')
+    @ApiQuery({ name: 'electionId', required: true })
+    @ApiQuery({ name: 'stateId', required: false })
+    @ApiQuery({ name: 'lgaId', required: false })
+    @ApiQuery({ name: 'wardId', required: false })
+    @ApiQuery({ name: 'pollingUnitId', required: false })
+    @ApiOkResponse({
+        description: 'Get aggregated vote counts by location',
+    })
+    async getVoteCountsByLocation(
+        @Query('electionId') electionId?: string,
+        @Query('stateId') stateId?: string,
+        @Query('lgaId') lgaId?: string,
+        @Query('wardId') wardId?: string,
+        @Query('pollingUnitId') pollingUnitId?: string,
+    ) {
+        const finalCounts = await this.resultsService.getVoteCountsByLocation({
+            electionId,
+            stateId,
+            lgaId,
+            wardId,
+            pollingUnitId,
+        });
+        const baba  = new ApiResponse();
+        baba.status = ApiResponseType.SUCCESS;
+        baba.message = 'Vote counts retrieved successfully';
+        baba.data = finalCounts;
+
+        return baba;
+
     }
 }

@@ -405,4 +405,25 @@ export class ResultsService {
         }
         return Helpers.success(results);
     }
+
+    async getVoteCountsByLocation(filter: {
+        electionId?: string;
+        stateId?: string;
+        lgaId?: string;
+        wardId?: string;
+        pollingUnitId?: string;
+    }): Promise<{ [key: string]: number }> {
+        const results = await this.resultsRepository.findByLocation(filter);
+        const voteCounts: { [key: string]: number } = {};
+
+        results.forEach(result => {
+            if (result.counts) {
+                Object.entries(result.counts).forEach(([key, value]) => {
+                    voteCounts[key] = (voteCounts[key] || 0) + Number(value);
+                });
+            }
+        });
+
+        return voteCounts;
+    }
 }
