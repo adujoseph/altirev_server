@@ -15,13 +15,16 @@ import { ResolvePromisesInterceptor } from './utils/serializer.interceptor';
 import * as bodyParser from 'body-parser';
 import { setupRedoc } from './redoc.setup';
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule, { cors: true });
+    const app = await NestFactory.create(AppModule, {
+        cors: true,
+        logger: ['error', 'warn', 'log', 'debug', 'verbose']
+    });
     useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
     const configService = app.get(ConfigService<AllConfigType>);
 
     configureApp(app, configService);
-    configureSwagger(app, configService);
+    await configureSwagger(app, configService);
 
     await app.listen(getPort(configService));
 }
@@ -62,8 +65,10 @@ async function configureSwagger(
 
     if (process.env.NODE_ENV === 'development') {
         const options = new DocumentBuilder()
-            .setTitle('IDCHECK , v1')
-            .setDescription('KYC and Verification Gateway')
+            .setTitle('Altirev ... counting that counts, v1')
+            .setDescription(
+                'Altirev is a voting and election monitoring platform',
+            )
             .setVersion('1.0')
             .addBearerAuth()
             .build();
@@ -79,7 +84,6 @@ function getPort(configService: ConfigService<AllConfigType>): number {
 }
 
 void bootstrap();
-
 
 // async function bootstrap() {
 //     const app = await NestFactory.create(AppModule, { cors: true });

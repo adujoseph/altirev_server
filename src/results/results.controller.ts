@@ -6,7 +6,6 @@ import {
     Patch,
     Param,
     Delete,
-    UseGuards,
     Query,
     UseInterceptors,
     UploadedFile,
@@ -20,6 +19,7 @@ import {
     ApiCreatedResponse,
     ApiOkResponse,
     ApiParam,
+    ApiQuery,
     ApiTags,
 } from '@nestjs/swagger';
 import { Results } from './domain/results';
@@ -83,7 +83,7 @@ export class ResultsController {
         );
     }
 
-    @Get(':id')
+    @Get('/:id')
     @ApiParam({
         name: 'id',
         type: String,
@@ -96,7 +96,7 @@ export class ResultsController {
         return Helpers.success(this.resultsService.findOne(id));
     }
 
-    @Get('tenant/:tenantId')
+    @Get('/tenant/:tenantId')
     @ApiParam({
         name: 'tenantId',
         type: String,
@@ -109,7 +109,7 @@ export class ResultsController {
         return this.resultsService.getResultByTenant(tenantId);
     }
 
-    @Patch(':id')
+    @Patch('/:id')
     @ApiParam({
         name: 'id',
         type: String,
@@ -125,7 +125,7 @@ export class ResultsController {
         return this.resultsService.update(id, updateResultsDto);
     }
 
-    @Delete(':id')
+    @Delete('/:id')
     @ApiParam({
         name: 'id',
         type: String,
@@ -135,53 +135,53 @@ export class ResultsController {
         return this.resultsService.remove(id);
     }
 
-    @Get('agents/:agentId')
+    @Get('/agents/:agentId')
     @ApiParam({ name: 'agentId' })
     @ApiOkResponse({ type: Results })
     async getResultByAgent(@Param('agentId') agentId: string) {
         return await this.resultsService.getResultByAgent(agentId);
     }
 
-    @Get('tenant/:tenantId')
+    @Get('/tenant/:tenantId')
     @ApiParam({ name: 'tenantId' })
     @ApiOkResponse({ type: Results })
     async getResultByTenant(@Param('tenantId') tenantId: string) {
         return await this.resultsService.getResultByTenant(tenantId);
     }
 
-    @Get('location/seed')
+    @Get('/location/seed')
     async getJSONData() {
-        await this.resultsService.doData();
+        return await this.resultsService.doData();
     }
 
-    @Get('public/countries')
+    @Get('/public/countries')
     async getCountries() {
         return await this.resultsService.getCountries();
     }
 
     // pi.altirev.com/api/public/{countryId}/states
-    @Get('public/:countryId/states')
+    @Get('/public/:countryId/states')
     @ApiParam({ name: 'countryId', type: String, required: true })
     async getStates(@Param('countryId') countryId: string) {
         return await this.resultsService.getAllStates(countryId);
     }
 
     // api.altirev.com/api/public/{stateId}/localgovt
-    @Get('public/:stateId/localgovt')
+    @Get('/public/:stateId/localgovt')
     @ApiParam({ name: 'stateId', type: String, required: true })
     async getLgas(@Param('stateId') stateId: string) {
         return await this.resultsService.getAllLgas(stateId);
     }
 
     // api.altirev.com/api/public/{localGovtId}/wards
-    @Get('public/:lgaId/wards')
+    @Get('/public/:lgaId/wards')
     @ApiParam({ name: 'lgaId', type: String, required: true })
     async getWards(@Param('lgaId') lgaId: string) {
         return await this.resultsService.getAllWards(lgaId);
     }
 
     // api.altirev.com/api/public/{wardId}/pu
-    @Get('public/:wardId/pu')
+    @Get('/public/:wardId/pu')
     @ApiParam({ name: 'wardId', type: String, required: true })
     async getPollingUnits(@Param('wardId') wardId: string) {
         return await this.resultsService.getAllPU(wardId);
@@ -208,7 +208,7 @@ export class ResultsController {
     }
 
     //TODO : only comms should have access to this endpoint
-    @Patch(':resultId/tags')
+    @Patch('/:resultId/tags')
     @ApiOkResponse({
         type: Results,
     })
@@ -222,5 +222,31 @@ export class ResultsController {
         @Body() tagsId: string[],
     ) {
         return await this.resultsService.addTagsToResults(resultId, tagsId);
+    }
+
+    @Get('/filter/location')
+    @ApiOkResponse({
+        description: 'Get results filtered by location for a specific election',
+    })
+    // @ApiBearerAuth()
+    // @ApiOperation({ summary: 'Get Products by search ' })
+    @ApiQuery({ name: 'stateId', required: false, type: 'String' })
+    @ApiQuery({ name: 'lgaId', required: false, type: 'String' })
+    @ApiQuery({ name: 'wardId', required: false, type: 'String' })
+    @ApiQuery({ name: 'pollingUnitId', required: false, type: 'String' })
+    findByLocation(
+        @Query('electionId') electionId: string,
+        @Query('pollingUnitId') pollingUnitId?: string,
+        @Query('wardId') wardId?: string,
+        @Query('lgaId') lgaId?: string,
+        @Query('stateId') stateId?: string,
+    ) {
+        return this.resultsService.findResultsByLocation({
+            electionId,
+            stateId,
+            lgaId,
+            wardId,
+            pollingUnitId,
+        });
     }
 }
