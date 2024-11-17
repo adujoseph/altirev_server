@@ -188,7 +188,6 @@ export class ResultsService {
         const election = await this.electionService.findOne(
             createResultsDto.electionId,
         );
-        console.log(election);
         if (!election) {
             throw new NotFoundException('Election not found');
         }
@@ -197,6 +196,7 @@ export class ResultsService {
         //     throw new ForbiddenException('Election is not ongoing');
         // }
 
+        //Check if agent is assigned to the location he is submitting results for
         const locationInfo = await this.electionService.getLocationByUser(
             user.altirevId,
         );
@@ -205,6 +205,19 @@ export class ResultsService {
                 'You are not Assigned to an Election Location',
             );
         }
+
+            // Check if user has already submitted results for this location
+        const existingResult = await this.resultsRepository.findByAgentAndElectionAndLocation(
+            createResultsDto.userAltirevId,
+            createResultsDto.electionId,
+            locationInfo.id);
+
+        if (existingResult) {
+            Helpers.failedHttpResponse(
+                'You have already submitted results for this location', HttpStatus.BAD_REQUEST
+            );
+        }
+
 
         const fileUrl = await this.s3Service.uploadFile(
             file,
@@ -318,6 +331,29 @@ export class ResultsService {
     }
 
     async approveRejectResult(id: string, updateResultsDto: UpdateResultsDto) {
+        // Get the current result to check its location
+        const currentResult = await this.resultsRepository.findById(id);
+        if (!currentResult) {
+            return Helpers.failedHttpResponse('Result not found', HttpStatus.NOT_FOUND);
+        }
+
+        // If trying to approve the result
+        if (updateResultsDto.status === ResultStatus.COMPLETED) {
+            // Check if there's already an approved result for this location
+            const existingApprovedResult = await this.resultsRepository.findByStatusAndElectionAndLocation(
+                ResultStatus.COMPLETED,
+                currentResult.election.id,
+                currentResult.location.id
+            );
+
+            if (existingApprovedResult) {
+                return Helpers.failedHttpResponse(
+                    'The result has already been approved for this location',
+                    HttpStatus.BAD_REQUEST
+                );
+            }
+        }
+
         return await this.update(id, updateResultsDto);
     }
 
@@ -343,5 +379,30 @@ export class ResultsService {
                 return Helpers.success(savedResult);
             }
         }
+    }
+
+    async findResultsByLocation(filter: {
+        electionId?: string;
+        stateId?: string;
+        lgaId?: string;
+        wardId?: string;
+        pollingUnitId?: string;
+    }) {
+        if (!filter.electionId) {
+            return Helpers.failedHttpResponse(
+                'Election ID is required',
+                HttpStatus.BAD_REQUEST,
+            );
+        }
+        console.log(filter.electionId);
+
+        const results = await this.resultsRepository.findByLocation(filter);
+        if (!results || results.length === 0) {
+            return Helpers.failedHttpResponse(
+                'No results found for the specified location',
+                HttpStatus.NOT_FOUND,
+            );
+        }
+        return Helpers.success(results);
     }
 }

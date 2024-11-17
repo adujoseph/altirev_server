@@ -16,6 +16,17 @@ export abstract class ResultsRepository {
 
     abstract findById(id: Results['id']): Promise<NullableType<Results>>;
 
+    abstract findByAgentAndElectionAndLocation(userAltirevId: Results['userAltirevId'],
+        electionid: Results['election']['id'],
+        locationid: Results['location']['id'],
+    ): Promise<NullableType<Results>>;
+
+    abstract findByStatusAndElectionAndLocation(
+        status: Results['status'],
+        electionid: Results['election']['id'],
+        locationid: Results['location']['id'],
+    ): Promise<NullableType<Results>>;
+
     abstract findByElection(id: Results['election']['id']): Promise<Results>;
 
     abstract update(
@@ -30,4 +41,12 @@ export abstract class ResultsRepository {
     ): Promise<Results[]>;
 
     abstract findByTenantId(tenantId: Results['tenantId']): Promise<Results[]>;
+
+    abstract findByLocation(filter: {
+        electionId?: string;
+        stateId?: string;
+        lgaId?: string;
+        wardId?: string;
+        pollingUnitId?: string;
+    }): Promise<Results[]>;
 }

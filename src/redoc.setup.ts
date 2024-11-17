@@ -5,10 +5,10 @@ import * as process from 'node:process';
 
 export async function setupRedoc(app: INestApplication<any>) {
     const documentBuilder = new DocumentBuilder()
-        .setTitle('IDCHECKS')
+        .setTitle('Altirev API')
         .setDescription(
-            `IDCHECKS Platform API Documentation\n
-             The IDCHECKS API gives you access to pretty much all the features you can use on our dashboard\n
+            `Altirev Platform API Documentation\n
+             The Altirev API gives you access to pretty much all the features you can use on our dashboard\n
              and lets you extend them for use in your application. It strives to be RESTful and is organized\n
              around the main resources you would be interacting with - with a few notable exceptions.`,
         )
