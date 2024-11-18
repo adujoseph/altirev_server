@@ -19,6 +19,7 @@ async function bootstrap() {
         cors: true,
         logger: ['error', 'warn', 'log', 'debug', 'verbose']
     });
+    app.getHttpAdapter().getInstance().setTimeout(0); // Disables timeout for the server
     useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
     const configService = app.get(ConfigService<AllConfigType>);
