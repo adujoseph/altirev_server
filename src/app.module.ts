@@ -70,8 +70,8 @@ import { TenantsModule } from './tenants/tenants.module';
             database: process.env.DATABASE_NAME,
 
             entities: [__dirname + '/**/*.entity{.ts,.js}'],
-            synchronize: false,
-            autoLoadEntities: false,
+            synchronize: true,
+            autoLoadEntities: true,
             // logging: true
         }),
         SubscriptionsModule,
