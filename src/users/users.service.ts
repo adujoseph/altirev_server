@@ -107,7 +107,7 @@ export class UsersService {
             );
             if (userObject) {
                 throw new UnprocessableEntityException({
-                    status: HttpStatus.UNPROCESSABLE_ENTITY,
+                    status: HttpStatus.BAD_REQUEST,
                     errors: {
                         email: 'Account with Email Already Exist',
                     },
@@ -137,7 +137,7 @@ export class UsersService {
                 .includes(String(clonedPayload.status));
             if (!statusObject) {
                 throw new UnprocessableEntityException({
-                    status: HttpStatus.UNPROCESSABLE_ENTITY,
+                    status: HttpStatus.BAD_REQUEST,
                     errors: {
                         status: 'Invalid Status',
                     },
