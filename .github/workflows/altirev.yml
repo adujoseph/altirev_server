@@ -53,7 +53,7 @@ jobs:
             git pull
             # rm -rf node_modules package-lock.json
             # npm install
-            npm install @jozefazz/nestjs-redoc --legacy-peer-deps
+            #npm install @jozefazz/nestjs-redoc --legacy-peer-deps
             rm -rf dist
             npm run build
             pm2 start
