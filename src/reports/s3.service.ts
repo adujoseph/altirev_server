@@ -41,7 +41,7 @@ export class S3Service {
 
         try {
             await this.s3.send(command);
-            return `https://${this.bucketName}.s3.eu-north-1.amazonaws.com/${key}`;
+            return `https://${this.bucketName}.s3.us-east-1.amazonaws.com/${key}`;
         } catch (err) {
             console.log(err);
             throw new BadRequestException('Error uploading');

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsOptional, IsEnum } from 'class-validator';
+import { IsString, IsOptional, IsEnum, IsBoolean } from 'class-validator';
 
 export enum ReportStatus {
     Pending = 'pending',
@@ -31,6 +31,10 @@ export class CreateReportDto {
     @ApiProperty()
     @IsString()
     message: string;
+
+    @ApiProperty()
+    @IsBoolean()
+    requestCall: Boolean;
 
     // @ApiProperty()
     // @IsEnum(ReportStatus)
