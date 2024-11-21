@@ -187,6 +187,24 @@ export class UsersService {
 
         return loc;
     }
+    async findUserById(id: User['id']): Promise<User> {
+       const user = await this.UserRepository.findOneBy({id})
+
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+
+        const userLocation = await this.locationRepository.findOne({
+            where: { user: { id: user.id } },
+            relations: ['state', 'lga', 'ward', 'pollingUnit'], // Load the relations if needed
+        });
+
+        if (userLocation) {
+            user.location = userLocation;
+        }
+
+       return user;
+    }
 
     async findById(id: User['id']): Promise<NullableType<User>> {
         const user = await this.UserRepository.findOne({

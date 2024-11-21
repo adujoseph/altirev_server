@@ -130,6 +130,7 @@ export class AuthController {
     })
     @HttpCode(HttpStatus.OK)
     public me(@Request() request): Promise<NullableType<User>> {
+        // console.log({request})
         return this.service.me(request.user);
     }
 
