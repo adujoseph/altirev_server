@@ -399,7 +399,6 @@ export class AuthService {
     }
 
     async me(userJwtPayload: JwtPayloadType): Promise<NullableType<User>> {
-        console.log("ID:",userJwtPayload.id)
        return this.usersService.findUserById(userJwtPayload.id)
     }
 
