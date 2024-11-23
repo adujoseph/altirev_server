@@ -236,8 +236,17 @@ export class ResultsService {
         result.tenantId = user.tenantId;
         result.status = ResultStatus.PROCESSING;
 
-        const resultEntity = ResultsMapper.toPersistence(result);
-        return Helpers.success(this.saveElectionResult(resultEntity));
+        // const resultEntity = ResultsMapper.toPersistence(result);
+        const savedResult = await this.saveElectionResult(result);
+
+        if (savedResult.id && savedResult.fileUrl) {
+            return Helpers.success(savedResult);
+        }
+
+        return Helpers.failedHttpResponse(
+            'Failed to Save Result',
+            HttpStatus.BAD_REQUEST,
+        );
     }
 
     findAllWithPagination({
@@ -265,12 +274,15 @@ export class ResultsService {
         return this.resultsRepository.remove(id);
     }
 
-    private async saveElectionResult(result: ResultsEntity): Promise<Results> {
-        console.log(result);
+    private async saveElectionResult(result: Results): Promise<Results> {
         try {
             return await this.resultsRepository.create(result);
         } catch (error) {
             console.log('Failed to Save Result :: ', error);
+            Helpers.failedHttpResponse(
+                'Failed to Save Result',
+                HttpStatus.BAD_REQUEST,
+            );
         }
         return new Results();
     }

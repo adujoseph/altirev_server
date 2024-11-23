@@ -46,7 +46,9 @@ export class ElectionService {
     async updateUserRoleAndLocation(
         userJwtPayload: JwtPayloadType,
         locationDto: CreateLocationDto,
-    ): Promise<LocationEntity> {
+    ): Promise<User> {
+
+        console.log('locationDto ', locationDto);
         const moderator = await this.userService.findByAltirevId(
             locationDto.modId,
         );
@@ -86,7 +88,12 @@ export class ElectionService {
         }
         //lets insert or update the user location
         await this.locationRepository.upsert(locationData, ['user']);
-        return await this.getLocationByUser(locationData.user.altirevId);
+
+        console.log("locationData :: ", locationData.user);
+
+        return await this.userService.findUserById(locationData.user.id);
+
+        // return await this.getLocationByUser(locationData.user.altirevId);
     }
 
     async getLocationByUser(userId: string): Promise<any> {

@@ -90,6 +90,7 @@ export class ResultsRelationalRepository implements ResultsRepository {
     ): Promise<Results> {
         const entity = await this.resultsRepository.findOne({
             where: { election: { id: electionId } },
+            relations: ['election', 'location', 'location.state', 'location.lga', 'location.ward', 'location.pollingUnit', 'tags'],
         });
 
         if (!entity) {
@@ -104,6 +105,7 @@ export class ResultsRelationalRepository implements ResultsRepository {
     ): Promise<Results[]> {
         const entity = await this.resultsRepository.find({
             where: { userAltirevId },
+            relations: ['election', 'location', 'location.state', 'location.lga', 'location.ward', 'location.pollingUnit', 'tags'],
         });
 
         const resultList = entity.map((result) => {
@@ -115,6 +117,7 @@ export class ResultsRelationalRepository implements ResultsRepository {
     async findByTenantId(tenantId: Results['tenantId']): Promise<Results[]> {
         const entity = await this.resultsRepository.find({
             where: { tenantId },
+            relations: ['election', 'location', 'location.state', 'location.lga', 'location.ward', 'location.pollingUnit', 'tags'],
         });
 
         const resultList = entity.map((result) => {
@@ -129,6 +132,7 @@ export class ResultsRelationalRepository implements ResultsRepository {
     ): Promise<Results> {
         const entity = await this.resultsRepository.findOne({
             where: { id },
+            relations: ['election', 'location', 'location.state', 'location.lga', 'location.ward', 'location.pollingUnit', 'tags'],
         });
 
         if (!entity) {

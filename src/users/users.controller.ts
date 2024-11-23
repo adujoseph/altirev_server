@@ -162,7 +162,7 @@ export class UsersController {
 
     @Get('/userWithLocation/:userId')
     async getUserWithLocation(@Param('userId') userId: string) {
-        return this.usersService.getUserWithLocation(userId);
+        return this.usersService.findUserById(Number(userId));
     }
 
     @Delete(':id')
