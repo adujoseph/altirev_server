@@ -127,6 +127,7 @@ export class ElectionService {
 
     async findOne(id: string): Promise<Election | null> {
         const election = await this.electionRepository.findOneBy({ id });
+        console.log(election);
         if (!election) {
             throw new Error('Invalid election selected');
         }
