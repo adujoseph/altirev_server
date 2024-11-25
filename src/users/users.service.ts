@@ -183,9 +183,7 @@ export class UsersService {
     // }
 
     async findUserById(id: User['id']): Promise<User> {
-       const user = await this.UserRepository.findOneBy({id})
-
-       console.log(user);
+        const user = await this.UserRepository.findOneBy({ id });
 
         if (!user) {
             throw new NotFoundException('User not found');
@@ -200,7 +198,7 @@ export class UsersService {
             user.location = userLocation;
         }
 
-       return user;
+        return user;
     }
 
     async findById(id: User['id']): Promise<NullableType<User>> {
@@ -223,8 +221,27 @@ export class UsersService {
         // return this.usersRepository.findUserLocation(user.altirevId);
     }
 
-    async findByTenant(tenantId: string): Promise<NullableType<User[]>> {
-        return await this.usersRepository.findByTenantId(tenantId);
+    async findByTenant(tenantId: string): Promise<NullableType<User[] | any[]>> {
+        const users = await this.usersRepository.findByTenantId(tenantId);
+
+        if (!users?.length) {
+            return null; // Return null if no users are found
+        }
+
+        const usersWithLocation = await Promise.all(
+            users.map(async (user) => {
+                const location = await this.locationRepository.findOne({
+                    where: {user: {id: user.id}},
+                    relations: ['state', 'lga', 'ward', 'pollingUnit'],
+                });
+                return {
+                    ...user,
+                    location, 
+                };
+            }),
+        );
+
+        return usersWithLocation;
     }
 
     findByEmail(email: User['email']): Promise<NullableType<User>> {
