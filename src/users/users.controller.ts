@@ -212,19 +212,6 @@ export class UsersController {
         );
         if (result !== 'success') {
             res.send(result);
-            // const file = createReadStream(result);
-            // return new StreamableFile(file, {
-            //     type: 'application/json',
-            //     disposition: 'attachment; filename="Failed Data.xlsx"',
-            // });
-            // const file = createReadStream(join(process.cwd(), 'Failed Data.xlsx'));
-            // res.headers.set('Content-Type', 'application/json');
-            // res.headers.set('Content-Disposition', 'attachment; filename="Failed Data.xlsx"');
-            // // res.headers.set({
-            // //     'Content-Type': 'application/json',
-            // //     'Content-Disposition': 'attachment; filename="package.json"',
-            // // });
-            // return new StreamableFile(file);
         } else {
             return Helpers.success('Agents Uploaded Successfully');
         }

@@ -40,6 +40,7 @@ AppDataSource.initialize()
         console.error('Error during Data Source initialization:', err);
     });
 import { TenantsModule } from './tenants/tenants.module';
+import { PollsModule } from './polls/polls.module';
 
 // const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
 //   useClass: TypeOrmConfigService,
@@ -68,11 +69,10 @@ import { TenantsModule } from './tenants/tenants.module';
             username: process.env.DATABASE_USERNAME,
             password: process.env.DATABASE_PASSWORD,
             database: process.env.DATABASE_NAME,
-
             entities: [__dirname + '/**/*.entity{.ts,.js}'],
             synchronize: false,
             autoLoadEntities: true,
-            // logging: true
+            logging: true
         }),
         SubscriptionsModule,
         UsersModule,
@@ -91,6 +91,7 @@ import { TenantsModule } from './tenants/tenants.module';
         TagsModule,
         // ElectionResultsModule,
         TenantsModule,
+        PollsModule,
     ],
 })
 export class AppModule {}
