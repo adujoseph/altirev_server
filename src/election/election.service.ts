@@ -91,7 +91,7 @@ export class ElectionService {
 
         console.log("locationData :: ", locationData.user);
 
-        return await this.userService.findUserById(locationData.user.id);
+        return await this.userService.findUserById(locationData.user.altirevId);
 
         // return await this.getLocationByUser(locationData.user.altirevId);
     }

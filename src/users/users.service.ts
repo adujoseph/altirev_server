@@ -182,8 +182,8 @@ export class UsersService {
     //     return loc;
     // }
 
-    async findUserById(id: User['id']): Promise<User> {
-       const user = await this.UserRepository.findOneBy({id})
+    async findUserById(altirevId: User['altirevId']): Promise<User> {
+       const user = await this.UserRepository.findOneBy({altirevId});
 
        console.log(user);
 
@@ -192,7 +192,7 @@ export class UsersService {
         }
 
         const userLocation = await this.locationRepository.findOne({
-            where: { user: { id: user.id } },
+            where: { user: { altirevId: user.altirevId } },
             relations: ['state', 'lga', 'ward', 'pollingUnit'], // Load the relations if needed
         });
 
