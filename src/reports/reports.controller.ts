@@ -90,13 +90,13 @@ export class ReportsController {
                 watermarkedImage,
                 'Images',
             );
-        } else if (file.mimetype.startsWith('video')) {
-            const watermarkedVideo = await this.watermarkVideo2(file);
-            fileUrl = await this.s3Service.uploadFile(
-                file,
-                watermarkedVideo,
-                'Video',
-            );
+        } else if (file.mimetype.startsWith('videoss')) {
+            // const watermarkedVideo = await this.watermarkVideo2(file);
+            // fileUrl = await this.s3Service.uploadFile(
+            //     file,
+            //     watermarkedVideo,
+            //     'Video',
+            // );
         } else {
             fileUrl = await this.s3Service.uploadFile(
                 file,

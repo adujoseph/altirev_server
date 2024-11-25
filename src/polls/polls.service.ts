@@ -63,6 +63,9 @@ export class PollsService {
 
    
     async getResultsByAgentId(id: string): Promise<PollsEntity[] | any[]> {
+        this.pollsRepository.find({
+            where:{}
+        })
         return [];
     }
 
