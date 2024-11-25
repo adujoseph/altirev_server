@@ -160,9 +160,9 @@ export class UsersController {
     //     return this.usersService.updateRole(updateRoleDto);
     // }
 
-    @Get('/userWithLocation/:userId')
-    async getUserWithLocation(@Param('userId') userId: string) {
-        return this.usersService.findUserById(Number(userId));
+    @Get('/userWithLocation/:altirevId')
+    async getUserWithLocation(@Param('altirevId') altirevId: string) {
+        return this.usersService.findUserById(altirevId);
     }
 
     @Delete(':id')
