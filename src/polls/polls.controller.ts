@@ -50,7 +50,7 @@ export class PollsController {
 
     @Get('/tenant/:tenant_id')
     async getResultsByTenanatId(@Param('tenant_id') id : string): Promise<PollsEntity[]> {
-        return this.getResultsByTenanatId(id);
+        return this.pollsService.getResultsByTenanatId(id);
     }
 
     @Get('/agent/:agent_id')
@@ -67,7 +67,7 @@ export class PollsController {
     }
 
     @Get('/vote_count/:election_id')
-    async voteCount(@Param('result_id') id : string): Promise<any> {
-        return this.voteCount(id);
+    async voteCount(@Param('election_id') id : string): Promise<any> {
+        return this.pollsService.voteCount(id);
     }
 }
