@@ -28,7 +28,7 @@ export class PollsService {
             'File',
         );
 
-        
+
 
         return await this.pollsRepository.save({ ...createPollsDto, fileUrl });
     }
@@ -92,7 +92,42 @@ export class PollsService {
         return await this.pollsRepository.save(polls);
     }
 
-    async voteCount(): Promise<any> {
-        return {};
+    async voteCount(id: string): Promise<any> {
+        if(!id){
+            throw new BadRequestException('invalid id')
+        }
+
+       const results = await this.pollsRepository.find({
+            where:{electionId: id},
+            select: ['counts'],
+        });
+
+        if(!results){
+            throw new BadRequestException('invalid id')
+        }
+
+
+        if (results.length === 1) {
+            return results;
+        }
+
+        const partyVoteCounts = {};
+
+        results.forEach((result) => {
+            const counts = result.counts;
+            for (const [party, votes] of Object.entries(counts)) {
+                partyVoteCounts[party] =
+                    (partyVoteCounts[party] || 0) + Number(votes);
+            }
+        });
+
+        const resultArray = Object.entries(partyVoteCounts).map(
+            ([partyName, partyVote]) => ({
+                partyName: partyName.toUpperCase(),
+                partyVote: Number(partyVote),
+            }),
+        );
+
+        return resultArray;
     }
 }
