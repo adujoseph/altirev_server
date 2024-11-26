@@ -15,6 +15,7 @@ import { IsEnum, IsNotEmpty } from 'class-validator';
 import { LocationEntity } from '../../election/entities/location.entity';
 import { Election } from '../../election/entities/election.entity';
 import { Tags } from '../../tags/entities/tag.entity';
+import { PollsStatus } from '../dto/create-polls.dto';
 // import { Election } from '../../../../../election/election.entity';
 
 export enum ResultStatus {
@@ -68,8 +69,8 @@ export class PollsEntity {
     @ManyToOne(() => Election, (election) => election.electionResults)
     election: Election;
 
-    @Column({ type: String, nullable: false, default: ResultStatus.PENDING })
-    status: ResultStatus;
+    @Column({ type: String, nullable: false, default: PollsStatus.PENDING })
+    status: PollsStatus;
 
     @Column({ name: 'tenant_id', type: String, nullable: false })
     tenantId: string;

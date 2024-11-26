@@ -46,6 +46,10 @@ export class CreatePollsDto {
 
     @ApiProperty()
     @IsNotEmpty()
+    tenantId: string;
+
+    @ApiProperty()
+    @IsNotEmpty()
     locationId: string;
 
     @ApiProperty({ type: 'string', format: 'binary', required: true })

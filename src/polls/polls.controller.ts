@@ -5,6 +5,7 @@ import { CreatePollsDto } from './dto/create-polls.dto';
 import { PollsEntity } from './entities/polls.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UpdatePollsDto } from './dto/update-polls.dto';
+import { PollsStatusDto } from './dto/polls-status.dto';
 
 @ApiTags('polls')
 @Controller('polls')
@@ -58,8 +59,11 @@ export class PollsController {
     }
 
     @Patch('/status/:result_id')
-    async updatePollStatus( @Param('result_id') id : string): Promise<any> {
-        return this.pollsService.updatePollStatus(id);
+    async updatePollStatus( 
+        @Param('result_id') id : string,
+        @Body() updatePollsDto: PollsStatusDto,
+    ): Promise<any> {
+        return this.pollsService.updatePollStatus(id, updatePollsDto);
     }
 
     @Get('/vote_count/:election_id')
