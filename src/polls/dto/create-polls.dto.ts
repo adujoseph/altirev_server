@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOctal, IsOptional } from 'class-validator';
 
 export enum PollsStatus {
     PROCESSING = 'processing',
@@ -51,6 +51,10 @@ export class CreatePollsDto {
     @ApiProperty()
     @IsNotEmpty()
     locationId: string;
+
+    // @ApiProperty({nullable: true})
+    // @IsOptional()
+    // location: {};
 
     @ApiProperty({ type: 'string', format: 'binary', required: true })
     file: Express.Multer.File;

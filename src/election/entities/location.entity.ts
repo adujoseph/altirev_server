@@ -13,6 +13,7 @@ import { WardEntity } from '../../results/infrastructure/persistence/relational/
 import { LgaEntity } from '../../results/infrastructure/persistence/relational/entities/lga.entity';
 import { StateEntity } from '../../results/infrastructure/persistence/relational/entities/state.entity';
 import { ResultsEntity } from '../../results/infrastructure/persistence/relational/entities/results.entity';
+import { PollsEntity } from '../../polls/entities/polls.entity';
 
 @Entity('locations')
 export class LocationEntity {
@@ -53,6 +54,9 @@ export class LocationEntity {
 
     @OneToMany(() => ResultsEntity, (result) => result.location)
     electionResults: ResultsEntity;
+
+    @OneToMany(() => PollsEntity, (polls) => polls.location)
+    pollResults: PollsEntity;
 
     @CreateDateColumn()
     createdAt: Date;

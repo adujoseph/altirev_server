@@ -39,7 +39,7 @@ export class PollsEntity {
     @IsNotEmpty()
     @Column({ name: 'voteCasted', type: Number, nullable: false })
     voteCasted: number;
-
+    
     @IsNotEmpty()
     @Column({ name: 'invalidVotes', type: Number, nullable: false })
     invalidVotes: number;
@@ -63,10 +63,10 @@ export class PollsEntity {
     @Column({ name: 'locationId', type: String, nullable: false })
     locationId: string;
 
-    @ManyToOne(() => LocationEntity, (location) => location.electionResults)
+    @ManyToOne(() => LocationEntity, (location) => location.pollResults)
     location: LocationEntity;
 
-    @ManyToOne(() => Election, (election) => election.electionResults)
+    @ManyToOne(() => Election, (election) => election.pollResults)
     election: Election;
 
     @Column({ type: String, nullable: false, default: PollsStatus.PENDING })

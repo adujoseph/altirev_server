@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreatePollsDto, PollsStatus } from './dto/create-polls.dto';
@@ -6,6 +6,7 @@ import { PollsEntity } from './entities/polls.entity';
 import { S3Service } from '../reports/s3.service';
 import { UpdatePollsDto } from './dto/update-polls.dto';
 import { PollsStatusDto } from './dto/polls-status.dto';
+import { ElectionService } from '../election/election.service';
 
 @Injectable()
 export class PollsService {
@@ -13,12 +14,14 @@ export class PollsService {
         @InjectRepository(PollsEntity)
         private readonly pollsRepository: Repository<PollsEntity>,
         private s3Service: S3Service,
+        @Inject(forwardRef(() => ElectionService))
+        private electionService: ElectionService,
     ) {}
 
     async postResults(
         createPollsDto: CreatePollsDto,
         file: Express.Multer.File,
-    ): Promise<PollsEntity> {
+    ): Promise<PollsEntity| any> {
         if (!file) {
             throw new BadRequestException('Upload a file for evidence');
         }
@@ -27,14 +30,50 @@ export class PollsService {
             file.buffer,
             'File',
         );
+       
+       const locationInfo = await this.electionService.getLocationByUser(createPollsDto.userAltirevId)
 
+       if(!locationInfo){
+        throw new BadRequestException('No location for this user');
+       }
 
-
-        return await this.pollsRepository.save({ ...createPollsDto, fileUrl });
+        let result = new PollsEntity();
+        result.accreditedVoters = createPollsDto.accreditedVoters;
+        result.status = PollsStatus.PROCESSING;
+        result.electionId = createPollsDto.electionId;
+        result.userAltirevId = createPollsDto.userAltirevId;
+        result.voteCasted = createPollsDto.voteCasted;
+        result.counts = createPollsDto.counts;
+        result.fileUrl = fileUrl;
+        result.location = locationInfo;
+        result.tenantId = createPollsDto.tenantId;
+        result.locationId = createPollsDto.locationId;
+        result.invalidVotes = createPollsDto.invalidVotes;
+        return await this.pollsRepository.save(result);
     }
 
     async getResults(): Promise<PollsEntity[] | any[]> {
-        return await this.pollsRepository.find({});
+        const electionResults = await this.pollsRepository.find({});
+        const sortedResults = electionResults.map(async (election) => {
+            if (!election?.userAltirevId) {
+                return { ...election, electionLocation: null };
+            } else {
+                const userLocation =
+                    await this.electionService.getLocationByUser(
+                        election?.userAltirevId,
+                    );
+
+                const electionName = await this.electionService.findOne(
+                    election.electionId,
+                );
+                return {
+                    ...election,
+                    electionLocation: userLocation,
+                    electionName,
+                };
+            }
+        });
+        return sortedResults;
     }
 
     async getSingleResult(id: string): Promise<PollsEntity | any> {
@@ -102,6 +141,40 @@ export class PollsService {
             select: ['counts'],
         });
 
+        const totalVotes = await this.pollsRepository.find({
+            where:{electionId: id},
+            select: ['voteCasted'],
+        });
+
+        const totalVotesCasted = totalVotes.reduce(
+            (sum, poll) => sum + poll.voteCasted,
+            0,
+          );
+
+  
+
+        const invalidVotes = await this.pollsRepository.find({
+            where:{electionId: id},
+            select: ['invalidVotes'],
+        });
+
+        const totalInvalidVotes = invalidVotes.reduce(
+            (sum, poll) => sum + poll.invalidVotes,
+            0,
+          );
+
+
+        const accreditedVoters = await this.pollsRepository.find({
+            where:{electionId: id},
+            select: ['accreditedVoters'],
+        });
+
+        const totalAccreditedVoters = accreditedVoters.reduce(
+            (sum, poll) => sum + poll.accreditedVoters,
+            0,
+          );
+      
+
         if(!results){
             throw new BadRequestException('invalid id')
         }
@@ -128,6 +201,6 @@ export class PollsService {
             }),
         );
 
-        return resultArray;
+        return {resultArray, totalAccreditedVoters, totalVotesCasted, totalInvalidVotes };
     }
 }

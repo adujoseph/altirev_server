@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from '../../users/persistence/entities/user.entity';
 import { ResultsEntity } from '../../results/infrastructure/persistence/relational/entities/results.entity';
+import { PollsEntity } from '../../polls/entities/polls.entity';
 
 export enum ElectionStatus {
     PREVIOUS = 'previous',
@@ -44,6 +45,9 @@ export class Election {
 
     @OneToMany(() => ResultsEntity, (result) => result.election)
     electionResults: ResultsEntity[];
+
+    @OneToMany(() => PollsEntity, (result) => result.election)
+    pollResults: PollsEntity[];
 
     @ManyToOne(() => UserEntity, (user) => user.id)
     createdBy: UserEntity;
