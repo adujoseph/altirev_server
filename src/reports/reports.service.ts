@@ -91,7 +91,14 @@ export class ReportsService {
     }
 
     async findReportTenant(id: string): Promise<ReportEntity[]> {
-        return this.reportsRepository.find({ where: { tenantId: id } });
+        const reports = await this.reportsRepository.find({
+            where: { tenantId: id },
+        });
+        // reports.map((report) => {
+        //     console.log(report.userId);
+        // });
+
+        return reports;
     }
 
     async suspend(suspendUserDto) {
