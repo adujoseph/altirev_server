@@ -101,7 +101,31 @@ export class PollsService {
         const polls = await this.pollsRepository.find({
             where: { tenantId: id },
         });
-        return polls;
+
+
+        const sortedPolls = polls.map(async (election) => {
+            if (!election?.userAltirevId) {
+                return { ...election, electionLocation: null };
+            } else {
+                const userLocation =
+                    await this.electionService.getLocationByUser(
+                        election?.userAltirevId,
+                    );
+
+                const electionName = await this.electionService.findOne(
+                    election.electionId,
+                );
+                return {
+                    ...election,
+                    electionLocation: userLocation,
+                    electionName,
+                };
+            }
+        });
+
+
+
+        return sortedPolls;
     }
 
     async getResultsByAgentId(id: string): Promise<PollsEntity[] | any[]> {

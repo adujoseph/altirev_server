@@ -30,6 +30,14 @@ export class CreateReportDto {
 
     @ApiProperty()
     @IsString()
+    state: string;
+
+    @ApiProperty()
+    @IsString()
+    lga: string;
+
+    @ApiProperty()
+    @IsString()
     message: string;
 
     @ApiProperty()
