@@ -49,16 +49,18 @@ export class ReportsController {
         @Body() createReportsDto: CreateReportDto,
         @UploadedFile() file: Express.Multer.File,
     ) {
-        if (!file) {
-            throw new BadRequestException('Upload a file for evidence');
+        if (file) {
+            const fileUrl = await this.s3Service.uploadFile(
+                file,
+                file.buffer,
+                'File',
+            );
+            createReportsDto.fileUrl = fileUrl;
+        } else {
+            createReportsDto.fileUrl = '';
         }
 
-        const fileUrl = await this.s3Service.uploadFile(
-            file,
-            file.buffer,
-            'File',
-        );
-        createReportsDto.fileUrl = fileUrl;
+     
         return this.reportsService.create(createReportsDto);
     }
 
