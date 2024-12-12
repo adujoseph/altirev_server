@@ -16,7 +16,7 @@ export class ReportEntity {
     @Column()
     tenantId: string;
 
-    @Column()
+    @Column({ nullable: true, default: '' })
     title: string;
 
     @Column()
@@ -34,6 +34,13 @@ export class ReportEntity {
     @Column()
     pollingUnit: string;
 
+    
+    @Column()
+    state: string;
+
+    @Column()
+    lga: string;
+
     @Column()
     message: string;
 
@@ -43,16 +50,16 @@ export class ReportEntity {
     @Column({ default: ReportStatus.Pending })
     status: ReportStatus;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, default: '' })
     fileUrl: string;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, default: ''  })
     videoUrl: string;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, default: ''  })
     audioUrl: string;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, default: ''  })
     imageUrl: string;
 
     @CreateDateColumn()
