@@ -204,9 +204,9 @@ export class PollsService {
         }
 
 
-        if (results.length === 1) {
-            return results;
-        }
+        // if (results.length === 1) {
+        //     return results;
+        // }
 
         const partyVoteCounts = {};
 
