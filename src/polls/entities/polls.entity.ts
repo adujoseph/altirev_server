@@ -75,6 +75,12 @@ export class PollsEntity {
     @Column({ name: 'tenant_id', type: String, nullable: false })
     tenantId: string;
 
+    @Column({ nullable: true, default: '' })
+    reasons: string;
+
+    @Column({ nullable: true })
+    modifiedBy: string;
+    
     @CreateDateColumn()
     createdAt: Date;
 

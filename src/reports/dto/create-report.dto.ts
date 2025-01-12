@@ -3,6 +3,7 @@ import { IsString, IsOptional, IsEnum, IsBoolean } from 'class-validator';
 
 export enum ReportStatus {
     Pending = 'pending',
+    processing = 'processing',
     Approved = 'approved',
     Rejected = 'rejected',
     Escalated = 'escalated',

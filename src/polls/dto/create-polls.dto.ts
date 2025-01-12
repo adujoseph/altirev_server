@@ -4,9 +4,11 @@ import { IsNotEmpty, IsOctal, IsOptional } from 'class-validator';
 export enum PollsStatus {
     PROCESSING = 'processing',
     PENDING = 'pending',
-    COMPLETED = 'completed',
+    COMPLETED = 'approved',
     REJECTED = 'rejected',
+    VERIFIED = 'verified',
 }
+
 
 export class CreatePollsDto {
     @ApiProperty({
