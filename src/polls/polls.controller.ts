@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Patch,
+    Post,
+    UploadedFile,
+    UseInterceptors,
+} from '@nestjs/common';
 import { ApiConsumes, ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
 import { PollsService } from './polls.service';
 import { CreatePollsDto } from './dto/create-polls.dto';
@@ -6,6 +16,7 @@ import { PollsEntity } from './entities/polls.entity';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UpdatePollsDto } from './dto/update-polls.dto';
 import { PollsStatusDto } from './dto/polls-status.dto';
+import { ChangePollsStatusDto } from './dto/change-polls-status.dto';
 
 @ApiTags('polls')
 @Controller('polls')
@@ -27,47 +38,60 @@ export class PollsController {
         return this.pollsService.getResults();
     }
 
-
     @Get('/:result_id')
     async getSingleResult(
-        @Param('result_id') id : string
+        @Param('result_id') id: string,
     ): Promise<PollsEntity> {
         return this.pollsService.getSingleResult(id);
     }
 
     @Patch('/:result_id')
     async updateSingleResult(
-        @Param('result_id') id : string,
-        @Body() updatePollsDto :UpdatePollsDto
+        @Param('result_id') id: string,
+        @Body() updatePollsDto: UpdatePollsDto,
     ): Promise<PollsEntity> {
         return this.pollsService.updateSingleResult(id, updatePollsDto);
     }
 
     @Delete('/:result_id')
-    async deleteSingleResult(@Param('result_id') id : string): Promise<PollsEntity> {
+    async deleteSingleResult(
+        @Param('result_id') id: string,
+    ): Promise<PollsEntity> {
         return this.pollsService.deleteSingleResult(id);
     }
 
     @Get('/tenant/:tenant_id')
-    async getResultsByTenanatId(@Param('tenant_id') id : string): Promise<PollsEntity[]> {
+    async getResultsByTenanatId(
+        @Param('tenant_id') id: string,
+    ): Promise<PollsEntity[]> {
         return this.pollsService.getResultsByTenanatId(id);
     }
 
     @Get('/agent/:agent_id')
-    async getResultsByAgentId(@Param('agent_id') id : string): Promise<PollsEntity[]> {
+    async getResultsByAgentId(
+        @Param('agent_id') id: string,
+    ): Promise<PollsEntity[]> {
         return this.pollsService.getResultsByAgentId(id);
     }
 
     @Patch('/status/:result_id')
-    async updatePollStatus( 
-        @Param('result_id') id : string,
+    async updatePollStatus(
+        @Param('result_id') id: string,
         @Body() updatePollsDto: PollsStatusDto,
     ): Promise<any> {
         return this.pollsService.updatePollStatus(id, updatePollsDto);
     }
 
     @Get('/vote_count/:election_id')
-    async voteCount(@Param('election_id') id : string): Promise<any> {
+    async voteCount(@Param('election_id') id: string): Promise<any> {
         return this.pollsService.voteCount(id);
+    }
+
+    @Patch('change-status/:id')
+    async changeReport(
+        @Param('id') id: string,
+        @Body() changePollsStatusDto: ChangePollsStatusDto,
+    ) {
+        return this.pollsService.changeStatus(id, changePollsStatusDto);
     }
 }

@@ -7,6 +7,7 @@ import { S3Service } from '../reports/s3.service';
 import { UpdatePollsDto } from './dto/update-polls.dto';
 import { PollsStatusDto } from './dto/polls-status.dto';
 import { ElectionService } from '../election/election.service';
+import { ChangePollsStatusDto } from './dto/change-polls-status.dto';
 
 @Injectable()
 export class PollsService {
@@ -203,11 +204,6 @@ export class PollsService {
             throw new BadRequestException('invalid id')
         }
 
-
-        // if (results.length === 1) {
-        //     return results;
-        // }
-
         const partyVoteCounts = {};
 
         results.forEach((result) => {
@@ -227,4 +223,19 @@ export class PollsService {
 
         return {resultArray, totalAccreditedVoters, totalVotesCasted, totalInvalidVotes };
     }
+
+        async changeStatus(id: string, statusDto: ChangePollsStatusDto) {
+            if (!id) {
+                throw new BadRequestException('Id not found');
+            }
+            let polls = await this.pollsRepository.findOneBy({ id });
+            if (!polls) {
+                throw new BadRequestException('Report does not exist');
+            }
+            polls.reasons = statusDto.reasons;
+            polls.status = statusDto.status;
+            polls.modifiedBy = statusDto.modifiedBy;
+    
+            return await this.pollsRepository.save(polls);
+        }
 }
