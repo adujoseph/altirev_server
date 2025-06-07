@@ -80,7 +80,10 @@ export class PollsEntity {
 
     @Column({ nullable: true })
     modifiedBy: string;
-    
+
+    @Column({ nullable: true, default: false })
+    verified: boolean
+
     @CreateDateColumn()
     createdAt: Date;
 

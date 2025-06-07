@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOctal, IsOptional } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOctal, IsOptional } from 'class-validator';
 
 export enum PollsStatus {
     PROCESSING = 'processing',
@@ -49,6 +49,10 @@ export class CreatePollsDto {
     @ApiProperty()
     @IsNotEmpty()
     tenantId: string;
+
+    @ApiProperty()
+    @IsBoolean()
+    verified: boolean
 
     @ApiProperty()
     @IsNotEmpty()
