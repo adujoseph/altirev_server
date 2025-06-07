@@ -23,24 +23,25 @@ import { ReportsModule } from './reports/reports.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { PlansModule } from './plans/plans.module';
 import { TagsModule } from './tags/tags.module';
+import { TenantsModule } from './tenants/tenants.module';
+import { PollsModule } from './polls/polls.module';
 // import { ElectionResultsModule } from './election-results/election-results.module';
 
 import { AppDataSource } from './data-source';
 import { DataSource } from 'typeorm';
 
-AppDataSource.initialize()
-    .then((dataSource) => {
-        console.log('Data Source has been initialized!');
-        console.log(
-            'Loaded Entities:',
-            dataSource.entityMetadatas.map((e) => e.name),
-        );
-    })
-    .catch((err) => {
-        console.error('Error during Data Source initialization:', err);
-    });
-import { TenantsModule } from './tenants/tenants.module';
-import { PollsModule } from './polls/polls.module';
+// AppDataSource.initialize()
+//     .then((dataSource) => {
+//         console.log('Data Source has been initialized!');
+//         console.log(
+//             'Loaded Entities:',
+//             dataSource.entityMetadatas.map((e) => e.name),
+//         );
+//     })
+//     .catch((err) => {
+//         console.error('Error during Data Source initialization:', err);
+//     });
+
 
 // const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
 //   useClass: TypeOrmConfigService,
@@ -48,6 +49,8 @@ import { PollsModule } from './polls/polls.module';
 //     return new DataSource(options).initialize();
 //   },
 // });
+
+console.log(process.env)
 
 @Module({
     imports: [
@@ -70,7 +73,7 @@ import { PollsModule } from './polls/polls.module';
             password: process.env.DATABASE_PASSWORD,
             database: process.env.DATABASE_NAME,
             entities: [__dirname + '/**/*.entity{.ts,.js}'],
-            synchronize: false,
+            synchronize: true,
             autoLoadEntities: true,
             logging: true
         }),
