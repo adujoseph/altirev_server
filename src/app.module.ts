@@ -29,6 +29,7 @@ import { PollsModule } from './polls/polls.module';
 
 import { AppDataSource } from './data-source';
 import { DataSource } from 'typeorm';
+import { HealthController } from './health/health.controller';
 
 // AppDataSource.initialize()
 //     .then((dataSource) => {
@@ -49,8 +50,6 @@ import { DataSource } from 'typeorm';
 //     return new DataSource(options).initialize();
 //   },
 // });
-
-console.log(process.env)
 
 @Module({
     imports: [
@@ -96,5 +95,6 @@ console.log(process.env)
         TenantsModule,
         PollsModule,
     ],
+    controllers: [HealthController],
 })
 export class AppModule {}
