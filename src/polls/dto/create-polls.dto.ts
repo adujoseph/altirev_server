@@ -50,9 +50,10 @@ export class CreatePollsDto {
     @IsNotEmpty()
     tenantId: string;
 
-    @ApiProperty()
-    @IsBoolean()
-    verified: boolean
+    // @ApiProperty()
+    // @IsBoolean()
+    // @IsOptional()
+    // verified?: boolean
 
     @ApiProperty()
     @IsNotEmpty()
