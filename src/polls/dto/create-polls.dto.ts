@@ -50,22 +50,26 @@ export class CreatePollsDto {
     @IsNotEmpty()
     tenantId: string;
 
-    // @ApiProperty()
-    // @IsBoolean()
-    // @IsOptional()
-    // verified?: boolean
-
+ 
     @ApiProperty()
     @IsNotEmpty()
     locationId: string;
+
+
+    @ApiProperty({ type: 'string', format: 'binary', required: true })
+    file: Express.Multer.File;
+
+}
+
+
+    // @ApiProperty({ enum: () => ResultStatus })
+    // status: ResultStatus;
 
     // @ApiProperty({nullable: true})
     // @IsOptional()
     // location: {};
 
-    @ApiProperty({ type: 'string', format: 'binary', required: true })
-    file: Express.Multer.File;
-
-    // @ApiProperty({ enum: () => ResultStatus })
-    // status: ResultStatus;
-}
+    // @ApiProperty()
+    // @IsBoolean()
+    // @IsOptional()
+    // verified?: boolean
