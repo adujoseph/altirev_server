@@ -13,16 +13,16 @@ import { UserEntity } from '../../users/persistence/entities/user.entity';
 export class Tenant extends EntityRelationalHelper {
 
     @PrimaryGeneratedColumn('uuid')
-    private id: string;
+    public id: string;
 
     @Column()
-    private name: string;
+    public name: string;
 
     @Column()
-    private moderator: string;
+    public moderator: string;
 
     @Column()
-    private userCount: number;
+    public userCount: number;
 
     @OneToOne(() => UserEntity, (user) => user.id)
     createdBy: UserEntity;

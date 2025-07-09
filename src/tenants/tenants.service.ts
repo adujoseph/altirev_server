@@ -4,6 +4,7 @@ import { UpdateTenantDto } from './dto/update-tenant.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Tenant } from './entities/tenant.entity';
 import { Repository } from 'typeorm';
+import { TenantMapper } from './persistence/mappers/tenant.mappers';
 
 @Injectable()
 export class TenantsService {
@@ -13,22 +14,29 @@ export class TenantsService {
     ) {}
 
     async create(createTenantDto: CreateTenantDto) {
-        return 'This action adds a new tenant';
+        const tenant = await this.tenantRepository.findOne({
+            where: { moderator: createTenantDto.moderatorEmail }
+        });
+        if (tenant) {
+            throw new Error('Tenant already exists');
+        }
+
+        return await this.tenantRepository.save(TenantMapper.toPersistence(createTenantDto));
     }
 
     async findAll() {
         return await this.tenantRepository.find();
     }
 
-    findOne(id: string) {
-        return `This action returns a #${id} tenant`;
-    }
+    // findOne(id: string) {
+    //     return this.tenantRepository.findOne({ where: { id } });
+    // }
 
     update(id: number, updateTenantDto: UpdateTenantDto) {
-        return `This action updates a #${id} tenant`;
+        return this.tenantRepository.update(id, updateTenantDto);
     }
 
     remove(id: number) {
-        return `This action removes a #${id} tenant`;
+        return this.tenantRepository.delete(id);
     }
 }

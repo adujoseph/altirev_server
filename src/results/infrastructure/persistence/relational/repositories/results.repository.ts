@@ -82,9 +82,6 @@ export class ResultsRelationalRepository implements ResultsRepository {
         return entity ? ResultsMapper.toDomain(entity) : null;
     }
 
-
-
-
     async findByElection(
         electionId: Results['election']['id'],
     ): Promise<Results> {
@@ -262,4 +259,5 @@ export class ResultsRelationalRepository implements ResultsRepository {
             throw error;
         }
     }
+    
 }

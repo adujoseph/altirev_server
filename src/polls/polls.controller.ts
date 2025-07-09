@@ -6,10 +6,11 @@ import {
     Param,
     Patch,
     Post,
+    Query,
     UploadedFile,
     UseInterceptors,
 } from '@nestjs/common';
-import { ApiConsumes, ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiConsumes, ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { PollsService } from './polls.service';
 import { CreatePollsDto } from './dto/create-polls.dto';
 import { PollsEntity } from './entities/polls.entity';
@@ -21,7 +22,7 @@ import { ChangePollsStatusDto } from './dto/change-polls-status.dto';
 @ApiTags('polls')
 @Controller('polls')
 export class PollsController {
-    constructor(private readonly pollsService: PollsService) {}
+    constructor(private readonly pollsService: PollsService) { }
 
     @Post('submit-result')
     @ApiConsumes('multipart/form-data')
@@ -94,4 +95,49 @@ export class PollsController {
     ) {
         return this.pollsService.changeStatus(id, changePollsStatusDto);
     }
+
+    // @Get('/filter/:electionId')
+    // @ApiQuery({ name: 'stateId', required: false, type: 'String' })
+    // @ApiQuery({ name: 'lgaId', required: false, type: 'String' })
+    // @ApiQuery({ name: 'wardId', required: false, type: 'String' })
+    // @ApiQuery({ name: 'pollingUnitId', required: false, type: 'String' })
+    // async findByLocation(
+    //     @Param('electionId') electionId: string,
+    //     @Query('stateId') stateId?: string,
+    //     @Query('lgaId') lgaId?: string,
+    //     @Query('wardId') wardId?: string,
+    //     @Query('pollingUnitId') pollingUnitId?: string,
+    // ) {
+    //     return this.pollsService.findResultsByLocation({
+    //         electionId,
+    //         stateId,
+    //         lgaId,
+    //         wardId,
+    //         pollingUnitId,
+    //     });
+    // }
+
+    // @Get('/vote/counts')
+    // async getVoteCountsByLocation(
+    //     @Query('electionId') electionId?: string,
+    //     @Query('stateId') stateId?: string,
+    //     @Query('lgaId') lgaId?: string,
+    //     @Query('wardId') wardId?: string,
+    //     @Query('pollingUnitId') pollingUnitId?: string,
+    // ) {
+    //     const finalCounts = await this.pollsService.getVoteCountsByLocation({
+    //         electionId,
+    //         stateId,
+    //         lgaId,
+    //         wardId,
+    //         pollingUnitId,
+    //     });
+    //     const baba = new ApiResponse();
+    //     baba.status = ApiResponseType.SUCCESS;
+    //     baba.message = 'Vote counts retrieved successfully';
+    //     baba.data = finalCounts;
+
+    //     return baba;
+
+    // }
 }

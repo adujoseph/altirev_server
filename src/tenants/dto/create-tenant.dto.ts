@@ -2,11 +2,11 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateTenantDto {
     @IsNotEmpty()
-    private name: string;
+    public name: string;
 
     @IsNotEmpty()
-    private moderatorEmail: string;
+    public moderatorEmail: string;
 
     @IsNotEmpty()
-    private userCount: string;
+    public userCount: number;
 }
