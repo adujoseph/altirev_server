@@ -27,10 +27,10 @@ export class TenantsController {
         return this.tenantsService.findAll();
     }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.tenantsService.findOne(id);
-    }
+    // @Get(':id')
+    // findOne(@Param('id') id: string) {
+    //     return this.tenantsService.findOne(id);
+    // }
 
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateTenantDto: UpdateTenantDto) {

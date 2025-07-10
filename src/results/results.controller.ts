@@ -230,7 +230,7 @@ export class ResultsController {
         description: 'Get results filtered by location for a specific election',
     })
     // @ApiBearerAuth()
-    // @ApiOperation({ summary: 'Get Products by search ' })
+    // @ApiOperation({ summary: 'Get results filtered by location for a specific election ' })
     @ApiQuery({ name: 'stateId', required: false, type: 'String' })
     @ApiQuery({ name: 'lgaId', required: false, type: 'String' })
     @ApiQuery({ name: 'wardId', required: false, type: 'String' })
@@ -251,8 +251,7 @@ export class ResultsController {
         });
     }
 
-    @Get('/vote/counts')
-    @ApiQuery({ name: 'electionId', required: true })
+    @Get('/counts/:electionId')
     @ApiQuery({ name: 'stateId', required: false })
     @ApiQuery({ name: 'lgaId', required: false })
     @ApiQuery({ name: 'wardId', required: false })
@@ -261,7 +260,7 @@ export class ResultsController {
         description: 'Get aggregated vote counts by location',
     })
     async getVoteCountsByLocation(
-        @Query('electionId') electionId?: string,
+        @Param('electionId') electionId: string,
         @Query('stateId') stateId?: string,
         @Query('lgaId') lgaId?: string,
         @Query('wardId') wardId?: string,

@@ -56,7 +56,7 @@ export class ResultsService {
         private tagService: TagsService,
         @InjectRepository(ResultsEntity)
         private electionResultRepository: Repository<ResultsEntity>,
-    ) {}
+    ) { }
 
     async postResult(
         createResultsDto: CreateResultsDto,
@@ -206,7 +206,7 @@ export class ResultsService {
             );
         }
 
-            // Check if user has already submitted results for this location
+        // Check if user has already submitted results for this location
         const existingResult = await this.resultsRepository.findByAgentAndElectionAndLocation(
             createResultsDto.userAltirevId,
             createResultsDto.electionId,
@@ -249,7 +249,7 @@ export class ResultsService {
         );
     }
 
-    findAllWithPagination({
+    async findAllWithPagination({
         paginationOptions,
     }: {
         paginationOptions: IPaginationOptions;
@@ -262,15 +262,15 @@ export class ResultsService {
         });
     }
 
-    findOne(id: Results['id']) {
+    async findOne(id: Results['id']) {
         return this.resultsRepository.findById(id);
     }
 
-    update(id: Results['id'], updateResultsDto: UpdateResultsDto) {
+    async update(id: Results['id'], updateResultsDto: UpdateResultsDto) {
         return this.resultsRepository.update(id, updateResultsDto);
     }
 
-    remove(id: Results['id']) {
+    async remove(id: Results['id']) {
         return this.resultsRepository.remove(id);
     }
 
@@ -330,6 +330,7 @@ export class ResultsService {
     async getAllWards(lgaId: string): Promise<WardEntity[]> {
         return this.wardRepository.find({ where: { lgaId: lgaId } });
     }
+
     async getWard(wardId: string) {
         return this.wardRepository.findOneOrFail({ where: { id: wardId } });
     }
@@ -424,18 +425,32 @@ export class ResultsService {
         lgaId?: string;
         wardId?: string;
         pollingUnitId?: string;
-    }): Promise<{ [key: string]: number }> {
+    }): Promise<any> {
+
+        let totalAccreditedVoters = 0;
+        let totalVotesCasted = 0;
+        let totalInvalidVotes = 0;
+
         const results = await this.resultsRepository.findByLocation(filter);
-        const voteCounts: { [key: string]: number } = {};
 
-        results.forEach(result => {
-            if (result.counts) {
-                Object.entries(result.counts).forEach(([key, value]) => {
-                    voteCounts[key] = (voteCounts[key] || 0) + Number(value);
-                });
-            }
-        });
+        const election = results.reduce((acc, curr) => {
+            totalAccreditedVoters += curr.accreditedVoters
+            totalVotesCasted += curr.voteCasted
+            totalInvalidVotes += (totalAccreditedVoters - totalVotesCasted)
 
-        return voteCounts;
+            const data = JSON.parse('' + curr.counts);
+            Object.entries(data).forEach(([key, value]) => {
+                acc[key] = (acc[key] || 0) + value;
+            });
+            return acc;
+        }, {});
+
+        const resultArray = Object.entries(election).map(
+            ([partyName, partyVote]) => ({
+                partyName: partyName.toUpperCase(),
+                partyVote: Number(partyVote),
+            }),
+        );
+        return { resultArray, totalAccreditedVoters, totalVotesCasted, totalInvalidVotes };
     }
 }

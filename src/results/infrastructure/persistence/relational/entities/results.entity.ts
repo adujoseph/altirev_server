@@ -10,7 +10,7 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
-import { IsEnum, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty } from 'class-validator';
 import { LocationEntity } from '../../../../../election/entities/location.entity';
 import { Election } from '../../../../../election/entities/election.entity';
 import { Tags } from '../../../../../tags/entities/tag.entity';
