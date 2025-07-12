@@ -13,7 +13,6 @@ import { AuthModule } from './auth/auth.module';
 import { SessionModule } from './session/session.module';
 import { MailerModule } from './mailer/mailer.module';
 import { MailModule } from './mail/mail.module';
-// import { ElectionModule } from './election/election.module';
 import { NotificationModule } from './notification/notification.module';
 import { AdminModule } from './admin/admin.module';
 import { ContactModule } from './contact/contact.module';
@@ -25,31 +24,8 @@ import { PlansModule } from './plans/plans.module';
 import { TagsModule } from './tags/tags.module';
 import { TenantsModule } from './tenants/tenants.module';
 import { PollsModule } from './polls/polls.module';
-// import { ElectionResultsModule } from './election-results/election-results.module';
-
-import { AppDataSource } from './data-source';
-import { DataSource } from 'typeorm';
 import { HealthController } from './health/health.controller';
 
-// AppDataSource.initialize()
-//     .then((dataSource) => {
-//         console.log('Data Source has been initialized!');
-//         console.log(
-//             'Loaded Entities:',
-//             dataSource.entityMetadatas.map((e) => e.name),
-//         );
-//     })
-//     .catch((err) => {
-//         console.error('Error during Data Source initialization:', err);
-//     });
-
-
-// const infrastructureDatabaseModule = TypeOrmModule.forRootAsync({
-//   useClass: TypeOrmConfigService,
-//   dataSourceFactory: async (options: DataSourceOptions) => {
-//     return new DataSource(options).initialize();
-//   },
-// });
 
 @Module({
     imports: [
@@ -91,7 +67,6 @@ import { HealthController } from './health/health.controller';
         ReportsModule,
         PlansModule,
         TagsModule,
-        // ElectionResultsModule,
         TenantsModule,
         PollsModule,
     ],

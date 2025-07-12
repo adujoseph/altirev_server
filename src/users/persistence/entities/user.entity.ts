@@ -73,7 +73,7 @@ export class UserEntity extends EntityRelationalHelper {
     // @Expose({ groups: ['me', 'admin'] })
     email: string;
 
-    @Column({ nullable: true })
+    @Column({ nullable: true, })
     @Exclude({ toPlainOnly: true })
     password?: string;
 
