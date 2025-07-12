@@ -13,7 +13,6 @@ import { AuthModule } from './auth/auth.module';
 import { SessionModule } from './session/session.module';
 import { MailerModule } from './mailer/mailer.module';
 import { MailModule } from './mail/mail.module';
-// import { ElectionModule } from './election/election.module';
 import { NotificationModule } from './notification/notification.module';
 import { AdminModule } from './admin/admin.module';
 import { ContactModule } from './contact/contact.module';
