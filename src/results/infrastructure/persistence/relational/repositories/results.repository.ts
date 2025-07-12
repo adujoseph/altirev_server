@@ -34,7 +34,7 @@ export class ResultsRelationalRepository implements ResultsRepository {
     }: {
         paginationOptions: IPaginationOptions;
     }): Promise<Results[]> {
-        console.log('=== Repository: findAllWithPagination called ===');
+        // console.log('=== Repository: findAllWithPagination called ===');
         const entities = await this.resultsRepository.find({
             skip: (paginationOptions.page - 1) * paginationOptions.limit,
             take: paginationOptions.limit,
@@ -45,7 +45,7 @@ export class ResultsRelationalRepository implements ResultsRepository {
     }
 
     async findById(id: Results['id']): Promise<NullableType<Results>> {
-        console.log('=== Repository: findById called ===');
+       //  console.log('=== Repository: findById called ===');
         const entity = await this.resultsRepository.findOne({
             where: { id },
             relations: ['election', 'location', 'location.state', 'location.lga', 'location.ward', 'location.pollingUnit', 'tags'],
@@ -208,8 +208,8 @@ export class ResultsRelationalRepository implements ResultsRepository {
         wardId?: string;
         pollingUnitId?: string;
     }): Promise<Results[]> {
-        console.log('=== Repository: findByLocation called ===');
-        console.log('Filter:', filter);
+        // console.log('=== Repository: findByLocation called ===');
+        // console.log('Filter:', filter);
 
         const queryBuilder = this.resultsRepository.createQueryBuilder('result')
             .leftJoinAndSelect('result.election', 'election')
@@ -222,40 +222,40 @@ export class ResultsRelationalRepository implements ResultsRepository {
 
         try {
             if (filter.electionId) {
-                console.log('Adding election filter:', filter.electionId);
+              
                 queryBuilder.andWhere('election.id = :electionId', { electionId: filter.electionId });
             }
             if (filter.stateId) {
-                console.log('Adding state filter:', filter.stateId);
+               
                 queryBuilder.andWhere('state.id = :stateId', { stateId: filter.stateId });
             }
             if (filter.lgaId) {
-                console.log('Adding lga filter:', filter.lgaId);
+              
                 queryBuilder.andWhere('lga.id = :lgaId', { lgaId: filter.lgaId });
             }
             if (filter.wardId) {
-                console.log('Adding ward filter:', filter.wardId);
+                
                 queryBuilder.andWhere('ward.id = :wardId', { wardId: filter.wardId });
             }
             if (filter.pollingUnitId) {
-                console.log('Adding polling unit filter:', filter.pollingUnitId);
+                
                 queryBuilder.andWhere('pollingUnit.id = :pollingUnitId', { pollingUnitId: filter.pollingUnitId });
             }
 
             const sql = queryBuilder.getSql();
             const parameters = queryBuilder.getParameters();
 
-            console.log('=== Query Details ===');
-            console.log('SQL:', sql);
-            console.log('Parameters:', parameters);
+            // console.log('=== Query Details ===');
+            // console.log('SQL:', sql);
+            // console.log('Parameters:', parameters);
 
             const entities = await queryBuilder.getMany();
-            console.log('Query executed successfully');
-            console.log('Found entities:', entities.length);
+            // console.log('Query executed successfully');
+            // console.log('Found entities:', entities.length);
 
             return entities.map(result => ResultsMapper.toDomain(result));
         } catch (error) {
-            console.error('Error executing query:', error);
+            // console.error('Error executing query:', error);
             throw error;
         }
     }

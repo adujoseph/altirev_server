@@ -43,7 +43,7 @@ export class S3Service {
             await this.s3.send(command);
             return `https://${this.bucketName}.s3.us-east-1.amazonaws.com/${key}`;
         } catch (err) {
-            console.log(err);
+            // console.log(err);
             throw new BadRequestException('Error uploading');
         }
     }
@@ -57,6 +57,6 @@ export class S3Service {
             },
         };
 
-        console.log(load);
+        //(load);
     }
 }

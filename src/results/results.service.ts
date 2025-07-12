@@ -66,7 +66,7 @@ export class ResultsService {
     }
 
     async doData(): Promise<string> {
-        console.log('Init Seeding .....');
+       // console.log('Init Seeding .....');
 
         const data = fs.readFileSync('src/results/data.json');
         const dataArray = JSON.parse(data.toString());
@@ -77,7 +77,7 @@ export class ResultsService {
 
             const count = await this.countryRepository.find({});
             if (count.length != 0) {
-                console.log('Seed Already done');
+                // console.log('Seed Already done');
                 return 'Seed Already done';
             }
             const savedCountry =
@@ -157,9 +157,9 @@ export class ResultsService {
             await this.lgaRepository.save(arrayLga);
             await this.wardRepository.save(arrayWard);
             await this.pollingRepository.save(arrayPU);
-            console.log('Location Data Seeding Completed');
+            // console.log('Location Data Seeding Completed');
         } catch (error) {
-            console.log(error);
+           // console.log(error);
         }
 
         return 'Seeding Location Data ................';
@@ -278,7 +278,7 @@ export class ResultsService {
         try {
             return await this.resultsRepository.create(result);
         } catch (error) {
-            console.log('Failed to Save Result :: ', error);
+            // console.log('Failed to Save Result :: ', error);
             Helpers.failedHttpResponse(
                 'Failed to Save Result',
                 HttpStatus.BAD_REQUEST,
@@ -407,7 +407,7 @@ export class ResultsService {
                 HttpStatus.BAD_REQUEST,
             );
         }
-        console.log(filter.electionId);
+       // console.log(filter.electionId);
 
         const results = await this.resultsRepository.findByLocation(filter);
         if (!results || results.length === 0) {

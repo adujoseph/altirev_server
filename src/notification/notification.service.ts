@@ -47,8 +47,6 @@ export class NotificationService {
             createNotificationDto.tenantId = user.tenantId;
         }
 
-        console.log({ user });
-
         const newTask = await this.NotificationRepsository.save(
             createNotificationDto,
         );

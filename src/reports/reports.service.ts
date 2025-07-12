@@ -119,7 +119,7 @@ export class ReportsService {
                 status: true,
             };
         } catch (err) {
-            console.log(err);
+           // console.log(err);
             return {
                 message: 'user suspension failed',
                 status: false,

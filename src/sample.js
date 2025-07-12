@@ -3,7 +3,7 @@ function getFirstElement(arr) {
   }
   
   const numbers = [10, 20, 30, 40, 50];
-  console.log(getFirstElement(numbers));  
+  // console.log(getFirstElement(numbers));  
   
 
 
@@ -17,7 +17,7 @@ function getFirstElement(arr) {
   
   // Example usage:
   const numbers2 = [1, 2, 3, 4, 5];
-  console.log(sumArray(numbers)); 
+  // console.log(sumArray(numbers)); 
 
 
   function sumPairs(arr) {
@@ -32,4 +32,4 @@ function getFirstElement(arr) {
   
   // Example usage:
   const numbers3 = [1, 2, 3];
-  console.log(sumPairs(numbers));
+ // console.log(sumPairs(numbers));

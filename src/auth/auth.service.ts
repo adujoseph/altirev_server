@@ -52,7 +52,7 @@ export class AuthService {
     async validateLogin(
         loginDto: AuthEmailLoginDto,
     ): Promise<LoginResponseDto> {
-        console.log('validating pass .... ', loginDto.password);
+        // console.log('validating pass .... ', loginDto.password);
         const user = await this.usersService.findByEmail(loginDto.email);
 
         if (!user) {
@@ -192,7 +192,7 @@ export class AuthService {
         // if (!createdToken) {
         //   throw new UnprocessableEntityException('Unable to save user token');
         // }
-        console.log(dto.email, dto.password);
+        // console.log(dto.email, dto.password);
         return await this.validateLogin({
             email: dto.email,
             password: dto.password,
@@ -673,7 +673,7 @@ export class AuthService {
         //generate token
         const otpToken = this.generateOTP();
 
-        console.log('send TOKEN : ', otpToken);
+       // console.log('send TOKEN : ', otpToken);
 
         //send token by email
         await this.mailService.userSignUpVerifyOTP({
@@ -692,7 +692,7 @@ export class AuthService {
         tokenData.token = otpToken;
         // tokenData.token = bcrypt.encodeBase64(otpToken, 6);
 
-        console.log('send TOKEN : ', tokenData.token);
+       // console.log('send TOKEN : ', tokenData.token);
 
         const createdToken = await this.tokenService.createToken(tokenData);
         if (!createdToken) {
@@ -721,7 +721,7 @@ export class AuthService {
         //generate token
         // const otpToken = bcrypt.decodeBase64(tokenEntity.token, 6);
         const otpToken = tokenEntity.token;
-        console.log('resend TOKEN : ', otpToken);
+        // console.log('resend TOKEN : ', otpToken);
 
         //send token by email
         await this.mailService.userSignUpVerifyOTP({

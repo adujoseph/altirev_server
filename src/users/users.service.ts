@@ -306,7 +306,6 @@ export class UsersService {
             clonedPayload.password &&
             clonedPayload.previousPassword !== clonedPayload.password
         ) {
-            console.log('checking for old password, then update');
             const salt = await bcrypt.genSalt();
             clonedPayload.password = await bcrypt.hash(
                 clonedPayload.password,
@@ -345,7 +344,6 @@ export class UsersService {
         }
 
         if (clonedPayload.role) {
-            console.log('role exists, then update');
             const roleObject = Object.values(RolesEnum)
                 .map(String)
                 .includes(String(clonedPayload.role));
@@ -384,7 +382,6 @@ export class UsersService {
     }
 
     async processBulkUserUpload(file: any, tenantId: string) {
-        console.log(file.mimetype);
         if (file.mimetype !== 'application/vnd.ms-excel') {
             return Helpers.fail('Invalid file type');
         }

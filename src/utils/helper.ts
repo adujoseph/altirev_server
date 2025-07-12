@@ -69,7 +69,6 @@ export class Helpers {
     }
 
     static failure(content: any, message: string): ApiResponse {
-        console.log(content.uuid);
         const data = {
             status: ApiResponseType.FAILED,
             message,
@@ -140,7 +139,6 @@ export class Helpers {
 
     static async generateQR(value: string): Promise<ApiResponse> {
         try {
-            console.log(value);
             return this.success('http://exanple.com/qr.png');
         } catch (err) {
             console.error(err);

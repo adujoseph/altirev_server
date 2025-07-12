@@ -245,7 +245,6 @@ export class PollsService {
         wardId?: string;
         pollingUnitId?: string;
     }) {
-        console.log('Received filter parameters:', JSON.stringify(filter, null, 2));
         
         if (!filter.electionId) {
             throw new BadRequestException('Election ID is required');
@@ -257,24 +256,18 @@ export class PollsService {
             .leftJoinAndSelect('poll.location', 'location')
             .where('poll.electionId = :electionId', { electionId: filter.electionId });
 
-        console.log('Base query:', queryBuilder.getSql());
-        console.log('With parameters:', queryBuilder.getParameters());
-
         // Add location filters if they exist
         if (filter.stateId) {
-            console.log('Adding state filter:', filter.stateId);
+
             queryBuilder.andWhere('location.stateId = :stateId', { stateId: filter.stateId });
         }
         if (filter.lgaId) {
-            console.log('Adding LGA filter:', filter.lgaId);
             queryBuilder.andWhere('location.lgaId = :lgaId', { lgaId: filter.lgaId });
         }
         if (filter.wardId) {
-            console.log('Adding ward filter:', filter.wardId);
             queryBuilder.andWhere('location.wardId = :wardId', { wardId: filter.wardId });
         }
         if (filter.pollingUnitId) {
-            console.log('Adding polling unit filter:', filter.pollingUnitId);
             queryBuilder.andWhere('location.pollingUnitId = :pollingUnitId', { 
                 pollingUnitId: filter.pollingUnitId 
             });
@@ -283,12 +276,10 @@ export class PollsService {
         // Get the final SQL query
         const sql = queryBuilder.getSql();
         const params = queryBuilder.getParameters();
-        console.log('Final SQL Query:', sql);
-        console.log('Query Parameters:', params);
 
         // Execute the query
         const results = await queryBuilder.getMany();
-        console.log('Query executed. Results found:', results.length);
+  
         if (!results || results.length === 0) {
             return Helpers.failedHttpResponse(
                 'No results found for the specified location',

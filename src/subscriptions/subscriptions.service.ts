@@ -115,7 +115,7 @@ export class SubscriptionsService {
 
             return await this.transactionRepository.save(transaction);
         } catch (error) {
-            console.log('Error saving Trx :: ', error);
+           // console.log('Error saving Trx :: ', error);
         }
     }
 }

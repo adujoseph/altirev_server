@@ -13,7 +13,6 @@ export class FilesS3Service {
 
     async create(file: Express.MulterS3.File): Promise<FileResponseDto> {
         if (!file) {
-            console.log('Error in file upload');
             throw new UnprocessableEntityException({
                 status: HttpStatus.UNPROCESSABLE_ENTITY,
                 errors: {
@@ -21,11 +20,8 @@ export class FilesS3Service {
                 },
             });
         }
-        console.log('file entering file service');
-        console.log(file);
 
         const savedFile = await this.fileRepository.create({ path: file.key });
-        console.log('Saved File in File service ::: ', savedFile);
 
         return { file: savedFile };
     }

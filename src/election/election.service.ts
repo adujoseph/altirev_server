@@ -48,7 +48,6 @@ export class ElectionService {
         locationDto: CreateLocationDto,
     ): Promise<User> {
 
-        console.log('locationDto ', locationDto);
         const moderator = await this.userService.findByAltirevId(
             locationDto.modId,
         );
@@ -76,11 +75,6 @@ export class ElectionService {
             const newUser = new User();
             newUser.tenantId = moderator.tenantId;
             newUser.role = locationDto.role;
-            console.log(
-                'checking user before updating ::: ',
-                moderator.tenantId,
-                locationDto.role,
-            );
             const updatedUser = await this.userService.update(user.id, newUser);
             if (!updatedUser) {
                 throw new Error('Unable to update User Role');
@@ -89,7 +83,6 @@ export class ElectionService {
         //lets insert or update the user location
         await this.locationRepository.upsert(locationData, ['user']);
 
-        console.log("locationData :: ", locationData.user);
 
         return await this.userService.findUserById(locationData.user.altirevId);
 
@@ -134,7 +127,7 @@ export class ElectionService {
 
     async findOne(id: string): Promise<Election | null> {
         const election = await this.electionRepository.findOneBy({ id });
-        console.log(election);
+       // console.log(election);
         if (!election) {
             throw new Error('Invalid election selected');
         }
@@ -150,7 +143,7 @@ export class ElectionService {
             election.id,
         );
         if (!result) {
-            console.log('Could not find result for election');
+          //  console.log('Could not find result for election');
         } else {
             // election.electionResults = ResultsMapper.toPersistence(result);
         }
