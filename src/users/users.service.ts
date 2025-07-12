@@ -55,7 +55,7 @@ export class UsersService {
         private pollingRepository: Repository<PollingEntity>,
         @InjectRepository(LocationEntity)
         private locationRepository: Repository<LocationEntity>,
-    ) { }
+    ) {}
 
     async create(
         createProfileDto: CreateUserDto,
@@ -183,9 +183,9 @@ export class UsersService {
     // }
 
     async findUserById(altirevId: User['altirevId']): Promise<User> {
-        const user = await this.UserRepository.findOneBy({ altirevId });
+       const user = await this.UserRepository.findOneBy({altirevId});
 
-        console.log(user);
+       console.log(user);
 
         if (!user) {
             throw new NotFoundException('User not found');
@@ -237,14 +237,10 @@ export class UsersService {
                     relations: ['state', 'lga', 'ward', 'pollingUnit'],
                 });
 
-                if (location == null) {
-                    return user
-                } else {
-                    return {
-                        ...user,
-                        location,
-                    };
-                }
+                return location ? {
+                    ...user,
+                    location, 
+                } : user;
             }),
         );
 

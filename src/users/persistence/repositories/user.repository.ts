@@ -68,6 +68,11 @@ export class UsersRelationalRepository implements UserRepository {
     async findByTenantId(tenantId: string): Promise<NullableType<User[]>> {
         const users = await this.usersRepository.find({
             where: { tenantId: tenantId },
+            select: [
+                'id', 'altirevId', 'tenantId', 'email', 'socialId', 'provider',
+                'firstName', 'lastName', 'phoneNumber', 'role', 'status',
+                'createdAt', 'updatedAt', 'deletedAt', 'country'
+            ]
         });
         const userList = users.map((user) => {
             return UserMapper.toDomain(user);
