@@ -92,18 +92,11 @@ export class ReportsController {
                 watermarkedImage,
                 'Images',
             );
-        } else if (file.mimetype.startsWith('videoss')) {
-            // const watermarkedVideo = await this.watermarkVideo2(file);
-            // fileUrl = await this.s3Service.uploadFile(
-            //     file,
-            //     watermarkedVideo,
-            //     'Video',
-            // );
-        } else {
+        }  else {
             fileUrl = await this.s3Service.uploadFile(
                 file,
                 file.buffer,
-                'Others',
+                'Media',
             );
         }
 
@@ -134,7 +127,7 @@ export class ReportsController {
             .toBuffer();
     }
 
-    private async watermarkVideo2(file: Express.Multer.File): Promise<Buffer> {
+    private async watermarkVideo(file: Express.Multer.File): Promise<Buffer> {
         const tempDir = './temp';
         const inputPath = path.join(tempDir, file.originalname);
         const outputPath = path.join(

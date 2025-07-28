@@ -9,6 +9,7 @@ import { PollsStatusDto } from './dto/polls-status.dto';
 import { ElectionService } from '../election/election.service';
 import { ChangePollsStatusDto } from './dto/change-polls-status.dto';
 import { Helpers } from '../utils/helper';
+import { watermarkImage } from '../utils/watermarkImage';
 
 @Injectable()
 export class PollsService {
@@ -27,9 +28,12 @@ export class PollsService {
         if (!file) {
             throw new BadRequestException('Upload a file for evidence');
         }
+
+        const watermarkedImage = await watermarkImage(file);
+        
         const fileUrl = await this.s3Service.uploadFile(
             file,
-            file.buffer,
+            watermarkedImage,
             'File',
         );
 
