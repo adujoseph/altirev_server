@@ -75,6 +75,7 @@ export class ElectionService {
             const newUser = new User();
             newUser.tenantId = moderator.tenantId;
             newUser.role = locationDto.role;
+            newUser.electionId = locationDto.electionId
             const updatedUser = await this.userService.update(user.id, newUser);
             if (!updatedUser) {
                 throw new Error('Unable to update User Role');

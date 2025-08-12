@@ -143,6 +143,7 @@ export class AuthService {
                 country: dto.country,
                 paymentRef: dto.paymentRef,
                 planId: dto.planId,
+                electionId: dto.electionId
             },
             '',
         );

@@ -57,6 +57,8 @@ export class UserEntity extends EntityRelationalHelper {
     @Column({ type: String, nullable: false })
     altirevId: string;
 
+    @Column({ type: String, nullable: false })
+    electionId: string;
     @ApiProperty({
         type: String,
     })

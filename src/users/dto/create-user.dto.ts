@@ -57,6 +57,10 @@ export class CreateUserDto {
     @IsNotEmpty()
     country: string | null;
 
+    @ApiProperty({ type: String })
+    @IsNotEmpty()
+    electionId: string;
+
     @ApiPropertyOptional({ type: () => String })
     @IsOptional()
     photo?: string | null;

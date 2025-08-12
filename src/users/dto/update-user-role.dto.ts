@@ -34,6 +34,10 @@ export class UpdateUserRoleDto {
     @IsNotEmpty()
     ward: string;
 
+    //    @ApiProperty({ enum: () => Gender })
+    // @IsNotEmpty()
+    // electionId: string;
+
     @ApiProperty({ example: 'Abuja', type: String })
     @IsNotEmpty()
     state: string | null;

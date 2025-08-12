@@ -42,6 +42,10 @@ export class AuthRegisterLoginDto {
     @IsNotEmpty()
     country: string;
 
+    @ApiProperty()
+    @IsNotEmpty()
+    electionId: string;
+
     @ApiProperty({ example: 'xY0kj3343r2' })
     @IsOptional()
     paymentRef: string;

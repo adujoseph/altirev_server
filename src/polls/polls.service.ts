@@ -10,6 +10,9 @@ import { ElectionService } from '../election/election.service';
 import { ChangePollsStatusDto } from './dto/change-polls-status.dto';
 import { Helpers } from '../utils/helper';
 import { watermarkImage } from '../utils/watermarkImage';
+import { PageDto } from '../common/dto/page.dto';
+import { PageMetaDto } from '../common/dto/page-meta.dto';
+import { PollsQueryDto } from './dto/polls-query.dto';
 
 @Injectable()
 export class PollsService {
@@ -293,6 +296,67 @@ export class PollsService {
         return Helpers.success(results);
     }
 
+      async findAllPaginated(
+    pollsQueryDto: PollsQueryDto,
+  ): Promise<PageDto<PollsEntity>> {
+    // 1. Create a query builder
+    const queryBuilder = this.pollsRepository.createQueryBuilder('poll');
+
+    // 2. Add JOINs to fetch related data efficiently
+    // This solves the N+1 problem from your original getResults()
+    queryBuilder
+      .leftJoinAndSelect('poll.location', 'location')
+      .leftJoinAndSelect('poll.election', 'election');
+
+    // 3. Apply Filters based on DTO
+    if (pollsQueryDto.electionId) {
+      queryBuilder.andWhere('poll.electionId = :electionId', {
+        electionId: pollsQueryDto.electionId,
+      });
+    }
+
+    if (pollsQueryDto.tenantId) {
+      queryBuilder.andWhere('poll.tenantId = :tenantId', {
+        tenantId: pollsQueryDto.tenantId,
+      });
+    }
+    
+    if (pollsQueryDto.userAltirevId) {
+      queryBuilder.andWhere('poll.userAltirevId = :userAltirevId', {
+        userAltirevId: pollsQueryDto.userAltirevId,
+      });
+    }
+
+    if (pollsQueryDto.status) {
+      queryBuilder.andWhere('poll.status = :status', {
+        status: pollsQueryDto.status,
+      });
+    }
+    
+    // Add full-text search (searching across related entity fields)
+    if (pollsQueryDto.search) {
+        queryBuilder.andWhere(
+          '(location.name ILIKE :search OR election.name ILIKE :search)',
+          { search: `%${pollsQueryDto.search}%` },
+        );
+        // NOTE: This assumes 'location' has a 'name' field and 'election' has a 'name' field.
+        // Adjust these field names to match your actual LocationEntity and ElectionEntity.
+    }
+
+    // 4. Apply Sorting
+    queryBuilder.orderBy('poll.createdAt', pollsQueryDto.order); // Default sort by createdAt
+
+    // 5. Apply Pagination
+    queryBuilder.skip(pollsQueryDto.skip).take(pollsQueryDto.limit);
+
+    // 6. Execute Query
+    const [entities, itemCount] = await queryBuilder.getManyAndCount();
+
+    // 7. Create Metadata and Response DTO
+    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto: pollsQueryDto });
+
+    return new PageDto(entities, pageMetaDto);
+  }
     // async getVoteCountsByLocation(filter: {
     //     electionId?: string;
     //     stateId?: string;

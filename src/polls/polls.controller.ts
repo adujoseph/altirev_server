@@ -9,8 +9,15 @@ import {
     Query,
     UploadedFile,
     UseInterceptors,
+    ValidationPipe,
 } from '@nestjs/common';
-import { ApiConsumes, ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+    ApiConsumes,
+    ApiOkResponse,
+    ApiParam,
+    ApiQuery,
+    ApiTags,
+} from '@nestjs/swagger';
 import { PollsService } from './polls.service';
 import { CreatePollsDto } from './dto/create-polls.dto';
 import { PollsEntity } from './entities/polls.entity';
@@ -18,11 +25,13 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { UpdatePollsDto } from './dto/update-polls.dto';
 import { PollsStatusDto } from './dto/polls-status.dto';
 import { ChangePollsStatusDto } from './dto/change-polls-status.dto';
+import { PollsQueryDto } from './dto/polls-query.dto';
+import { PageDto } from '../common/dto/page.dto';
 
 @ApiTags('polls')
 @Controller('polls')
 export class PollsController {
-    constructor(private readonly pollsService: PollsService) { }
+    constructor(private readonly pollsService: PollsService) {}
 
     @Post('submit-result')
     @ApiConsumes('multipart/form-data')
@@ -37,6 +46,17 @@ export class PollsController {
     @Get()
     async getResults(): Promise<PollsEntity[]> {
         return this.pollsService.getResults();
+    }
+
+    @Get('/paginated')
+    @ApiOkResponse({
+        description: 'Successfully retrieved a paginated list of polls.',
+    })
+    async getPaginatedResults(
+        @Query(new ValidationPipe({ transform: true, whitelist: true }))
+        pollsQueryDto: PollsQueryDto,
+    ): Promise<PageDto<PollsEntity>> {
+        return this.pollsService.findAllPaginated(pollsQueryDto);
     }
 
     @Get('/:result_id')

@@ -27,6 +27,11 @@ export class User {
 
     @ApiProperty({
         type: String,
+    })
+    electionId: string;
+
+    @ApiProperty({
+        type: String,
         example: 'john.doe@example.com',
     })
     // @Expose({ groups: ['me', 'admin'] })
@@ -102,6 +107,13 @@ export class User {
         enum: () => RolesEnum,
     })
     role: RolesEnum;
+
+//   @ApiProperty({
+//         type: String,
+//         example: '2yehej3kmbn8dbndjd83n',
+//     })
+//     electionId: string | null;
+
 
     @ApiProperty({
         enum: () => StatusEnum,

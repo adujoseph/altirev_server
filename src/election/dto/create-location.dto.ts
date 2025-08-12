@@ -11,6 +11,10 @@ export class CreateLocationDto {
     @IsNotEmpty()
     lga: string;
 
+    @ApiProperty({type: String})
+    @IsNotEmpty()
+    electionId: string;
+
     @ApiProperty({ type: String })
     @IsNotEmpty()
     ward: string;

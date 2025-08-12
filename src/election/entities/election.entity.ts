@@ -31,6 +31,9 @@ export class Election {
     @Column({ nullable: true })
     description: string;
 
+    @Column({ nullable: true })
+    electionId: string;
+
     @Column({ type: 'datetime' })
     electionDate: Date;
 
