@@ -10,12 +10,20 @@ import {
     Param,
     Patch,
     Post,
+    Query,
     UploadedFile,
     UseInterceptors,
+    ValidationPipe,
 } from '@nestjs/common';
 import { ReportsService } from './reports.service';
 import { CreateReportDto } from './dto/create-report.dto';
-import { ApiBody, ApiConsumes, ApiParam, ApiTags } from '@nestjs/swagger';
+import {
+    ApiBody,
+    ApiConsumes,
+    ApiOkResponse,
+    ApiParam,
+    ApiTags,
+} from '@nestjs/swagger';
 import {
     FileFieldsInterceptor,
     FileInterceptor,
@@ -31,6 +39,8 @@ import fs from 'fs';
 import { promisify } from 'util';
 import { ChangeReportStatusDto } from './dto/change-report-status.dto';
 import { SuspendUserDto } from './dto/suspend-user.dto';
+import { PageDto } from '../common/dto/page.dto';
+import { ReportsQueryDto } from './dto/report-query.dto';
 
 const writeFileAsync = promisify(fs.writeFile);
 const unlinkAsync = promisify(fs.unlink);
@@ -60,7 +70,6 @@ export class ReportsController {
             createReportsDto.fileUrl = '';
         }
 
-     
         return this.reportsService.create(createReportsDto);
     }
 
@@ -92,7 +101,7 @@ export class ReportsController {
                 watermarkedImage,
                 'Images',
             );
-        }  else {
+        } else {
             fileUrl = await this.s3Service.uploadFile(
                 file,
                 file.buffer,
@@ -150,7 +159,7 @@ export class ReportsController {
         }
 
         // Save the uploaded video temporarily
-        await writeFileAsync(inputPath, file.buffer);
+        await writeFileAsync(inputPath, String(file.buffer) );
 
         return new Promise((resolve, reject) => {
             ffmpeg(inputPath)
@@ -250,4 +259,11 @@ export class ReportsController {
     remove(@Param('id') id: string) {
         return this.reportsService.remove(id);
     }
+
+    // async getPaginatedResults(
+    //     @Query(new ValidationPipe({ transform: true, whitelist: true }))
+    //     reportsQueryDto: ReportsQueryDto,
+    // ): Promise<PageDto<ReportEntity>> {
+    //     return this.reportsService.findAllPaginated(reportsQueryDto);
+    // }
 }

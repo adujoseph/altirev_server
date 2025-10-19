@@ -23,6 +23,10 @@ export class CreateReportDto {
 
     @ApiProperty()
     @IsString()
+    electionId: string;
+
+    @ApiProperty()
+    @IsString()
     ward: string;
 
     @ApiProperty()

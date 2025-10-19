@@ -16,6 +16,9 @@ export class ReportEntity {
     @Column()
     tenantId: string;
 
+     @Column()
+    electionId: string;
+
     @Column({ nullable: true, default: '' })
     title: string;
 

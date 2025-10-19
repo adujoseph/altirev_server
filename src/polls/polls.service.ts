@@ -296,7 +296,7 @@ export class PollsService {
         return Helpers.success(results);
     }
 
-      async findAllPaginated(
+async findAllPaginated(
     pollsQueryDto: PollsQueryDto,
   ): Promise<PageDto<PollsEntity>> {
     // 1. Create a query builder
